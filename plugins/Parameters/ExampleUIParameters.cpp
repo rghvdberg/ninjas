@@ -42,22 +42,11 @@ public:
           In this example all default values are false, so we can simply zero them.
         */
         std::memset(fParamGrid, 0, sizeof(bool)*9);
+
+        setSize(512, 512);
     }
 
 protected:
-   /* --------------------------------------------------------------------------------------------------------
-    * Init */
-
-   /**
-      Set the initial UI size.
-      This function will be called once, shortly after the UI is created.
-    */
-    void d_initSize(uint& width, uint& height)
-    {
-        width  = kUIWidth;
-        height = kUIHeight;
-    }
-
    /* --------------------------------------------------------------------------------------------------------
     * DSP/Plugin Callbacks */
 
