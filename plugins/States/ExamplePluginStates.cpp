@@ -21,20 +21,16 @@ START_NAMESPACE_DISTRHO
 // -----------------------------------------------------------------------------------------------------------
 
 /**
-  Simple plugin to demonstrate parameter usage (including UI).
+  Simple plugin to demonstrate state usage (including UI).
   The plugin will be treated as an effect, but it will not change the host audio.
  */
-class ExamplePluginParameters : public Plugin
+class ExamplePluginStates : public Plugin
 {
 public:
-    ExamplePluginParameters()
-        : Plugin(9, 0, 0) // 9 parameters, 0 programs, 0 states
+    ExamplePluginStates()
+        : Plugin(0, 0, 9) // 0 parameters, 0 programs, 9 states
     {
-       /**
-          Initialize all our parameters to their defaults.
-          In this example all parameters have 0 as default, so we can simply zero them.
-        */
-        std::memset(fParamGrid, 0, sizeof(float)*9);
+       // nothing here
     }
 
 protected:
@@ -47,7 +43,7 @@ protected:
     */
     const char* d_getLabel() const override
     {
-        return "parameters";
+        return "states";
     }
 
    /**
@@ -81,96 +77,67 @@ protected:
     */
     int64_t d_getUniqueId() const override
     {
-        return d_cconst('d', 'P', 'r', 'm');
+        return d_cconst('d', 'S', 't', 's');
     }
 
    /* --------------------------------------------------------------------------------------------------------
-    * Init */
+    * Parameters */
 
    /**
-      Initialize the parameter @a index.
+      This plugin has no parameters, so we can safely ignore some functions.
+    */
+    void  d_initParameter(uint32_t, Parameter&) override {}
+    void  d_setParameterValue(uint32_t, float)  override {}
+    float d_getParameterValue(uint32_t) const   override { return 0.0f; }
+
+   /* --------------------------------------------------------------------------------------------------------
+    * State */
+
+   /**
+      Set the key name of the state @a index.
       This function will be called once, shortly after the plugin is created.
     */
-    void d_initParameter(uint32_t index, Parameter& parameter) override
+    void d_initStateKey(uint32_t index, d_string& stateKey) override
     {
-       /**
-          All parameters in this plugin are similar except for name.
-          As such, we initialize the common details first, then set the unique name later.
-        */
-
-       /**
-          Changing parameters does not cause any realtime-unsafe operations, so we can mark them as automable.
-          Also set as boolean because they work are on/off switches.
-        */
-        parameter.hints = kParameterIsAutomable|kParameterIsBoolean;
-
-       /**
-          Minimum 0 (off), maximum 1 (on).
-          Default is off.
-        */
-        parameter.ranges.min = 0.0f;
-        parameter.ranges.max = 1.0f;
-        parameter.ranges.def = 0.0f;
-
-       /**
-          Set the (unique) parameter name.
-          @see fParamGrid
-        */
         switch (index)
         {
         case 0:
-            parameter.name = "top-left";
+            stateKey = "top-left";
             break;
         case 1:
-            parameter.name = "top-center";
+            stateKey = "top-center";
             break;
         case 2:
-            parameter.name = "top-right";
+            stateKey = "top-right";
             break;
         case 3:
-            parameter.name = "middle-left";
+            stateKey = "middle-left";
             break;
         case 4:
-            parameter.name = "middle-center";
+            stateKey = "middle-center";
             break;
         case 5:
-            parameter.name = "middle-right";
+            stateKey = "middle-right";
             break;
         case 6:
-            parameter.name = "bottom-left";
+            stateKey = "bottom-left";
             break;
         case 7:
-            parameter.name = "bottom-center";
+            stateKey = "bottom-center";
             break;
         case 8:
-            parameter.name = "bottom-right";
+            stateKey = "bottom-right";
             break;
         }
-
-       /**
-          Our parameter names are valid symbols except for "-".
-        */
-        parameter.symbol = parameter.name;
-        parameter.symbol.replace('-', '_');
-    }
-
-   /* --------------------------------------------------------------------------------------------------------
-    * Internal data */
-
-   /**
-      Get the current value of a parameter.
-    */
-    float d_getParameterValue(uint32_t index) const override
-    {
-        return fParamGrid[index];
     }
 
    /**
-      Change a parameter value.
+      Change an internal state.
     */
-    void d_setParameterValue(uint32_t index, float value) override
+    void d_setState(const char*, const char*) override
     {
-        fParamGrid[index] = value;
+        // there is no plugin side state here.
+        // states on this plugin will only change the UI grid, so we do nothing here
     }
 
    /* --------------------------------------------------------------------------------------------------------
@@ -196,20 +163,12 @@ protected:
     // -------------------------------------------------------------------------------------------------------
 
 private:
-   /**
-      Our parameters are used to display a 3x3 grid like this:
-       0 1 2
-       3 4 5
-       6 7 8
-
-      The index matches its grid position.
-    */
-    float fParamGrid[9];
+    // nothing here
 
    /**
       Set our plugin class as non-copyable and add a leak detector just in case.
     */
-    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExamplePluginParameters)
+    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExamplePluginStates)
 };
 
 /* ------------------------------------------------------------------------------------------------------------
@@ -217,7 +176,7 @@ private:
 
 Plugin* createPlugin()
 {
-    return new ExamplePluginParameters();
+    return new ExamplePluginStates();
 }
 
 // -----------------------------------------------------------------------------------------------------------
