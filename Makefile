@@ -12,7 +12,7 @@ libs:
 	$(MAKE) -C dpf/dgl
 
 plugins: libs
-	$(MAKE) all -C plugins/openav-rommy
+	$(MAKE) all -C plugins/openav-roomy
 	$(MAKE) all -C plugins/Parameters
 	$(MAKE) all -C plugins/States
 
@@ -27,7 +27,7 @@ dpf/utils/lv2_ttl_generator:
 clean:
 	$(MAKE) clean -C dpf/dgl
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
-	$(MAKE) clean -C plugins/openav-rommy
+	$(MAKE) clean -C plugins/openav-roomy
 	$(MAKE) clean -C plugins/Parameters
 	$(MAKE) clean -C plugins/States
 
