@@ -43,7 +43,7 @@ public:
         */
         std::memset(fParamGrid, 0, sizeof(bool)*9);
 
-        setSize(512, 512);
+        setSize(kUIWidth, kUIHeight);
     }
 
 protected:
