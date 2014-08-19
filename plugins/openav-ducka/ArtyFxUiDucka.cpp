@@ -72,7 +72,7 @@ protected:
             break;
         case 3:
             /// only update when value changes?
-            //if ( sidechainAmp > value + 0.1 || sidechainAmp < value - 0.1)
+            if ( sidechainAmp > value + 0.1 || sidechainAmp < value - 0.1)
             {
                 fUI.graph->sidechain( value );
                 sidechainAmp = value;
