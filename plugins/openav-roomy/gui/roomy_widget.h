@@ -6,7 +6,6 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 //#include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
-//#include "../dsp/roomy.hxx"
 #include "DistrhoUI.hpp"
 
 #include "avtk.h"
@@ -22,7 +21,7 @@ START_NAMESPACE_DISTRHO
 class RoomyUI {
 public:
   void update_button(int button);
-  RoomyUI(UI* ui);
+  RoomyUI(UI* const ui);
   Fl_Double_Window *window;
   Avtk::Image *headerImage;
 private:

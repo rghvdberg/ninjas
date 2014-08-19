@@ -56,7 +56,7 @@ void RoomyUI::cb_dryWet(Avtk::Dial* o, void* v) {
 void RoomyUI::update_button(int button) {
 }
 
-RoomyUI::RoomyUI(UI* uic) : ui(uic) {
+RoomyUI::RoomyUI(UI* const uic) : ui(uic) {
   { Fl_Double_Window* o = window = new Fl_Double_Window(160, 220);
     window->user_data((void*)(this));
     { headerImage = new Avtk::Image(0, 0, 160, 29, "header.png");
