@@ -53,7 +53,7 @@ protected:
     */
     const char* d_getLabel() const override
     {
-        return "roomy";
+        return "ducka";
     }
 
    /**
