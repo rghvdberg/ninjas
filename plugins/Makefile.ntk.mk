@@ -38,7 +38,7 @@ endif
 # Set distrho code files
 
 DISTRHO_PLUGIN_FILES = ../../dpf/distrho/DistrhoPluginMain.cpp
-DISTRHO_UI_FILES     = ../../dpf/distrho/DistrhoUIMain.cpp ../../dpf/libdgl.a
+DISTRHO_UI_FILES     = ../../dpf/distrho/DistrhoUIMain.cpp
 
 # --------------------------------------------------------------
 # Handle plugins without UI
