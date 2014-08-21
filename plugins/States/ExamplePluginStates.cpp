@@ -94,10 +94,10 @@ protected:
     * State */
 
    /**
-      Set the key name of the state @a index.
+      Set the state key and default value of @a index.
       This function will be called once, shortly after the plugin is created.
     */
-    void d_initStateKey(uint32_t index, d_string& stateKey) override
+    void d_initState(uint32_t index, d_string& stateKey, d_string& defaultStateValue) override
     {
         switch (index)
         {
@@ -129,6 +129,8 @@ protected:
             stateKey = "bottom-right";
             break;
         }
+
+        defaultStateValue = "false";
     }
 
    /**
