@@ -88,9 +88,6 @@ protected:
             }
             break;
         }
-
-        // trigger repaint
-        repaint();
     }
 
    /**
