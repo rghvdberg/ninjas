@@ -185,13 +185,13 @@ protected:
         for (uint32_t i=0; i<frames; ++i)
         {
             // left
-            tmp = std::abs(outputs[0][i]);
+            tmp = std::abs(inputs[0][i]);
 
             if (tmp > tmpLeft)
                 tmpLeft = tmp;
 
             // right
-            tmp = std::abs(outputs[1][i]);
+            tmp = std::abs(inputs[1][i]);
 
             if (tmp > tmpRight)
                 tmpRight = tmp;
