@@ -8,6 +8,7 @@
 
 .kdev_include_paths
 .kdev4/
+.DS_Store
 
 bin/*-dssi/
 bin/*.lv2/
