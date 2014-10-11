@@ -27,9 +27,9 @@ include ../Makefile.mk
 # Enable all possible plugin types
 
 ifeq ($(LINUX),true)
-all: jack dssi lv2_sep vst
+all: jack lv2_sep vst
 else
-all: dssi lv2_sep vst
+all: lv2_sep vst
 endif
 
 # --------------------------------------------------------------
