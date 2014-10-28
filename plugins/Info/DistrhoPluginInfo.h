@@ -31,7 +31,7 @@
 #define DISTRHO_PLUGIN_WANT_STATE    0
 #define DISTRHO_PLUGIN_WANT_TIMEPOS  1
 
-#define DISTRHO_PLUGIN_URI "http://distrho.sf.net/examples/I n f o"
+#define DISTRHO_PLUGIN_URI "http://distrho.sf.net/examples/Info"
 
 #define DISTRHO_UI_USE_NANOVG 1
 
