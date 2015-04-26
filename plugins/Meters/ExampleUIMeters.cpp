@@ -34,7 +34,7 @@ class ExampleUIMeters : public UI
 {
 public:
     ExampleUIMeters()
-        : UI(),
+        : UI(128, 512),
           // default color is green
           fColor(93, 231, 61),
           // which is value 0
@@ -43,7 +43,6 @@ public:
           fOutLeft(0.0f),
           fOutRight(0.0f)
     {
-        setSize(128, 512);
     }
 
 protected:
@@ -54,7 +53,7 @@ protected:
       A parameter has changed on the plugin side.
       This is called by the host to inform the UI about parameter changes.
     */
-    void d_parameterChanged(uint32_t index, float value) override
+    void parameterChanged(uint32_t index, float value) override
     {
         switch (index)
         {
@@ -94,7 +93,7 @@ protected:
       A state has changed on the plugin side.
       This is called by the host to inform the UI about state changes.
     */
-    void d_stateChanged(const char*, const char*)
+    void stateChanged(const char*, const char*)
     {
         // nothing here
     }
@@ -116,7 +115,7 @@ protected:
         const float outRight(fOutRight);
 
         // tell DSP side to reset meter values
-        d_setState("reset", "");
+        setState("reset", "");
 
         // useful vars
         const float halfWidth        = static_cast<float>(getWidth())/2;
@@ -193,7 +192,7 @@ protected:
 
         const int newColor(fColorValue == 0 ? 1 : 0);
         updateColor(newColor);
-        d_setParameterValue(0, newColor);
+        setParameterValue(0, newColor);
 
         return true;
     }

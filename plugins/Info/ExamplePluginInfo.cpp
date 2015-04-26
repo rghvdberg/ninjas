@@ -40,7 +40,7 @@ protected:
       Get the plugin label.
       A plugin label follows the same rules as Parameter::symbol, with the exception that it can start with numbers.
     */
-    const char* d_getLabel() const override
+    const char* getLabel() const override
     {
         return "info";
     }
@@ -48,7 +48,7 @@ protected:
    /**
       Get the plugin author/maker.
     */
-    const char* d_getMaker() const override
+    const char* getMaker() const override
     {
         return "DISTRHO";
     }
@@ -56,7 +56,7 @@ protected:
    /**
       Get the plugin license name (a single line of text).
     */
-    const char* d_getLicense() const override
+    const char* getLicense() const override
     {
         return "ISC";
     }
@@ -65,7 +65,7 @@ protected:
       Get the plugin version, in hexadecimal.
       TODO format to be defined
     */
-    uint32_t d_getVersion() const override
+    uint32_t getVersion() const override
     {
         return 0x1000;
     }
@@ -74,7 +74,7 @@ protected:
       Get the plugin unique Id.
       This value is used by LADSPA, DSSI and VST plugin formats.
     */
-    int64_t d_getUniqueId() const override
+    int64_t getUniqueId() const override
     {
         return d_cconst('d', 'N', 'f', 'o');
     }
@@ -86,7 +86,7 @@ protected:
       Initialize the parameter @a index.
       This function will be called once, shortly after the plugin is created.
     */
-    void d_initParameter(uint32_t index, Parameter& parameter) override
+    void initParameter(uint32_t index, Parameter& parameter) override
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsOutput;
         parameter.ranges.def = 0.0f;
@@ -158,7 +158,7 @@ protected:
    /**
       Get the current value of a parameter.
     */
-    float d_getParameterValue(uint32_t index) const override
+    float getParameterValue(uint32_t index) const override
     {
         return fParameters[index];
 
@@ -167,7 +167,7 @@ protected:
    /**
       Change a parameter value.
     */
-    void d_setParameterValue(uint32_t, float) override
+    void setParameterValue(uint32_t, float) override
     {
         // this is only called for input paramters, which we have none of.
     }
@@ -178,7 +178,7 @@ protected:
    /**
       Run/process function for plugins without MIDI input.
     */
-    void d_run(const float** inputs, float** outputs, uint32_t frames) override
+    void run(const float** inputs, float** outputs, uint32_t frames) override
     {
        /**
           This plugin does nothing, it just demonstrates information usage.
@@ -192,9 +192,9 @@ protected:
             std::memcpy(outputs[1], inputs[1], sizeof(float)*frames);
 
         // set info
-        fParameters[kParameterBufferSize] = d_getBufferSize();
+        fParameters[kParameterBufferSize] = getBufferSize();
 
-        const TimePosition& timePos(d_getTimePosition());
+        const TimePosition& timePos(getTimePosition());
 
         fParameters[kParameterTimePlaying]        = timePos.playing ? 1.0f : 0.0f;
         fParameters[kParameterTimeFrame]          = timePos.frame;

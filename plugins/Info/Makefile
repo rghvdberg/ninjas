@@ -26,10 +26,20 @@ include ../Makefile.mk
 # --------------------------------------------------------------
 # Enable all possible plugin types
 
-ifeq ($(LINUX),true)
-all: jack lv2_sep vst
-else
-all: lv2_sep vst
+ifeq ($(HAVE_DGL),true)
+ifeq ($(HAVE_JACK),true)
+TARGETS += jack
 endif
+endif
+
+ifeq ($(HAVE_DGL),true)
+TARGETS += lv2_sep
+else
+TARGETS += lv2_dsp
+endif
+
+TARGETS += vst
+
+all: $(TARGETS)
 
 # --------------------------------------------------------------

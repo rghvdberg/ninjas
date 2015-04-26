@@ -73,13 +73,13 @@ protected:
    /**
       This plugin has no parameters, so we can safely ignore this.
     */
-    void d_parameterChanged(uint32_t, float) override {}
+    void parameterChanged(uint32_t, float) override {}
 
    /**
       A state has changed on the plugin side.
       This is called by the host to inform the UI about state changes.
     */
-    void d_stateChanged(const char* key, const char* value)
+    void stateChanged(const char* key, const char* value)
     {
         // check which block changed, enable it if its value is "true"
 
@@ -189,7 +189,7 @@ protected:
                 fParamGrid[index] = !fParamGrid[index];
 
                 // report change to host (and thus plugin)
-                d_setState(getStateKeyFromIndex(index), fParamGrid[index] ? "true" : "false");
+                setState(getStateKeyFromIndex(index), fParamGrid[index] ? "true" : "false");
 
                 // trigger repaint
                 repaint();
@@ -204,7 +204,7 @@ protected:
                 // same as before
                 const uint32_t index = 3+i;
                 fParamGrid[index] = !fParamGrid[index];
-                d_setState(getStateKeyFromIndex(index), fParamGrid[index] ? "true" : "false");
+                setState(getStateKeyFromIndex(index), fParamGrid[index] ? "true" : "false");
                 repaint();
                 break;
             }
@@ -217,7 +217,7 @@ protected:
                 // same as before
                 const uint32_t index = 6+i;
                 fParamGrid[index] = !fParamGrid[index];
-                d_setState(getStateKeyFromIndex(index), fParamGrid[index] ? "true" : "false");
+                setState(getStateKeyFromIndex(index), fParamGrid[index] ? "true" : "false");
                 repaint();
                 break;
             }

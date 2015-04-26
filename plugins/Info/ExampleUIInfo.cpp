@@ -26,15 +26,13 @@ class ExampleUIInfo : public UI
 {
 public:
     ExampleUIInfo()
-        : UI()
+        : UI(405, 256)
     {
         std::memset(fParameters, 0, sizeof(float)*kParameterCount);
         std::memset(fStrBuf, 0, sizeof(char)*(0xff+1));
 
-        fSampleRate = d_getSampleRate();
+        fSampleRate = getSampleRate();
         fFont       = createFont("sans", "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf");
-
-        setSize(405, 256);
     }
 
 protected:
@@ -45,7 +43,7 @@ protected:
       A parameter has changed on the plugin side.
       This is called by the host to inform the UI about parameter changes.
     */
-    void d_parameterChanged(uint32_t index, float value) override
+    void parameterChanged(uint32_t index, float value) override
     {
         fParameters[index] = value;
         repaint();
@@ -57,7 +55,7 @@ protected:
    /**
       Optional callback to inform the UI about a sample rate change on the plugin side.
     */
-    void d_sampleRateChanged(double newSampleRate)
+    void sampleRateChanged(double newSampleRate)
     {
         fSampleRate = newSampleRate;
         repaint();

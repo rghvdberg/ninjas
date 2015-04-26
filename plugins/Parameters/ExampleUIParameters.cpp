@@ -35,15 +35,13 @@ class ExampleUIParameters : public UI
 {
 public:
     ExampleUIParameters()
-        : UI()
+        : UI(kUIWidth, kUIHeight)
     {
        /**
           Initialize all our parameters to their defaults.
           In this example all default values are false, so we can simply zero them.
         */
         std::memset(fParamGrid, 0, sizeof(bool)*9);
-
-        setSize(kUIWidth, kUIHeight);
     }
 
 protected:
@@ -54,7 +52,7 @@ protected:
       A parameter has changed on the plugin side.
       This is called by the host to inform the UI about parameter changes.
     */
-    void d_parameterChanged(uint32_t index, float value) override
+    void parameterChanged(uint32_t index, float value) override
     {
         // update our grid state to match the plugin side
         fParamGrid[index] = (value > 0.5f);
@@ -146,7 +144,7 @@ protected:
                 fParamGrid[index] = !fParamGrid[index];
 
                 // report change to host (and thus plugin)
-                d_setParameterValue(index, fParamGrid[index] ? 1.0f : 0.0f);
+                setParameterValue(index, fParamGrid[index] ? 1.0f : 0.0f);
 
                 // trigger repaint
                 repaint();
@@ -161,7 +159,7 @@ protected:
                 // same as before
                 const uint32_t index = 3+i;
                 fParamGrid[index] = !fParamGrid[index];
-                d_setParameterValue(index, fParamGrid[index] ? 1.0f : 0.0f);
+                setParameterValue(index, fParamGrid[index] ? 1.0f : 0.0f);
                 repaint();
                 break;
             }
@@ -174,7 +172,7 @@ protected:
                 // same as before
                 const uint32_t index = 6+i;
                 fParamGrid[index] = !fParamGrid[index];
-                d_setParameterValue(index, fParamGrid[index] ? 1.0f : 0.0f);
+                setParameterValue(index, fParamGrid[index] ? 1.0f : 0.0f);
                 repaint();
                 break;
             }
