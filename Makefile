@@ -16,8 +16,6 @@ plugins: libs
 	$(MAKE) all -C plugins/Meters
 	$(MAKE) all -C plugins/Parameters
 	$(MAKE) all -C plugins/States
-	#$(MAKE) all -C plugins/openav-ducka
-	#$(MAKE) all -C plugins/openav-roomy
 
 gen: plugins dpf/utils/lv2_ttl_generator
 	@$(CURDIR)/dpf/utils/generate-ttl.sh
@@ -37,8 +35,6 @@ clean:
 	$(MAKE) clean -C plugins/Meters
 	$(MAKE) clean -C plugins/Parameters
 	$(MAKE) clean -C plugins/States
-	#$(MAKE) clean -C plugins/openav-ducka
-	#$(MAKE) clean -C plugins/openav-roomy
 
 # --------------------------------------------------------------
 
