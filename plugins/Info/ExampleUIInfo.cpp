@@ -32,7 +32,7 @@ public:
         std::memset(fStrBuf, 0, sizeof(char)*(0xff+1));
 
         fSampleRate = getSampleRate();
-        fFont       = createFont("sans", "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf");
+        fFont       = createFontFromFile("sans", "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf");
     }
 
 protected:
