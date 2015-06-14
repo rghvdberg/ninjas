@@ -17,6 +17,7 @@ endif
 
 plugins: libs
 	$(MAKE) all -C plugins/Info
+	$(MAKE) all -C plugins/Latency
 	$(MAKE) all -C plugins/Meters
 	$(MAKE) all -C plugins/Parameters
 	$(MAKE) all -C plugins/States
@@ -38,6 +39,7 @@ ifeq ($(HAVE_DGL),true)
 endif
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
 	$(MAKE) clean -C plugins/Info
+	$(MAKE) clean -C plugins/Latency
 	$(MAKE) clean -C plugins/Meters
 	$(MAKE) clean -C plugins/Parameters
 	$(MAKE) clean -C plugins/States
