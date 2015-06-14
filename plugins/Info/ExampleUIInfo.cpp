@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2014 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2015 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -22,10 +22,10 @@ START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------------------------------------------
 
-class ExampleUIInfo : public UI
+class InfoExampleUI : public UI
 {
 public:
-    ExampleUIInfo()
+    InfoExampleUI()
         : UI(405, 256)
     {
         std::memset(fParameters, 0, sizeof(float)*kParameterCount);
@@ -55,7 +55,7 @@ protected:
    /**
       Optional callback to inform the UI about a sample rate change on the plugin side.
     */
-    void sampleRateChanged(double newSampleRate)
+    void sampleRateChanged(double newSampleRate) override
     {
         fSampleRate = newSampleRate;
         repaint();
@@ -155,11 +155,13 @@ private:
     float  fParameters[kParameterCount];
     double fSampleRate;
 
+    // font
     FontId fFont;
 
     // temp buf for text
     char fStrBuf[0xff+1];
 
+    // helpers for putting text into fStrBuf and returning it
     const char* getTextBufInt(const int value)
     {
         std::snprintf(fStrBuf, 0xff, "%i", value);
@@ -182,28 +184,29 @@ private:
         return fStrBuf;
     }
 
+    // helpers for drawing text
     void drawLeft(const float x, const float y, const char* const text)
     {
         beginPath();
-        fillColor(200,200,200);
-        textAlign(Align(ALIGN_RIGHT|ALIGN_TOP));
-        textBox(x, y, 100, text, nullptr);
+        fillColor(200, 200, 200);
+        textAlign(ALIGN_RIGHT|ALIGN_TOP);
+        textBox(x, y, 100, text);
         closePath();
     }
 
     void drawRight(const float x, const float y, const char* const text)
     {
         beginPath();
-        fillColor(255,255,255);
-        textAlign(Align(ALIGN_LEFT|ALIGN_TOP));
-        textBox(x+105, y, 100, text, nullptr);
+        fillColor(255, 255, 255);
+        textAlign(ALIGN_LEFT|ALIGN_TOP);
+        textBox(x+105, y, 100, text);
         closePath();
     }
 
    /**
       Set our UI class as non-copyable and add a leak detector just in case.
     */
-    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExampleUIInfo)
+    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InfoExampleUI)
 };
 
 /* ------------------------------------------------------------------------------------------------------------
@@ -211,7 +214,7 @@ private:
 
 UI* createUI()
 {
-    return new ExampleUIInfo();
+    return new InfoExampleUI();
 }
 
 // -----------------------------------------------------------------------------------------------------------

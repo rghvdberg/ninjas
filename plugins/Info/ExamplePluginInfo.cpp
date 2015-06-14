@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2014 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2015 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -21,15 +21,19 @@ START_NAMESPACE_DISTRHO
 // -----------------------------------------------------------------------------------------------------------
 
 /**
-  Plugin to demonstrate parameter outputs using meters.
+  Plugin to show how to get some basic information sent to the UI.
  */
-class ExamplePluginInfo : public Plugin
+class InfoExamplePlugin : public Plugin
 {
 public:
-    ExamplePluginInfo()
+    InfoExamplePlugin()
         : Plugin(kParameterCount, 0, 0)
     {
+        // clear all parameters
         std::memset(fParameters, 0, sizeof(float)*kParameterCount);
+
+        // we can know buffer-size right at the start
+        fParameters[kParameterBufferSize] = getBufferSize();
     }
 
 protected:
@@ -38,11 +42,11 @@ protected:
 
    /**
       Get the plugin label.
-      A plugin label follows the same rules as Parameter::symbol, with the exception that it can start with numbers.
+      This label is a short restricted name consisting of only _, a-z, A-Z and 0-9 characters.
     */
     const char* getLabel() const override
     {
-        return "info";
+        return "Info";
     }
 
    /**
@@ -55,6 +59,7 @@ protected:
 
    /**
       Get the plugin license name (a single line of text).
+      For commercial plugins this should return some short copyright information.
     */
     const char* getLicense() const override
     {
@@ -157,6 +162,7 @@ protected:
 
    /**
       Get the current value of a parameter.
+      The host may call this function from any context, including realtime processing.
     */
     float getParameterValue(uint32_t index) const override
     {
@@ -166,6 +172,9 @@ protected:
 
    /**
       Change a parameter value.
+      The host may call this function from any context, including realtime processing.
+      When a parameter is marked as automable, you must ensure no non-realtime operations are performed.
+      @note This function will only be called for parameter inputs.
     */
     void setParameterValue(uint32_t, float) override
     {
@@ -173,10 +182,11 @@ protected:
     }
 
    /* --------------------------------------------------------------------------------------------------------
-    * Process */
+    * Audio/MIDI Processing */
 
    /**
       Run/process function for plugins without MIDI input.
+      @note Some parameters might be null if there are no audio inputs or outputs.
     */
     void run(const float** inputs, float** outputs, uint32_t frames) override
     {
@@ -191,22 +201,51 @@ protected:
         if (outputs[1] != inputs[1])
             std::memcpy(outputs[1], inputs[1], sizeof(float)*frames);
 
-        // set info
-        fParameters[kParameterBufferSize] = getBufferSize();
-
+        // get time position
         const TimePosition& timePos(getTimePosition());
 
+        // set basic values
         fParameters[kParameterTimePlaying]        = timePos.playing ? 1.0f : 0.0f;
         fParameters[kParameterTimeFrame]          = timePos.frame;
         fParameters[kParameterTimeValidBBT]       = timePos.bbt.valid ? 1.0f : 0.0f;
-        fParameters[kParameterTimeBar]            = timePos.bbt.bar;
-        fParameters[kParameterTimeBeat]           = timePos.bbt.beat;
-        fParameters[kParameterTimeTick]           = timePos.bbt.tick;
-        fParameters[kParameterTimeBarStartTick]   = timePos.bbt.barStartTick;
-        fParameters[kParameterTimeBeatsPerBar]    = timePos.bbt.beatsPerBar;
-        fParameters[kParameterTimeBeatType]       = timePos.bbt.beatType;
-        fParameters[kParameterTimeTicksPerBeat]   = timePos.bbt.ticksPerBeat;
-        fParameters[kParameterTimeBeatsPerMinute] = timePos.bbt.beatsPerMinute;
+
+        // set bbt
+        if (timePos.bbt.valid)
+        {
+            fParameters[kParameterTimeBar]            = timePos.bbt.bar;
+            fParameters[kParameterTimeBeat]           = timePos.bbt.beat;
+            fParameters[kParameterTimeTick]           = timePos.bbt.tick;
+            fParameters[kParameterTimeBarStartTick]   = timePos.bbt.barStartTick;
+            fParameters[kParameterTimeBeatsPerBar]    = timePos.bbt.beatsPerBar;
+            fParameters[kParameterTimeBeatType]       = timePos.bbt.beatType;
+            fParameters[kParameterTimeTicksPerBeat]   = timePos.bbt.ticksPerBeat;
+            fParameters[kParameterTimeBeatsPerMinute] = timePos.bbt.beatsPerMinute;
+        }
+        else
+        {
+            fParameters[kParameterTimeBar]            = 0.0f;
+            fParameters[kParameterTimeBeat]           = 0.0f;
+            fParameters[kParameterTimeTick]           = 0.0f;
+            fParameters[kParameterTimeBarStartTick]   = 0.0f;
+            fParameters[kParameterTimeBeatsPerBar]    = 0.0f;
+            fParameters[kParameterTimeBeatType]       = 0.0f;
+            fParameters[kParameterTimeTicksPerBeat]   = 0.0f;
+            fParameters[kParameterTimeBeatsPerMinute] = 0.0f;
+        }
+    }
+
+   /* --------------------------------------------------------------------------------------------------------
+    * Callbacks (optional) */
+
+   /**
+      Optional callback to inform the plugin about a buffer size change.@
+      This function will only be called when the plugin is deactivated.
+      @note This value is only a hint!
+            Hosts might call run() with a higher or lower number of frames.
+    */
+    void bufferSizeChanged(uint32_t newBufferSize) override
+    {
+        fParameters[kParameterBufferSize] = newBufferSize;
     }
 
     // -------------------------------------------------------------------------------------------------------
@@ -218,7 +257,7 @@ private:
    /**
       Set our plugin class as non-copyable and add a leak detector just in case.
     */
-    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExamplePluginInfo)
+    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InfoExamplePlugin)
 };
 
 /* ------------------------------------------------------------------------------------------------------------
@@ -226,7 +265,7 @@ private:
 
 Plugin* createPlugin()
 {
-    return new ExamplePluginInfo();
+    return new InfoExamplePlugin();
 }
 
 // -----------------------------------------------------------------------------------------------------------
