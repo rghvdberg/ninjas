@@ -13,10 +13,10 @@ NAME = d_info
 # Files to build
 
 OBJS_DSP = \
-	ExamplePluginInfo.cpp.o
+	InfoExamplePlugin.cpp.o
 
 OBJS_UI  = \
-	ExampleUIInfo.cpp.o
+	InfoExampleUI.cpp.o
 
 # --------------------------------------------------------------
 # Do some magic
