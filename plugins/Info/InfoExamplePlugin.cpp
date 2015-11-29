@@ -50,11 +50,27 @@ protected:
     }
 
    /**
+      Get an extensive comment/description about the plugin.
+    */
+    const char* getDescription() const override
+    {
+        return "Plugin to show how to get some basic information sent to the UI.";
+    }
+
+   /**
       Get the plugin author/maker.
     */
     const char* getMaker() const override
     {
         return "DISTRHO";
+    }
+
+   /**
+      Get the plugin homepage.
+    */
+    const char* getHomePage() const override
+    {
+        return "https://github.com/DISTRHO/plugin-examples";
     }
 
    /**
@@ -68,11 +84,10 @@ protected:
 
    /**
       Get the plugin version, in hexadecimal.
-      TODO format to be defined
     */
     uint32_t getVersion() const override
     {
-        return 0x1000;
+        return d_version(1, 0, 0);
     }
 
    /**

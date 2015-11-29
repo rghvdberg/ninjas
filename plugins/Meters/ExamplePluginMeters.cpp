@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2014 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2015 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -49,6 +49,14 @@ protected:
     }
 
    /**
+      Get an extensive comment/description about the plugin.
+    */
+    const char* getDescription() const override
+    {
+        return "Plugin to demonstrate parameter outputs using meters.";
+    }
+
+   /**
       Get the plugin author/maker.
     */
     const char* getMaker() const override
@@ -57,7 +65,16 @@ protected:
     }
 
    /**
+      Get the plugin homepage.
+    */
+    const char* getHomePage() const override
+    {
+        return "https://github.com/DISTRHO/plugin-examples";
+    }
+
+   /**
       Get the plugin license name (a single line of text).
+      For commercial plugins this should return some short copyright information.
     */
     const char* getLicense() const override
     {
@@ -66,11 +83,10 @@ protected:
 
    /**
       Get the plugin version, in hexadecimal.
-      TODO format to be defined
     */
     uint32_t getVersion() const override
     {
-        return 0x1000;
+        return d_version(1, 0, 0);
     }
 
    /**

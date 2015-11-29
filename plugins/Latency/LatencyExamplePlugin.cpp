@@ -80,7 +80,7 @@ protected:
     }
 
    /**
-      Get the plugin license (a single line of text or a URL).
+      Get the plugin license name (a single line of text).
       For commercial plugins this should return some short copyright information.
     */
     const char* getLicense() const override
