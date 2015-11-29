@@ -21,7 +21,7 @@ START_NAMESPACE_DISTRHO
 // -----------------------------------------------------------------------------------------------------------
 
 /**
-  Plugin to show how to get some basic information sent to the UI.
+  Plugin that demonstrates the latency API in DPF.
  */
 class LatencyExamplePlugin : public Plugin
 {
@@ -56,6 +56,14 @@ protected:
     }
 
    /**
+      Get an extensive comment/description about the plugin.
+    */
+    const char* getDescription() const override
+    {
+        return "Plugin that demonstrates the latency API in DPF.";
+    }
+
+   /**
       Get the plugin author/maker.
     */
     const char* getMaker() const override
@@ -64,7 +72,15 @@ protected:
     }
 
    /**
-      Get the plugin license name (a single line of text).
+      Get the plugin homepage.
+    */
+    const char* getHomePage() const override
+    {
+        return "https://github.com/DISTRHO/plugin-examples";
+    }
+
+   /**
+      Get the plugin license (a single line of text or a URL).
       For commercial plugins this should return some short copyright information.
     */
     const char* getLicense() const override
@@ -74,11 +90,10 @@ protected:
 
    /**
       Get the plugin version, in hexadecimal.
-      TODO format to be defined
     */
     uint32_t getVersion() const override
     {
-        return 0x1000;
+        return d_version(1, 0, 0);
     }
 
    /**
