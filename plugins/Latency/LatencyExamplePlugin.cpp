@@ -37,6 +37,11 @@ public:
         sampleRateChanged(getSampleRate());
     }
 
+    ~LatencyExamplePlugin() override
+    {
+        delete[] fBuffer;
+    }
+
 protected:
    /* --------------------------------------------------------------------------------------------------------
     * Information */
