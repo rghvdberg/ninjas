@@ -28,7 +28,7 @@ class ExamplePluginParameters : public Plugin
 {
 public:
     ExamplePluginParameters()
-        : Plugin(9, 0, 0) // 9 parameters, 0 programs, 0 states
+        : Plugin(9, 2, 0) // 9 parameters, 2 programs, 0 states
     {
        /**
           Initialize all our parameters to their defaults.
@@ -117,7 +117,7 @@ The plugin will be treated as an effect, but it will not change the host audio."
 
        /**
           Changing parameters does not cause any realtime-unsafe operations, so we can mark them as automable.
-          Also set as boolean because they work are on/off switches.
+          Also set as boolean because they work as on/off switches.
         */
         parameter.hints = kParameterIsAutomable|kParameterIsBoolean;
 
@@ -171,6 +171,23 @@ The plugin will be treated as an effect, but it will not change the host audio."
         parameter.symbol.replace('-', '_');
     }
 
+   /**
+      Set the name of the program @a index.
+      This function will be called once, shortly after the plugin is created.
+    */
+    void initProgramName(uint32_t index, String& programName) override
+    {
+        switch (index)
+        {
+        case 0:
+            programName = "Default";
+            break;
+        case 1:
+            programName = "Custom";
+            break;
+        }
+    }
+
    /* --------------------------------------------------------------------------------------------------------
     * Internal data */
 
@@ -188,6 +205,39 @@ The plugin will be treated as an effect, but it will not change the host audio."
     void setParameterValue(uint32_t index, float value) override
     {
         fParamGrid[index] = value;
+    }
+
+   /**
+      Load a program.
+      The host may call this function from any context, including realtime processing.
+    */
+    void loadProgram(uint32_t index) override
+    {
+        switch (index)
+        {
+        case 0:
+            fParamGrid[0] = 0.0f;
+            fParamGrid[1] = 0.0f;
+            fParamGrid[2] = 0.0f;
+            fParamGrid[3] = 0.0f;
+            fParamGrid[4] = 0.0f;
+            fParamGrid[5] = 0.0f;
+            fParamGrid[6] = 0.0f;
+            fParamGrid[7] = 0.0f;
+            fParamGrid[8] = 0.0f;
+            break;
+        case 1:
+            fParamGrid[0] = 1.0f;
+            fParamGrid[1] = 1.0f;
+            fParamGrid[2] = 0.0f;
+            fParamGrid[3] = 0.0f;
+            fParamGrid[4] = 1.0f;
+            fParamGrid[5] = 1.0f;
+            fParamGrid[6] = 1.0f;
+            fParamGrid[7] = 0.0f;
+            fParamGrid[8] = 1.0f;
+            break;
+        }
     }
 
    /* --------------------------------------------------------------------------------------------------------

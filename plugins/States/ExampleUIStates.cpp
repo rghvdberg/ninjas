@@ -18,43 +18,39 @@
 
 START_NAMESPACE_DISTRHO
 
-/**
-  For simplicity this UI will be of constant size.
- */
-static const int kUIWidth  = 512;
-static const int kUIHeight = 512;
-
-/**
-  We need the rectangle class from DGL.
- */
-using DGL::Rectangle;
-
-/**
-  Get key name from an index.
- */
-static const char* getStateKeyFromIndex(const uint32_t index)
-{
-    switch (index)
-    {
-    case 0: return "top-left";
-    case 1: return "top-center";
-    case 2: return "top-right";
-    case 3: return "middle-left";
-    case 4: return "middle-center";
-    case 5: return "middle-right";
-    case 6: return "bottom-left";
-    case 7: return "bottom-center";
-    case 8: return "bottom-right";
-    }
-
-    return "unknown";
-}
-
 // -----------------------------------------------------------------------------------------------------------
 
 class ExampleUIParameters : public UI
 {
 public:
+    /**
+      For simplicity this UI will be of constant size.
+    */
+    static const int kUIWidth  = 512;
+    static const int kUIHeight = 512;
+
+    /**
+      Get key name from an index.
+    */
+    static const char* getStateKeyFromIndex(const uint32_t index) noexcept
+    {
+        switch (index)
+        {
+        case 0: return "top-left";
+        case 1: return "top-center";
+        case 2: return "top-right";
+        case 3: return "middle-left";
+        case 4: return "middle-center";
+        case 5: return "middle-right";
+        case 6: return "bottom-left";
+        case 7: return "bottom-center";
+        case 8: return "bottom-right";
+        }
+
+        return "unknown";
+    }
+
+    /* constructor */
     ExampleUIParameters()
         : UI()
     {
@@ -76,31 +72,68 @@ protected:
     void parameterChanged(uint32_t, float) override {}
 
    /**
+      A program has been loaded on the plugin side.
+      This is called by the host to inform the UI about program changes.
+    */
+    void programLoaded(uint32_t index) override
+    {
+        d_stdout("UI programLoaded %i", index);
+
+        switch (index)
+        {
+        case 0:
+            fParamGrid[0] = false;
+            fParamGrid[1] = false;
+            fParamGrid[2] = false;
+            fParamGrid[3] = false;
+            fParamGrid[4] = false;
+            fParamGrid[5] = false;
+            fParamGrid[6] = false;
+            fParamGrid[7] = false;
+            fParamGrid[8] = false;
+            break;
+        case 1:
+            fParamGrid[0] = true;
+            fParamGrid[1] = true;
+            fParamGrid[2] = false;
+            fParamGrid[3] = false;
+            fParamGrid[4] = true;
+            fParamGrid[5] = true;
+            fParamGrid[6] = true;
+            fParamGrid[7] = false;
+            fParamGrid[8] = true;
+            break;
+        }
+        repaint();
+    }
+
+   /**
       A state has changed on the plugin side.
       This is called by the host to inform the UI about state changes.
     */
-    void stateChanged(const char* key, const char* value)
+    void stateChanged(const char* key, const char* value) override
     {
-        // check which block changed, enable it if its value is "true"
+        const bool valueOnOff = (std::strcmp(value, "true") == 0);
 
+        // check which block changed
         /**/ if (std::strcmp(key, "top-left") == 0)
-            fParamGrid[0] = (std::strcmp(value, "true") == 0);
+            fParamGrid[0] = valueOnOff;
         else if (std::strcmp(key, "top-center") == 0)
-            fParamGrid[1] = (std::strcmp(value, "true") == 0);
+            fParamGrid[1] = valueOnOff;
         else if (std::strcmp(key, "top-right") == 0)
-            fParamGrid[2] = (std::strcmp(value, "true") == 0);
+            fParamGrid[2] = valueOnOff;
         else if (std::strcmp(key, "middle-left") == 0)
-            fParamGrid[3] = (std::strcmp(value, "true") == 0);
+            fParamGrid[3] = valueOnOff;
         else if (std::strcmp(key, "middle-center") == 0)
-            fParamGrid[4] = (std::strcmp(value, "true") == 0);
+            fParamGrid[4] = valueOnOff;
         else if (std::strcmp(key, "middle-right") == 0)
-            fParamGrid[5] = (std::strcmp(value, "true") == 0);
+            fParamGrid[5] = valueOnOff;
         else if (std::strcmp(key, "bottom-left") == 0)
-            fParamGrid[6] = (std::strcmp(value, "true") == 0);
+            fParamGrid[6] = valueOnOff;
         else if (std::strcmp(key, "bottom-center") == 0)
-            fParamGrid[7] = (std::strcmp(value, "true") == 0);
+            fParamGrid[7] = valueOnOff;
         else if (std::strcmp(key, "bottom-right") == 0)
-            fParamGrid[8] = (std::strcmp(value, "true") == 0);
+            fParamGrid[8] = valueOnOff;
 
         // trigger repaint
         repaint();
