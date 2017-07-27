@@ -22,7 +22,7 @@ START_NAMESPACE_DISTRHO
 // -----------------------------------------------------------------------------------------------------------
 
 /**
-  this will hopefuly become a sample slicer plugin 
+  this will hopefuly become a sample slicer plugin
  */
 class SlicerPlugin : public Plugin
 {
@@ -31,6 +31,7 @@ public:
         : Plugin(1, 0, 0)
     {
         play_sample = 1.0f
+
     }
 
 protected:
@@ -111,19 +112,6 @@ protected:
         parameter.ranges.max = 1.0f;
         parameter.name   = "Play Sample";
         parameter.symbol = "play_sample";
-        /
-        * ** load sample stuff 
-         * code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
-         */
-        SndfileHandle fileHandle( "sample.wav" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 1 , 44100);
-        int size = fileHandle.frames();
-        int channels = fileHandle.channels();
-        int samplerate = fileHandle.samplerate();
-        
-        std::vector<float> sampleVector;
-        sampleVector.resize(size);
-        fileHandle.read( &sampleVector,at(0), size);
-        int playbackIndex = 0;
 
     }
 
@@ -165,29 +153,45 @@ protected:
           So here we directly copy inputs over outputs, leaving the audio untouched.
           We need to be careful in case the host re-uses the same buffer for both ins and outs.
         */
-        
+
         for ( int i = 0; i < frames; i++)
 			{
 				switch(play_sample)
 				{
 					case 1 :
-					/* copy sample stuff */
-					break;
+					if ( playbackIndex >= sampleVector.size() ) {
+                      playbackIndex = 0;
+                      )
+                      output[0]  = sndfile_sample[0];     out_right[0] = sndfile_sample[1];    out_left_[1] = sndfile_sample [2];
+										break;
 					case 0 :
 					/* copy zeros */
 					break;
 				}
-				
-      
-     
+
+
+
     }
 
- 
+
     // -------------------------------------------------------------------------------------------------------
 
 private:
     // Parameters
     float play_sample
+    /*  load sample stuff
+     * code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
+    */
+    SndfileHandle fileHandle( "/home/rob/build/slicer/plugin-examples/plugins/Slicer/sample.wav" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
+    int size = fileHandle.frames();
+    int channels = fileHandle.channels();
+    int samplerate = fileHandle.samplerate();
+    std::vector<float> sampleVector;
+    sampleVector.resize(size);
+    fileHandle.read( &sampleVector,at(0), size);
+    int playbackIndex = 0;
+    //
+
    /**
       Set our plugin class as non-copyable and add a leak detector just in case.
     */
