@@ -31,6 +31,7 @@ public:
         : Plugin(1, 0, 0)
     {
         play_sample = 1.0f
+        loadSample()
 
     }
 
@@ -148,38 +149,32 @@ protected:
     */
     void run(const float** inputs, float** outputs, uint32_t frames) override
     {
-       /**
-          This plugin does nothing, it just demonstrates information usage.
-          So here we directly copy inputs over outputs, leaving the audio untouched.
-          We need to be careful in case the host re-uses the same buffer for both ins and outs.
-        */
+       float* const outL = outputs[0];
+       float* const outR = outputs[1];
 
         for ( int i = 0; i < frames; i++)
 			{
 				switch(play_sample)
 				{
 					case 1 :
-					if ( playbackIndex >= sampleVector.size() ) {
+					if ( playbackIndex >= (sampleVector.size()-1) ) {
                       playbackIndex = 0;
-                      )
-                      output[0]  = sndfile_sample[0];     out_right[0] = sndfile_sample[1];    out_left_[1] = sndfile_sample [2];
-										break;
+                      }
+                      outL[i]  = sndfile_sample[playbackIndex];
+                      outR[i] = sndfile_sample[playbackIndex+1];
+                      playbackIndex +=2
+                    break;
 					case 0 :
+					   outL[i] = 0
+					   outR[i] = 0
 					/* copy zeros */
 					break;
 				}
-
-
-
     }
-
-
-    // -------------------------------------------------------------------------------------------------------
-
-private:
-    // Parameters
-    float play_sample
-    /*  load sample stuff
+    }
+void loadSample()
+    {
+        /*  load sample stuff
      * code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
     */
     SndfileHandle fileHandle( "/home/rob/build/slicer/plugin-examples/plugins/Slicer/sample.wav" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
@@ -189,6 +184,13 @@ private:
     std::vector<float> sampleVector;
     sampleVector.resize(size);
     fileHandle.read( &sampleVector,at(0), size);
+    }
+
+    // -------------------------------------------------------------------------------------------------------
+
+private:
+    // Parameters
+    float play_sample
     int playbackIndex = 0;
     //
 

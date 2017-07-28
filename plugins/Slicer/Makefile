@@ -7,16 +7,16 @@
 # --------------------------------------------------------------
 # Project name, used for binaries
 
-NAME = d_info
+NAME = slicer
 
 # --------------------------------------------------------------
 # Files to build
 
 OBJS_DSP = \
-	InfoExamplePlugin.cpp.o
+	Slicer.cpp.o
 
 OBJS_UI  = \
-	InfoExampleUI.cpp.o
+	SlicerUI.cpp.o
 
 # --------------------------------------------------------------
 # Do some magic

@@ -16,11 +16,7 @@ ifeq ($(HAVE_DGL),true)
 endif
 
 plugins: libs
-	$(MAKE) all -C plugins/Info
-	$(MAKE) all -C plugins/Latency
-	$(MAKE) all -C plugins/Meters
-	$(MAKE) all -C plugins/Parameters
-	$(MAKE) all -C plugins/States
+	$(MAKE) all -C plugins/Slicer
 
 gen: plugins dpf/utils/lv2_ttl_generator
 	@$(CURDIR)/dpf/utils/generate-ttl.sh
