@@ -162,11 +162,11 @@ protected:
                       }
                       outL[i]  = sampleVector[playbackIndex];
                       outR[i] = sampleVector[playbackIndex+1];
-                      playbackIndex +=2
+                      playbackIndex +=2;
                     break;
 					case 0 :
-					   outL[i] = 0
-					   outR[i] = 0
+					   outL[i] = 0;
+					   outR[i] = 0;
 					/* copy zeros */
 					break;
 				}
@@ -174,14 +174,13 @@ protected:
     }
 void loadSample()
     {
-        /*  load sample stuff
-     * code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
+    /*  load sample stuff
+     *  code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
     */
     SndfileHandle fileHandle( "/home/rob/build/slicer/plugin-examples/plugins/Slicer/sample.wav" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
     int size = fileHandle.frames();
-    int channels = fileHandle.channels();
-    int samplerate = fileHandle.samplerate();
-    std::vector<float> sampleVector;
+    // int channels = fileHandle.channels();
+    // int samplerate = fileHandle.samplerate();
     sampleVector.resize(size);
     fileHandle.read( &sampleVector,at(0), size);
     }
@@ -192,6 +191,7 @@ private:
     // Parameters
     float play_sample;
     int playbackIndex = 0;
+    std::vector<float> sampleVector;
     //
 
    /**
