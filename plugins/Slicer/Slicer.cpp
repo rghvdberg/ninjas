@@ -30,8 +30,8 @@ public:
     SlicerPlugin()
         : Plugin(1, 0, 0)
     {
-        play_sample = 1.0f
-        loadSample()
+        play_sample = 1.0f;
+        loadSample();
 
     }
 
@@ -137,7 +137,7 @@ protected:
     */
     void setParameterValue(uint32_t index, float value) override
     {
-        play_sample = value
+        play_sample = value;
     }
 
    /* --------------------------------------------------------------------------------------------------------
@@ -154,14 +154,14 @@ protected:
 
         for ( int i = 0; i < frames; i++)
 			{
-				switch(play_sample)
+				switch((int)play_sample)
 				{
 					case 1 :
 					if ( playbackIndex >= (sampleVector.size()-1) ) {
                       playbackIndex = 0;
                       }
-                      outL[i]  = sndfile_sample[playbackIndex];
-                      outR[i] = sndfile_sample[playbackIndex+1];
+                      outL[i]  = sampleVector[playbackIndex];
+                      outR[i] = sampleVector[playbackIndex+1];
                       playbackIndex +=2
                     break;
 					case 0 :
@@ -190,7 +190,7 @@ void loadSample()
 
 private:
     // Parameters
-    float play_sample
+    float play_sample;
     int playbackIndex = 0;
     //
 

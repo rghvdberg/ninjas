@@ -34,11 +34,8 @@ ifeq ($(HAVE_DGL),true)
 	$(MAKE) clean -C dpf/dgl
 endif
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
-	$(MAKE) clean -C plugins/Info
-	$(MAKE) clean -C plugins/Latency
-	$(MAKE) clean -C plugins/Meters
-	$(MAKE) clean -C plugins/Parameters
-	$(MAKE) clean -C plugins/States
+	$(MAKE) clean -C plugins/Slicer
+
 
 # --------------------------------------------------------------
 
