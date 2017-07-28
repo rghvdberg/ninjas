@@ -182,7 +182,7 @@ void loadSample()
     // int channels = fileHandle.channels();
     // int samplerate = fileHandle.samplerate();
     sampleVector.resize(size);
-    fileHandle.read( &sampleVector,at(0), size);
+    fileHandle.read( &sampleVector.at(0), size);
     }
 
     // -------------------------------------------------------------------------------------------------------

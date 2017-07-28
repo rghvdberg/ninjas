@@ -15,8 +15,8 @@ NAME = slicer
 OBJS_DSP = \
 	Slicer.cpp.o
 
-OBJS_UI  = \
-	SlicerUI.cpp.o
+#OBJS_UI  = \
+#	SlicerUI.cpp.o
 
 # --------------------------------------------------------------
 # Do some magic

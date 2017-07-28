@@ -20,7 +20,6 @@
 #define DISTRHO_PLUGIN_NAME  "Slicer"
 #define DISTRHO_PLUGIN_URI   "http://distrho.sf.net/examples/Slicer"
 
-/* #define DISTRHO_PLUGIN_HAS_UI  1 */
 #define DISTRHO_PLUGIN_NUM_INPUTS   2
 #define DISTRHO_PLUGIN_NUM_OUTPUTS  2
 
