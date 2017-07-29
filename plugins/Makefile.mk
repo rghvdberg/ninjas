@@ -124,7 +124,7 @@ lv2_sep: $(lv2_dsp) $(lv2_ui)
 
 $(lv2): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --libs sndfile) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
 
 $(lv2_dsp): $(OBJS_DSP) $(DISTRHO_PLUGIN_FILES)
 	mkdir -p $(shell dirname $@)
@@ -141,7 +141,7 @@ vst: $(vst)
 
 $(vst): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_VST -o $@
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS)  $(shell pkg-config --cflags --libs sndfile) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_VST -o $@
 
 # --------------------------------------------------------------
 

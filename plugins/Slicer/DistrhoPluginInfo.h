@@ -21,7 +21,8 @@
 #define DISTRHO_PLUGIN_URI   "https://github.com/rghvdberg/plugin-examples"
 
 #define DISTRHO_PLUGIN_IS_SYNTH 1
-#define DISTRHO_PLUGIN_NUM_OUTPUTS  2
 #define DISTRHO_PLUGIN_NUM_INPUTS 0
+#define DISTRHO_PLUGIN_NUM_OUTPUTS  2
+
 
 #endif // DISTRHO_PLUGIN_INFO_H_INCLUDED

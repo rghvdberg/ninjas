@@ -196,7 +196,7 @@ private:
     int playbackIndex = 0;
     // sample variables
     std::vector<float> sampleVector;
-    int midinote = 0
+    int midinote = 0;
     //
 
    /**
