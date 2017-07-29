@@ -17,6 +17,7 @@
 #include "DistrhoPlugin.hpp"
 #include <sndfile.hh>
 #include <vector>
+#include <iostream>
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------------------------------------------
@@ -147,14 +148,16 @@ protected:
       Run/process function for plugins without MIDI input.
       @note Some parameters might be null if there are no audio inputs or outputs.
     */
-    void run(const float** inputs, float** outputs, uint32_t frames) override
+    void run(const float**, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount)
     {
        float* const outL = outputs[0];
        float* const outR = outputs[1];
+       // get midi events
+       std::cout << midiEventCount << std::endl;
 
         for ( int i = 0; i < frames; i++)
 			{
-				switch((int)play_sample)
+				switch(midinote)
 				{
 					case 1 :
 					if ( playbackIndex >= (sampleVector.size()-1) ) {
@@ -191,7 +194,9 @@ private:
     // Parameters
     float play_sample;
     int playbackIndex = 0;
+    // sample variables
     std::vector<float> sampleVector;
+    int midinote = 0
     //
 
    /**

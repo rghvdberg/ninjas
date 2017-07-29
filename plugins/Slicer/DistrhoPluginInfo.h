@@ -18,9 +18,10 @@
 #define DISTRHO_PLUGIN_INFO_H_INCLUDED
 
 #define DISTRHO_PLUGIN_NAME  "Slicer"
-#define DISTRHO_PLUGIN_URI   "http://distrho.sf.net/examples/Slicer"
+#define DISTRHO_PLUGIN_URI   "https://github.com/rghvdberg/plugin-examples"
 
-#define DISTRHO_PLUGIN_NUM_INPUTS   2
+#define DISTRHO_PLUGIN_IS_SYNTH 1
 #define DISTRHO_PLUGIN_NUM_OUTPUTS  2
+#define DISTRHO_PLUGIN_NUM_INPUTS 0
 
 #endif // DISTRHO_PLUGIN_INFO_H_INCLUDED
