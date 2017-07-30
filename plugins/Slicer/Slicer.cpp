@@ -144,16 +144,22 @@ protected:
    /* --------------------------------------------------------------------------------------------------------
     * Audio/MIDI Processing */
 
-   /**
-      Run/process function for plugins without MIDI input.
-      @note Some parameters might be null if there are no audio inputs or outputs.
-    */
     void run(const float**, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount)
     {
        float* const outL = outputs[0];
        float* const outR = outputs[1];
        // get midi events
-       std::cout << midiEventCount << std::endl;
+       if (midiEventCount > 0)
+       {
+		   for (int curEventIndex = 0; curEventIndex < midiEventCount;++curEventIndex)
+		    {
+				const uint8_t*  data = midiEvents[curEventIndex].data; // pointer to midi data
+				std::cout << "Total events in buffer : "<< midiEventCount << " Current event : "<<curEventIndex << " - ";
+				std::cout << "Data : " << (int)data[0] << "," << (int)data[1] << "," << (int)data[2] <<" - ";
+				std::cout << "Offset in frames " << midiEvents[curEventIndex].frame << std::endl;
+			}
+		}
+       //
 
         for ( int i = 0; i < frames; i++)
 			{
