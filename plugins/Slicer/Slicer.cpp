@@ -151,6 +151,7 @@ protected:
        // get midi events
        if (midiEventCount > 0)
        {
+           
 		   for (int curEventIndex = 0; curEventIndex < midiEventCount;++curEventIndex)
 		    {
 				const uint8_t*  data = midiEvents[curEventIndex].data; // pointer to midi data
@@ -161,9 +162,23 @@ protected:
 		}
        //
 
-        for ( int i = 0; i < frames; i++)
+        for ( int i = 0, curEventIndex = 0; i < frames; i++)
 			{
-				switch(midinote)
+               /* if (midiEventCount > 0)
+                {                    
+                    std::cout << midiEventCount << std::endl;
+                    std::cout << midiEvents[curEventIndex].frame << std::endl;
+                }
+                if (i = midiEvents[curEventIndex].frame)
+                {
+                    const uint8_t*  data = midiEvents[curEventIndex].data;
+                    uint8_t status = midiEvents[curEventIndex].data[0] && 0xF0;
+                    std::cout << "Status : " << std::hex << status << std::endl;
+                    ++curEventIndex;
+                }
+                  */  
+                
+				switch(sample_is_playing)
 				{
 					case 1 :
 					if ( playbackIndex >= (sampleVector.size()-1) ) {
@@ -202,8 +217,13 @@ private:
     int playbackIndex = 0;
     // sample variables
     std::vector<float> sampleVector;
-    int midinote = 0;
-    //
+    int sample_is_playing = 0;
+    /*struct Note {
+        uint8_t status;
+        uint8_t note_number;
+        uint8_t velocity;
+    };
+    */
 
    /**
       Set our plugin class as non-copyable and add a leak detector just in case.
