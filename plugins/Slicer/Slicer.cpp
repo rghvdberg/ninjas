@@ -146,56 +146,55 @@ protected:
 
     void run(const float**, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount)
     {
-       float* const outL = outputs[0];
-       float* const outR = outputs[1];
-       // get midi events
-       if (midiEventCount > 0)
-       {
-           
-		   for (int curEventIndex = 0; curEventIndex < midiEventCount;++curEventIndex)
-		    {
-				const uint8_t*  data = midiEvents[curEventIndex].data; // pointer to midi data
-				std::cout << "Total events in buffer : "<< midiEventCount << " Current event : "<<curEventIndex << " - ";
-				std::cout << "Data : " << (int)data[0] << "," << (int)data[1] << "," << (int)data[2] <<" - ";
-				std::cout << "Offset in frames " << midiEvents[curEventIndex].frame << std::endl;
-			}
-		}
-       //
-
-        for ( int i = 0, curEventIndex = 0; i < frames; i++)
-			{
-               /* if (midiEventCount > 0)
-                {                    
-                    std::cout << midiEventCount << std::endl;
-                    std::cout << midiEvents[curEventIndex].frame << std::endl;
-                }
-                if (i = midiEvents[curEventIndex].frame)
+        float* const outL = outputs[0];
+        float* const outR = outputs[1];
+        uint32_t framesDone = 0;
+        uint32_t curEventIndex = 0;
+               
+        while (framesDone < frames)
+        {
+              /* process any ready events */
+              while (curEventIndex < midiEventCount && framesDone == midiEvents[curEventIndex].frame)
+              {
+                  if (midiEvents[curEventIndex].size > MidiEvent::kDataSize)
+                continue;
+                int status = midiEvents[curEventIndex].data[0] ;
+                std::cout << std::hex << status << std::endl;
+                switch(status)
                 {
-                    const uint8_t*  data = midiEvents[curEventIndex].data;
-                    uint8_t status = midiEvents[curEventIndex].data[0] && 0xF0;
-                    std::cout << "Status : " << std::hex << status << std::endl;
-                    ++curEventIndex;
+                    case 0x80 : // note off
+                        sample_is_playing = 0;
+                        break;
+                        
+                    case 0x90 :
+                        sample_is_playing = 1;
+                        playbackIndex = 0;
+                        break;
+                        
                 }
-                  */  
                 
+              curEventIndex++;
+              }
 				switch(sample_is_playing)
 				{
 					case 1 :
 					if ( playbackIndex >= (sampleVector.size()-1) ) {
                       playbackIndex = 0;
                       }
-                      outL[i]  = sampleVector[playbackIndex];
-                      outR[i] = sampleVector[playbackIndex+1];
+                      outL[framesDone]  = sampleVector[playbackIndex];
+                      outR[framesDone] = sampleVector[playbackIndex+1];
                       playbackIndex +=2;
                     break;
 					case 0 :
-					   outL[i] = 0;
-					   outR[i] = 0;
+					   outL[framesDone] = 0;
+					   outR[framesDone] = 0;
 					/* copy zeros */
 					break;
-				}
-    }
-    }
+				} 
+				
+			++framesDone;	
+    } // the frames loop 
+    } // run()
 void loadSample()
     {
     /*  load sample stuff
