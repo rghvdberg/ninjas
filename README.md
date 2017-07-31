@@ -1,3 +1,5 @@
-# DPF Plugin Examples
+# Sample Slicer plugin
 
-This repository contains plugin examples and test code for DPF.
+Creating a sample slicer plugin using DPF framework
+
+very early work
