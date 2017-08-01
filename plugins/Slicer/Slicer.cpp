@@ -169,6 +169,7 @@ protected:
                     case 0x90 :
                         sample_is_playing = 1;
                         playbackIndex = 0;
+                        ratioIndex = 0; 
                         break;
                         
                 }
@@ -178,18 +179,31 @@ protected:
 				switch(sample_is_playing)
 				{
 					case 1 :
-					if ( playbackIndex >= (sampleVector.size()-1) ) {
+                    {
+					  if ( playbackIndex >= (sampleVector.size()-1) ) 
+                      {
                       playbackIndex = 0;
+                      ratioIndex = 0;
                       }
                       outL[framesDone]  = sampleVector[playbackIndex];
                       outR[framesDone] = sampleVector[playbackIndex+1];
-                      playbackIndex +=2;
+                      ratioIndex = ratioIndex + ratio;
+                      float temp = ratioIndex * 2;
+                      float rest = fmod(temp,2);
+                      int i = temp -rest;
+                      
+                      playbackIndex = playbackIndex + i;
+                      
+                      std::cout << ratioIndex << " : "  << playbackIndex << std::endl;
                     break;
+                    }
 					case 0 :
+                    {
 					   outL[framesDone] = 0;
 					   outR[framesDone] = 0;
 					/* copy zeros */
 					break;
+                    }
 				} 
 				
 			++framesDone;	
@@ -214,15 +228,15 @@ private:
     // Parameters
     float play_sample;
     int playbackIndex = 0;
+    float ratioIndex = 0.0; 
+    // =MACHT(2;C4/12)
+    //int transpose = 12; //octave up, twice as fast
+    int transpose = 0;
+    float ratio = pow(2.0, transpose / 12);
     // sample variables
     std::vector<float> sampleVector;
     int sample_is_playing = 0;
-    /*struct Note {
-        uint8_t status;
-        uint8_t note_number;
-        uint8_t velocity;
-    };
-    */
+
 
    /**
       Set our plugin class as non-copyable and add a leak detector just in case.
