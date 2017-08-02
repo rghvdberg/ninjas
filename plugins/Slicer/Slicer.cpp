@@ -164,12 +164,14 @@ protected:
                 {
                     case 0x80 : // note off
                         sample_is_playing = 0;
+                        playbackIndex = 0;
+                        multiplierIndex = 0; 
                         break;
                         
                     case 0x90 :
                         sample_is_playing = 1;
                         playbackIndex = 0;
-                        ratioIndex = 0; 
+                        multiplierIndex = 0; 
                         break;
                         
                 }
@@ -183,18 +185,20 @@ protected:
 					  if ( playbackIndex >= (sampleVector.size()-1) ) 
                       {
                       playbackIndex = 0;
-                      ratioIndex = 0;
+                      multiplierIndex = 0;
+                      std::cout << "index reset" << playbackIndex << "-" << multiplierIndex << std::endl;
                       }
                       outL[framesDone]  = sampleVector[playbackIndex];
                       outR[framesDone] = sampleVector[playbackIndex+1];
-                      ratioIndex = ratioIndex + ratio;
-                      float temp = ratioIndex * 2;
-                      float rest = fmod(temp,2);
-                      int i = temp -rest;
+                      multiplierIndex = multiplierIndex + multiplier;
+                      int tmp = multiplierIndex;
+                      tmp*=2;
+                      //float rest = fmod(temp,2);
+                      //int i = temp -rest;
                       
-                      playbackIndex = playbackIndex + i;
+                      playbackIndex = tmp; 
                       
-                      std::cout << ratioIndex << " : "  << playbackIndex << std::endl;
+                  //    std::cout << multiplierIndex << " : "  << playbackIndex << std::endl;
                     break;
                     }
 					case 0 :
@@ -220,6 +224,7 @@ void loadSample()
     // int samplerate = fileHandle.samplerate();
     sampleVector.resize(size);
     fileHandle.read( &sampleVector.at(0), size);
+    std::cout << size << std::endl;
     }
 
     // -------------------------------------------------------------------------------------------------------
@@ -228,11 +233,11 @@ private:
     // Parameters
     float play_sample;
     int playbackIndex = 0;
-    float ratioIndex = 0.0; 
+    float multiplierIndex = 0.0; 
     // =MACHT(2;C4/12)
     //int transpose = 12; //octave up, twice as fast
     int transpose = 0;
-    float ratio = pow(2.0, transpose / 12);
+    float multiplier = pow(2.0, (float)transpose / 12.0);
     // sample variables
     std::vector<float> sampleVector;
     int sample_is_playing = 0;
