@@ -159,20 +159,21 @@ protected:
                   if (midiEvents[curEventIndex].size > MidiEvent::kDataSize)
                 continue;
                 int status = midiEvents[curEventIndex].data[0] ;
-                std::cout << std::hex << status << std::endl;
+                int note = midiEvents[curEventIndex].data[1];
+                std::cout << status << std::endl;
                 switch(status)
                 {
                     case 0x80 : // note off
                         sample_is_playing = 0;
-                        playbackIndex = 0;
-                        multiplierIndex = 0; 
                         break;
                         
                     case 0x90 :
                         sample_is_playing = 1;
                         playbackIndex = 0;
-                        multiplierIndex = 0; 
-                        break;
+                        multiplierIndex = 0;
+                        transpose = note - 60;
+                        multiplier = pow(2.0, (float)transpose / 12.0);
+                       break;
                         
                 }
                 
@@ -187,18 +188,16 @@ protected:
                       playbackIndex = 0;
                       multiplierIndex = 0;
                       std::cout << "index reset" << playbackIndex << "-" << multiplierIndex << std::endl;
+                      std::cout << sampleVector.size()<< std::endl;
                       }
-                      outL[framesDone]  = sampleVector[playbackIndex];
+                      outL[framesDone] = sampleVector[playbackIndex];
                       outR[framesDone] = sampleVector[playbackIndex+1];
                       multiplierIndex = multiplierIndex + multiplier;
                       int tmp = multiplierIndex;
                       tmp*=2;
-                      //float rest = fmod(temp,2);
-                      //int i = temp -rest;
-                      
-                      playbackIndex = tmp; 
-                      
-                  //    std::cout << multiplierIndex << " : "  << playbackIndex << std::endl;
+                       playbackIndex = tmp; 
+                      //std::cout << std::fixed << sampleVector[playbackIndex] << ":" << sampleVector[playbackIndex+1] << "-" << playbackIndex << " | ";
+                   //std::cout << multiplierIndex << "|"  << playbackIndex << ":";
                     break;
                     }
 					case 0 :
@@ -209,23 +208,22 @@ protected:
 					break;
                     }
 				} 
-				
 			++framesDone;	
     } // the frames loop 
     } // run()
+
 void loadSample()
     {
     /*  load sample stuff
      *  code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
     */
-    SndfileHandle fileHandle( "/home/rob/build/slicer/plugin-examples/plugins/Slicer/sample.wav" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
+    SndfileHandle fileHandle( "/home/rob/build/slicer/plugin-examples/plugins/Slicer/sample.ogg" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
     int size = fileHandle.frames();
     // int channels = fileHandle.channels();
     // int samplerate = fileHandle.samplerate();
     sampleVector.resize(size);
     fileHandle.read( &sampleVector.at(0), size);
-    std::cout << size << std::endl;
-    }
+   }
 
     // -------------------------------------------------------------------------------------------------------
 
