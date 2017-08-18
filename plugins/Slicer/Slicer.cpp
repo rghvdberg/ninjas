@@ -18,6 +18,13 @@
 #include <sndfile.hh>
 #include <vector>
 #include <iostream>
+#include "Sample.h"
+#include <string>
+#include "Slice.h"
+#include "Voice.h"
+#include "ADSR.h"
+#include "Mixer.h"
+#include "Stack.h"
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------------------------------------------
@@ -34,8 +41,7 @@ public:
         : Plugin(1, 0, 0) //1 parameter, 0 programs (presets) , 0 states
     {
         play_sample = 1.0f;
-        loadSample();  // load the sample
-    
+        samplevector = SampleObject.getSampleVector();
 
     }
 
@@ -268,6 +274,8 @@ private:
     int transpose = 0; // offset from C4 in semitones
     float multiplier = pow(2.0, (float)transpose / 12.0); 
     // sample variables
+    // empty sample object
+    Sample SampleObject();
     std::vector<float> sampleVector; // this holds the sample data
     int sample_is_playing = 0; // flag if the sample is playing
 
