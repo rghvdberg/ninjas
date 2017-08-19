@@ -17,6 +17,7 @@ Sample::Sample(std::string fp)
     {
         // create a "Sndfile" handle, it's part of the sndfile library we
         // use to load samples
+        std::cout << "file path =" << fp << std::endl;
           SndfileHandle fileHandle( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
         // get the number of frames in the sample
           size  = fileHandle.frames();
@@ -24,7 +25,7 @@ Sample::Sample(std::string fp)
             {
                 //file doesn't exist or is of incompatible type, main handles the -1
                 std::cout << "Something went wrong" << std::endl;
-                return -1;
+                return 1;
             }
           // get some more info of the sample
           channels   = fileHandle.channels();

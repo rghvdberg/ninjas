@@ -245,22 +245,6 @@ protected:
     } // the frames loop 
     } // run()
 
-void loadSample()
-    {
-    /*  load sample stuff
-     *  code from https://github.com/harryhaaren/openAudioProgrammingTutorials/blob/master/loopedSample/loopedSample.cpp
-    */
-    SndfileHandle fileHandle( "/home/rob/build/slicer/plugin-examples/plugins/Slicer/sample.ogg" , SFM_READ, SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
-    int size = fileHandle.frames();
-    
-    /* stuff not needed for now
-     * int channels = fileHandle.channels();
-     * int samplerate = fileHandle.samplerate();
-    */
-    
-    sampleVector.resize(size);
-    fileHandle.read( &sampleVector.at(0), size);
-   }
 
     // -------------------------------------------------------------------------------------------------------
 
@@ -276,7 +260,7 @@ private:
     // sample variables
     // empty sample object
     std::vector<float> sampleVector; // this holds the sample data
-    Sample SampleObject{"sample.ogg"};
+    Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Slicer/sample.ogg"};
     int sample_is_playing = 0; // flag if the sample is playing
 
 
