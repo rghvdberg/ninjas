@@ -13,7 +13,16 @@ NAME = slicer
 # Files to build
 
 OBJS_DSP = \
-	Slicer.cpp.o
+	Slicer.cpp.o \
+	Sample.cpp.o \
+	ADSR.cpp.o \
+	Slice.cpp.o \
+	Stack.cpp.o \
+	Voice.cpp.o \
+	Mixer.cpp.o
+	
+
+	
 
 #OBJS_UI  = \
 #	SlicerUI.cpp.o

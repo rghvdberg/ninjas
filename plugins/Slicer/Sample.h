@@ -19,6 +19,8 @@ class Sample
     int size;
 
     public:
+        Sample();
+
         Sample(std::string filepath);
 
         std::vector<float> getSampleVector()
