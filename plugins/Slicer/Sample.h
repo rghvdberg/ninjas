@@ -24,9 +24,17 @@ class Sample
         std::vector<float> getSampleVector()
          {
              return sampleVector;
-             };
-        int getSampleSize() {return size;};
-        int getSampleChannels() {return channels;};
+             }
+
+        int getSampleSize()
+        {
+            return size;
+        }
+
+        int getSampleChannels()
+        {
+            return channels;
+        }
 };
 
 #endif // SAMPLE_H

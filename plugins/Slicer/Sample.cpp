@@ -2,18 +2,15 @@
 #include "sndfile.hh"
 #include <vector>
 #include <iostream>
+#include <string>
 
 // Constructor
-Sample::Sample()
-{
-
-}
 
 Sample::Sample(std::string fp)
 {
     int ok = loadSample(fp);
     std::cout << "sample loading flag: " << ok << std::endl;
-};
+}
 
     int Sample::loadSample(std::string fp)
 
