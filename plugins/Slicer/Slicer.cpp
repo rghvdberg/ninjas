@@ -176,35 +176,138 @@ protected:
                   if (midiEvents[curEventIndex].size > MidiEvent::kDataSize) // not excatly shure what's happening here. this is in both Nekobi and Kars sourcecode
                 continue;
                 
-                int status = midiEvents[curEventIndex].data[0]; // midi status .. I asume we only use note info for the moment 
-                int note = midiEvents[curEventIndex].data[1]; // note number .. can't be bothered too much about velocity, but that would be in .data[2]
-                std::cout << status << std::endl; // just some debug output ;-)
-                switch(status) 
+                int status = midiEvents[curEventIndex].data[0]; // midi status
+                int channel = status & 0x0F ; // get midi channel
+                int message = status & 0xF0 ; // get midi message
+                int note = midiEvents[curEventIndex].data[1];// note number
+                int velocity = midiEvents[curEventIndex].data[2]; //
+                /* TODO pitchbend .. */
+                switch(message)
                 {
                     case 0x80 : // note off
-                        sample_is_playing = 0; // turn the sample playing off
+                    {
+                    	// check if note is playing
+                    	bool voice_playing = stack.check_Voice_Playing(channel, note);
+                    	if (voice_playing == false)
+                    		break; // note wasn't playing anyway .. ignore
+                    	if (voice_playing)
+                    		{
+                    		// get the (pointer to) voice
+                    		Voice* vp = stack.get_Voice(channel, note);
+                    		if (!vp->active)
+                    		stack.remove_Voice(channel,note);
+                    		else
+                    		vp->adsr.ADSRstage=ADSR::RELEASE;
+                    		/* TODO .. think about how this works for pitchbend*/
+                    		}
+                       // sample_is_playing = 0; // turn the sample playing off
                         break;
+                    }
                         
                     case 0x90 :
-                        sample_is_playing = 1; // turn on playing
-                        playbackIndex = 0; //reset playbackIndex
-                        multiplierIndex = 0; //reset the fractional index needed for pitching
-                        transpose = note - 60; // note 60 is c4, get the offset from that note
-                        multiplier = pow(2.0, (float)transpose / 12.0); 
-                        /* WIZARDRY AND MAGIC .. this sets the multiplier for the fractional index
-                         * when transpose is 0 .. mutliplier = 1 => normal speed
-                         * when transpose is 12 .. multiplier = 2 => double speed
-                         * when transpose is -12 .. multiplier = 0.5 => half speed
-                         * and this works for any transpose thrown at it
-                         */
-                                      
-                       break;
-                        
-                }
+                    {
+                    	// new note,
+                    	// find empty "slot"
+                    	int i { 0 };
+                    	while ( (voices[i].active) && i <= 127 )
+                    	{
+                    		//cout << i << " , " << voices[i].active << endl;
+                    		i++;
+                    	}
+                    	/* voices[i] should be free but lets check it
+                    	 * also if no unactive voices are found it means that 128 voices are playing
+                    	 * unlikely .. but
+                    	 * TODO needs fixing, create proper cue (fifo)
+                    	 */
+                    	if (i>127)
+                    	{
+                    		cout << "index out of range" << endl;
+                    		return -1;
+                    	}
+                    	else {
+                    		//set properties of voice and add to stack
+                    		voices[i].active = true;
+                    		voices[i].index= voice_index;
+                    		voices[i].channel = channel;
+                    		voices[i].notenumber = note;
+                    		voices[i].velocity = velocity;
+                    		voices[i].pitchbend = pitchbend;
+                    		voices[i].gain = (float) velocity / 127.0f;
+                    		voices[i].slice = &v_slices[channel];
+                    		voices[i].adsr.initADSR();
+                    		voices[i].adsr.setADSR(0.1f, 0.1f ,0.75f ,0.1f);
+                    		voices[i].position = 0;
+                    		// all set . add to stack
+                    		stack.add_Voice(&voices[i]);
+                    		//
+                    		voice_index++;
+                    		voice_index=voice_index%128;
+                    	} // else
+
+                    } // case 0x90
+
+                    break;
+                } // switch
+
                 
               curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
               }
-				switch(sample_is_playing) // are we playing a sample ??
+              // get all voices playing
+              	int max = stack.get_Stack_Size();
+              	if (max > 0)
+              	{
+              	// loop through active voices
+              		for (int i = 0; i < max ; ++i)
+              		{
+              			/*get the raw samples from the voice
+              	TODOD mono/stereo handling ..
+              	float* pointer will allow any amount of samples to be pulled in
+              	*/
+
+              			/*debug stuff
+				int pos_debug = stack.get_Position(i);
+                int start_debug = stack.get_Slice_Start(i);
+              	int end_debug = stack.get_Slice_End(i);
+              	cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
+
+              			float* sample = stack.get_Sample(i, &mySample);
+              			// cout << *sample << " - " << *(sample+1) << endl;
+
+              			float sampleL { *sample };
+              			float sampleR { *(sample + 1) };
+              			// get gain factor
+              			// process adsr to get the gain back
+              			float adsr_gain = stack.runADSR(i);
+              			gain = stack.get_Gain(i) * adsr_gain;
+
+              			// cout << "Pos :"<< pos_debug << " Gain :" << gain << endl;
+
+              			sampleL = sampleL * gain;
+              			sampleR = sampleR * gain;
+              			// put samples in mixer
+              			mixL.add_Sample(sampleL);
+              			mixR.add_Sample(sampleR);
+              			// increase the sample position
+              			int channels = SampleObject.getSampleChannels();
+              			// cout << "sample channels :#" << channels << endl;
+              			stack.inc_Position(i, channels);
+              		} // end for loop through active voices
+              		// get mixer
+              		float left = mixL.getMix()
+              		float right = mixR.getMix()
+					outL[framesDone] = left;
+              		outR[framesDone] = right;
+              	} // if max > 0
+              	else
+              	{
+              		// no voices playing
+              		outL[framesDone] = 0; // output 0 == silence
+              		outR[framesDone] = 0;
+              	}
+
+
+/*				OLDS !!
+              	switch(sample_is_playing) // are we playing a sample ??
 				{
 					case 1 : // we are !!
                     {
@@ -218,29 +321,29 @@ protected:
                       outL[framesDone] = sampleVector[playbackIndex]; // copy sampledata to buffer
                       outR[framesDone] = sampleVector[playbackIndex+1];
                       multiplierIndex = multiplierIndex + multiplier; 
-                      /* there's two index running. this one is needed to pitch the sample 
+                       there's two index running. this one is needed to pitch the sample
                       * 1 = normal speed .. we use every frame in the sample
                       * 0.5 = half speed .. we use every frame twice
                       * 2 = double speed .. we skip a frame
-                      * this results in different pitch */
+                      * this results in different pitch
                       int tmp = multiplierIndex; // 'cat the float to int
                       tmp*=2; // double it to to sample align it to the stereo .playbackIndex should was be a power of 2 (0,2,4,6,8 ..)
                       playbackIndex = tmp; // could possibly skip some steps here, but to me at least it makes sense
                       
-                      /* debug stuff .. this brings playback to a screaching halt!!!
+                       debug stuff .. this brings playback to a screaching halt!!!
                        * std::cout << std::fixed << sampleVector[playbackIndex] << ":" << sampleVector[playbackIndex+1] << "-" << playbackIndex << " | ";
                        * std::cout << multiplierIndex << "|"  << playbackIndex << ":";
-                      */
+
                     break;
                     }
 					case 0 :  // sample is not playing
                     {
 					   outL[framesDone] = 0; // output 0 == silence
 					   outR[framesDone] = 0;
-					/* copy zeros */
+					 copy zeros
 					break;
                     }
-				} 
+				}*/
 			++framesDone;	
     } // the frames loop 
     } // run()
@@ -262,6 +365,52 @@ private:
     std::vector<float> sampleVector; // this holds the sample data
     Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Slicer/sample.ogg"};
     int sample_is_playing = 0; // flag if the sample is playing
+
+    /* create Mixer objects
+    One for each audio channel
+    after each iteration mix is put in audiobuffer
+     */
+    Mixer mixL { };
+    Mixer mixR { };
+
+    /*Voice stack
+    here we keep track of voices playing
+     */
+    Stack stack { };
+
+    /*by example of the cars plugin create array of voices
+    tried to create them 'on the fly' but that won't work.
+     */
+        Voice voices[128] { };
+
+    /*Status   lsb      msb
+     * 1110nnnn 0lllllll 0mmmmmmm
+     * Pitch Bend Change. This message is sent to indicate a change in the pitch bender (wheel or lever, typically).
+     * The pitch bender is measured by a fourteen bit value. Center (no pitch change) is 2000H.
+     * Sensitivity is a function of the receiver, but may be set using RPN 0. (lllllll)
+     * are the least significant 7 bits. (mmmmmmm) are the most significant 7 bits.
+     */
+
+    int pitchbend { 8192 };
+    float gain { 1.0f };
+
+    int voice_index { 0 };
+    std::vector<Slice> v_slices ;
+    	int slices {1};
+    	int sliceSize { mySize / slices };
+    	cout << "sliceSize :" << sliceSize << endl;
+    	for (int i=0, j=0 ; i < mySize; i+=sliceSize )
+    	{
+    		v_slices.push_back( Slice() ); // create slice
+    		// set start and end
+    		v_slices[j].setSliceStart( i );
+    		v_slices[j].setSliceEnd(i+sliceSize-1);
+    	/*	debug
+    		cout << j << " : "  << i << " -> " << i+sliceSize-1 << endl;
+    		cout << "Slice :" << j << " : " << 	v_slices[j].getSliceStart() << "->" << v_slices[j].getSliceEnd() << endl;
+    	*/
+    		++j;
+    	}
 
 
    /**

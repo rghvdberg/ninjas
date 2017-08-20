@@ -13,7 +13,7 @@ Mixer::Mixer()
 : mix {0}, channels {0}, average {0}
 
 {
-	// TODO Auto-generated constructor stub
+
 }
 
 Mixer::~Mixer() {
