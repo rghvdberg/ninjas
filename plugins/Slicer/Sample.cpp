@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <Slice.h>
+#include "Slice.h"
 
 // Constructor
 

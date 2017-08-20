@@ -14,12 +14,12 @@ NAME = slicer
 
 OBJS_DSP = \
 	Slicer.cpp.o \
-	Sample.cpp.o \
 	ADSR.cpp.o \
+	Mixer.cpp.o \
+	Sample.cpp.o \
 	Slice.cpp.o \
 	Stack.cpp.o \
-	Voice.cpp.o \
-	Mixer.cpp.o
+	Voice.cpp.o
 	
 
 	
