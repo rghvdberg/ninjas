@@ -4,6 +4,7 @@
 #include "sndfile.hh"
 #include <vector>
 #include <string>
+#include "Slice.h"
 
 
 
@@ -37,6 +38,7 @@ class Sample
         {
             return channels;
         }
+        void createSlices( std::vector<Slice>* slices, int number);
 };
 
 #endif // SAMPLE_H

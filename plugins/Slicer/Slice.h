@@ -42,6 +42,7 @@ class Slice
         };
 
 
+
         // getter functions
 
         int getSliceStart ()

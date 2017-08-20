@@ -42,6 +42,7 @@ public:
     {
         play_sample = 1.0f;
         sampleVector = SampleObject.getSampleVector();
+        SampleObject.createSlices(&v_slices,slices);
 
     }
 
@@ -221,8 +222,8 @@ protected:
                     	 */
                     	if (i>127)
                     	{
-                    		cout << "index out of range" << endl;
-                    		return -1;
+                    		std::cout << "index out of range" << std::endl;
+                    		// return -1;
                     	}
                     	else {
                     		//set properties of voice and add to stack
@@ -270,7 +271,7 @@ protected:
               	int end_debug = stack.get_Slice_End(i);
               	cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
 
-              			float* sample = stack.get_Sample(i, &mySample);
+              			float* sample = stack.get_Sample(i, &sampleVector);
               			// cout << *sample << " - " << *(sample+1) << endl;
 
               			float sampleL { *sample };
@@ -279,7 +280,6 @@ protected:
               			// process adsr to get the gain back
               			float adsr_gain = stack.runADSR(i);
               			gain = stack.get_Gain(i) * adsr_gain;
-
               			// cout << "Pos :"<< pos_debug << " Gain :" << gain << endl;
 
               			sampleL = sampleL * gain;
@@ -293,8 +293,8 @@ protected:
               			stack.inc_Position(i, channels);
               		} // end for loop through active voices
               		// get mixer
-              		float left = mixL.getMix()
-              		float right = mixR.getMix()
+              		float left = mixL.get_Mix();
+              		float right = mixR.get_Mix();
 					outL[framesDone] = left;
               		outR[framesDone] = right;
               	} // if max > 0
@@ -370,8 +370,8 @@ private:
     One for each audio channel
     after each iteration mix is put in audiobuffer
      */
-    Mixer mixL { };
-    Mixer mixR { };
+    Mixer mixL;
+    Mixer mixR;
 
     /*Voice stack
     here we keep track of voices playing
@@ -381,7 +381,7 @@ private:
     /*by example of the cars plugin create array of voices
     tried to create them 'on the fly' but that won't work.
      */
-        Voice voices[128] { };
+    Voice voices[128] { };
 
     /*Status   lsb      msb
      * 1110nnnn 0lllllll 0mmmmmmm
@@ -396,21 +396,22 @@ private:
 
     int voice_index { 0 };
     std::vector<Slice> v_slices ;
-    	int slices {1};
-    	int sliceSize { mySize / slices };
-    	cout << "sliceSize :" << sliceSize << endl;
+    int slices = 1;
+    int sliceSize;
+    /*	std::cout << "sliceSize :" << sliceSize << std::endl;
     	for (int i=0, j=0 ; i < mySize; i+=sliceSize )
     	{
     		v_slices.push_back( Slice() ); // create slice
     		// set start and end
     		v_slices[j].setSliceStart( i );
     		v_slices[j].setSliceEnd(i+sliceSize-1);
-    	/*	debug
+    		debug
     		cout << j << " : "  << i << " -> " << i+sliceSize-1 << endl;
     		cout << "Slice :" << j << " : " << 	v_slices[j].getSliceStart() << "->" << v_slices[j].getSliceEnd() << endl;
-    	*/
+
     		++j;
     	}
+*/
 
 
    /**
