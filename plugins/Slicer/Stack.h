@@ -19,6 +19,7 @@ public:
 	virtual ~Stack();
 	void add_Voice( Voice* voice);
 	void remove_Voice(int ch, int nn);
+    void remove_Voice(int i);
 	Voice* get_Voice(int ch, int nn);
 	bool check_Voice_Playing (int ch, int nn);
 	int get_Stack_Size();
@@ -29,6 +30,7 @@ public:
 	int get_Position(int index);
 	int get_Slice_Start(int index);
 	int get_Slice_End(int index);
+    bool get_Voice_Active(int index);
 
 private:
 	std::vector<Voice*> voice_stack;

@@ -33,6 +33,11 @@ void Stack::remove_Voice(int ch, int nn)
 	}
 }
 
+void Stack::remove_Voice(int i)
+{
+ voice_stack.erase(voice_stack.begin()+i);
+}
+
 Voice* Stack::get_Voice(int ch, int nn)
 {
 	for(int i = 0; i <= (int) voice_stack.size(); i++)
@@ -88,7 +93,7 @@ float Stack::runADSR(int i)
 {
 	bool * active = &voice_stack[i]->active;
 	float adsr_gain = voice_stack[i]->adsr.ADSRrun(active);
-	std::cout <<voice_stack[i]->adsr.ADSRstage << std::endl;
+    //std::cout << "ADSRstage = "<< voice_stack[i]->adsr.ADSRstage << std::endl;
 	return adsr_gain;
 }
 
@@ -105,5 +110,10 @@ int Stack::get_Slice_Start(int i)
 int Stack::get_Slice_End(int i)
 {
 	return voice_stack[i]->slice->getSliceEnd();
+}
+
+bool Stack::get_Voice_Active(int i)
+{
+    return voice_stack[i]->active;
 }
 

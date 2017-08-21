@@ -1,6 +1,6 @@
 #ifndef SLICE_H
 #define SLICE_H
-#include "Sample.h"
+// #include "Sample.h"
 
 
 class Slice

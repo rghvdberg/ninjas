@@ -47,7 +47,7 @@ void ADSR::calcADRGain()
 	{
 		attack_gain = (1.0 / attack) /(float) SAMPLERATE;
 		decay_gain = -(1.0 / decay) / (float)SAMPLERATE;
-		release_gain = (1.0 / release) / (float)SAMPLERATE;
+        release_gain = -(1.0 / release) / (float)SAMPLERATE;
 	}
 
 float ADSR::getADSR_gain(){
@@ -72,42 +72,46 @@ float ADSR::getADSR_gain(){
 	}
 
 float ADSR::ADSRrun(bool * active){
+    //  std::cout << "ADSRstage =" << ADSRstage << std::endl;
 	// attack phase ; should be triggered by note on
-
-		if (ADSRstage == ATTACK && (adsr_gain < 1.0))
-		  	adsr_gain+=attack_gain;
-
-		if (ADSRstage == ATTACK && (adsr_gain >= 1.0))
-		{
-			adsr_gain = 1.0f;
-			ADSRstage = DECAY;
-			return adsr_gain;
-		}
+        switch (ADSRstage)
+        {
+        case ATTACK:
+            if (adsr_gain < 1.0f)
+                adsr_gain+=attack_gain;
+            else
+            {
+                adsr_gain = 1.0f;
+                ADSRstage = DECAY;
+            }
+            break;
 		// now go into decay
-		if (ADSRstage == DECAY && adsr_gain > sustain)
-			adsr_gain += decay_gain;
-		if (ADSRstage == DECAY && adsr_gain <= sustain)
-		{
-			adsr_gain = sustain;
-			ADSRstage = SUSTAIN;
-			return adsr_gain;
-		}
+        case DECAY:
+            if (adsr_gain > sustain)
+                adsr_gain += decay_gain;
+            else
+            {
+                adsr_gain = sustain;
+                ADSRstage = SUSTAIN;
+            }
+            break;
 		// sustain
-		if (ADSRstage == SUSTAIN)
-			return adsr_gain;
-		// release phase ; should be triggered by note off
-		if (ADSRstage == RELEASE && adsr_gain > 0.0)
-			{
-			adsr_gain += release_gain;
-			}
-		// gain might have dipped below 0.0
-		if (ADSRstage == RELEASE && adsr_gain <= 0.0f)
-		{
-			adsr_gain = 0.0f;
-			*active = false;
+        case SUSTAIN:
+        //	return adsr_gain;
+            break;
+        // release phase ; should be triggered by note off
+        case RELEASE:
+            if (adsr_gain > 0.0f)
+                adsr_gain += release_gain;
+            else
+            {
+             // gain might have dipped below 0.0
+                adsr_gain = 0.0f;
+                *active = false;
+            }
 
-		}
-		return adsr_gain;
+        }
+        return adsr_gain;
 	}
 
 void ADSR::setADSR(float a, float d, float s, float r)

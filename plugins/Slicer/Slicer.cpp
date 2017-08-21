@@ -189,8 +189,10 @@ protected:
                     {
                     	// check if note is playing
                     	bool voice_playing = stack.check_Voice_Playing(channel, note);
+
+                        std::cout << "voice_playing = " << voice_playing << std::endl;
                     	if (voice_playing == false)
-                    		break; // note wasn't playing anyway .. ignore
+                            break; // note wasn't playing anyway .. ignore
                     	if (voice_playing)
                     		{
                     		// get the (pointer to) voice
@@ -236,7 +238,7 @@ protected:
                     		voices[i].gain = (float) velocity / 127.0f;
                     		voices[i].slice = &v_slices[channel];
                     		voices[i].adsr.initADSR();
-                    		voices[i].adsr.setADSR(0.1f, 0.1f ,0.75f ,0.1f);
+                            voices[i].adsr.setADSR(1.0f, 1.0f ,0.75f ,0.1f);
                     		voices[i].position = 0;
                     		// all set . add to stack
                     		stack.add_Voice(&voices[i]);
@@ -270,8 +272,9 @@ protected:
                 int start_debug = stack.get_Slice_Start(i);
               	int end_debug = stack.get_Slice_End(i);
               	cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
-
-              			float* sample = stack.get_Sample(i, &sampleVector);
+                        if (stack.get_Voice_Active(i))
+                        {
+                        float* sample = stack.get_Sample(i, &sampleVector);
               			// cout << *sample << " - " << *(sample+1) << endl;
 
               			float sampleL { *sample };
@@ -279,6 +282,8 @@ protected:
               			// get gain factor
               			// process adsr to get the gain back
               			float adsr_gain = stack.runADSR(i);
+                        // std::cout<<"adsr_gain =" << adsr_gain << std::endl;
+
               			gain = stack.get_Gain(i) * adsr_gain;
               			// cout << "Pos :"<< pos_debug << " Gain :" << gain << endl;
 
@@ -291,6 +296,13 @@ protected:
               			int channels = SampleObject.getSampleChannels();
               			// cout << "sample channels :#" << channels << endl;
               			stack.inc_Position(i, channels);
+                        }
+                        else
+                        {
+                            stack.remove_Voice(i);
+                            mixL.add_Sample(0.0f);
+                            mixR.add_Sample(0.0f);
+                        }
               		} // end for loop through active voices
               		// get mixer
               		float left = mixL.get_Mix();

@@ -38,7 +38,7 @@ class Sample
         {
             return channels;
         }
-        void createSlices( std::vector<Slice::Slice>* slices, int number);
+        void createSlices( std::vector<Slice>* slices, int number);
 };
 
 #endif // SAMPLE_H
