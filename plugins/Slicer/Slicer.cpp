@@ -201,6 +201,7 @@ protected:
                     		stack.remove_Voice(channel,note);
                     		else
                     		vp->adsr.ADSRstage=ADSR::RELEASE;
+                            std::cout << "Line 204 : ADSRstage =" << vp->adsr.ADSRstage << std::endl;
                     		/* TODO .. think about how this works for pitchbend*/
                     		}
                        // sample_is_playing = 0; // turn the sample playing off
