@@ -118,7 +118,7 @@ plugins/Slicer/Sample.cpp
 plugins/Slicer/Sample.h
 plugins/Slicer/Slice.cpp
 plugins/Slicer/Slice.h
-plugins/Slicer/Slicer.cpp
+plugins/Slicer/Ninjas.cpp
 plugins/Slicer/SlicerUI.cpp
 plugins/Slicer/SlicerUI.hpp
 plugins/Slicer/Stack.cpp

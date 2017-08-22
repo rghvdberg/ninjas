@@ -16,7 +16,7 @@ ifeq ($(HAVE_DGL),true)
 endif
 
 plugins: libs
-	$(MAKE) all -C plugins/Slicer
+	$(MAKE) all -C plugins/Ninjas
 
 gen: plugins dpf/utils/lv2_ttl_generator
 	@$(CURDIR)/dpf/utils/generate-ttl.sh
@@ -34,7 +34,7 @@ ifeq ($(HAVE_DGL),true)
 	$(MAKE) clean -C dpf/dgl
 endif
 	$(MAKE) clean -C dpf/utils/lv2-ttl-generator
-	$(MAKE) clean -C plugins/Slicer
+	$(MAKE) clean -C plugins/Ninjas
 
 
 # --------------------------------------------------------------
