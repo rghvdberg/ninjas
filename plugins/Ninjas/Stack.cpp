@@ -64,7 +64,7 @@ int Stack::get_Stack_Size(){
 
 float* Stack::get_Sample(int i , std::vector<float> * samplevector){
 	int start = voice_stack[i]->slice->getSliceStart();
-	int pos { voice_stack[i]->position };
+    int pos { voice_stack[i]->playbackIndex };
 	float* sample = &samplevector->at(start+pos);
 			return sample;
 }
@@ -72,21 +72,23 @@ float Stack::get_Gain(int i){
 	return voice_stack[i]->gain;
 }
 
-void Stack::inc_Position(int i, int increment)
+void Stack::inc_Position(int i, int channels)
 {
-	int start = voice_stack[i]->position + voice_stack[i]->slice->getSliceStart();
-	int end = voice_stack[i]->slice->getSliceEnd();
-	//std::cout << "start : " << start << " end : " << end <<std::endl;
+    int start = voice_stack[i]->playbackIndex + voice_stack[i]->slice->getSliceStart();
+    int end = voice_stack[i]->slice->getSliceEnd();
+    voice_stack[i]->multiplierIndex += voice_stack[i]->multiplier;
+    int tmp = (int) voice_stack[i]->multiplierIndex;
+    tmp*=channels;
 
-	if (start + increment < end)
-	{
-		voice_stack[i]->position += increment;
-	}
-	else
-	{
-		voice_stack[i]->position = 0;
-	}
-
+    if (start + tmp > (end-channels))
+    {
+        voice_stack[i]->playbackIndex = 0;
+        voice_stack[i]->multiplierIndex = 0;
+    }
+    else
+    {
+        voice_stack[i]->playbackIndex = tmp;
+    }
 }
 
 float Stack::runADSR(int i)
@@ -99,7 +101,7 @@ float Stack::runADSR(int i)
 
 int Stack::get_Position(int i)
 {
-	return voice_stack[i]->position;
+    return voice_stack[i]->playbackIndex;
 }
 
 int Stack::get_Slice_Start(int i)

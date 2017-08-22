@@ -11,7 +11,7 @@ class Voice
 {
     public:
 		Voice ();
-		Voice(int id, bool active, int ch,int nn, int vel, int pb, float gn, Slice* slc, int pos);
+        //Voice(int id, bool active, int ch,int nn, int vel, int pb, float gn, Slice* slc, int pos);
 
         /*getter function
          * will fix when really need this :-)
@@ -28,7 +28,9 @@ class Voice
         int pitchbend;
 		float gain; // linked to adsr
         Slice* slice; // the part of the sample this voice plays
-        int position; // frame of slice (sample) playing
+        float multiplierIndex; // frame of slice (sample) playing
+        float multiplier;
+        int playbackIndex;
         ADSR adsr; // ADSR of voice
 
 };

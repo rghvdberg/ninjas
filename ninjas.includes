@@ -7,3 +7,9 @@ dpf/distrho/src/ladspa
 dpf/distrho/src/lv2
 dpf/distrho/src/vestige
 plugins/Slicer
+dpf/dgl/src
+dpf/dgl
+dpf/distrho/extra
+plugins/Ninjas
+dpf/utils/lv2-ttl-generator
+dpf/distrho

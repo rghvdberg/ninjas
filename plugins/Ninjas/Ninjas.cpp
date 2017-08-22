@@ -64,7 +64,7 @@ protected:
     */
     const char* getDescription() const override
     {
-        return "Ninjas plugin";
+        return "Ninjas is not just another slicer";
     }
 
    /**
@@ -108,7 +108,7 @@ protected:
    // don't bother too much about this :-) 
     int64_t getUniqueId() const override
     {
-        return d_cconst('d', 'N', 'f', 'o');
+        return d_cconst('N', 'i', 'N', 'j');
     }
 
    /* --------------------------------------------------------------------------------------------------------
@@ -165,17 +165,17 @@ protected:
     {
         float* const outL = outputs[0]; // output ports , stereo
         float* const outR = outputs[1];
-        uint32_t framesDone = 0; 
+        uint32_t framesDone = 0;
         uint32_t curEventIndex = 0; // index for midi event to process
-               
+
         while (framesDone < frames) // we have frames to process !!
         {
-              /* process any ready midi events */
-              //   we have midi data to proces, at precisly the current audio frame in the loop 
-              while (curEventIndex < midiEventCount && framesDone == midiEvents[curEventIndex].frame) // the .frame is the offset of the midi event in current block
-              {
-                  if (midiEvents[curEventIndex].size > MidiEvent::kDataSize) // not excatly shure what's happening here. this is in both Nekobi and Kars sourcecode
-                continue;
+            /* process any ready midi events */
+            //   we have midi data to proces, at precisly the current audio frame in the loop
+            while (curEventIndex < midiEventCount && framesDone == midiEvents[curEventIndex].frame) // the .frame is the offset of the midi event in current block
+            {
+                if (midiEvents[curEventIndex].size > MidiEvent::kDataSize) // not excatly shure what's happening here. this is in both Nekobi and Kars sourcecode
+                    continue;
                 
                 int status = midiEvents[curEventIndex].data[0]; // midi status
                 int channel = status & 0x0F ; // get midi channel
@@ -185,180 +185,191 @@ protected:
                 /* TODO pitchbend .. */
                 switch(message)
                 {
-                    case 0x80 : // note off
-                    {
-                    	// check if note is playing
-                    	bool voice_playing = stack.check_Voice_Playing(channel, note);
+                case 0x80 : // note off
+                {
+                    // check if note is playing
+                    bool voice_playing = stack.check_Voice_Playing(channel, note);
 
-                        std::cout << "voice_playing = " << voice_playing << std::endl;
-                    	if (voice_playing == false)
-                            break; // note wasn't playing anyway .. ignore
-                    	if (voice_playing)
-                    		{
-                    		// get the (pointer to) voice
-                    		Voice* vp = stack.get_Voice(channel, note);
-                    		if (!vp->active)
-                    		stack.remove_Voice(channel,note);
-                    		else
-                    		vp->adsr.ADSRstage=ADSR::RELEASE;
-                            std::cout << "Line 204 : ADSRstage =" << vp->adsr.ADSRstage << std::endl;
-                    		/* TODO .. think about how this works for pitchbend*/
-                    		}
-                       // sample_is_playing = 0; // turn the sample playing off
-                        break;
+                    std::cout << "voice_playing = " << voice_playing << std::endl;
+                    if (voice_playing == false)
+                        break; // note wasn't playing anyway .. ignore
+                    if (voice_playing)
+                    {
+                        // get the (pointer to) voice
+                        Voice* vp = stack.get_Voice(channel, note);
+                        if (!vp->active)
+                            stack.remove_Voice(channel,note);
+                        else
+                            vp->adsr.ADSRstage=ADSR::RELEASE;
+                        std::cout << "Line 204 : ADSRstage =" << vp->adsr.ADSRstage << std::endl;
+                        /* TODO .. think about how this works for pitchbend*/
                     }
-                        
-                    case 0x90 :
-                    {
-                    	// new note,
-                    	// find empty "slot"
-                    	int i { 0 };
-                    	while ( (voices[i].active) && i <= 127 )
-                    	{
-                    		//cout << i << " , " << voices[i].active << endl;
-                    		i++;
-                    	}
-                    	/* voices[i] should be free but lets check it
-                    	 * also if no unactive voices are found it means that 128 voices are playing
-                    	 * unlikely .. but
-                    	 * TODO needs fixing, create proper cue (fifo)
-                    	 */
-                    	if (i>127)
-                    	{
-                    		std::cout << "index out of range" << std::endl;
-                    		// return -1;
-                    	}
-                    	else {
-                    		//set properties of voice and add to stack
-                    		voices[i].active = true;
-                    		voices[i].index= voice_index;
-                    		voices[i].channel = channel;
-                    		voices[i].notenumber = note;
-                    		voices[i].velocity = velocity;
-                    		voices[i].pitchbend = pitchbend;
-                    		voices[i].gain = (float) velocity / 127.0f;
-                    		voices[i].slice = &v_slices[channel];
-                    		voices[i].adsr.initADSR();
-                            voices[i].adsr.setADSR(1.0f, 1.0f ,0.75f ,0.1f);
-                    		voices[i].position = 0;
-                    		// all set . add to stack
-                    		stack.add_Voice(&voices[i]);
-                    		//
-                    		voice_index++;
-                    		voice_index=voice_index%128;
-                    	} // else
+                    // sample_is_playing = 0; // turn the sample playing off
+                    break;
+                }
 
-                    } // case 0x90
+                case 0x90 :
+                {
+                    // new note,
+                    // find empty "slot"
+                    int i { 0 };
+                    while ( (voices[i].active) && i <= 127 )
+                    {
+                        //cout << i << " , " << voices[i].active << endl;
+                        i++;
+                    }
+                    /* voices[i] should be free but lets check it
+                         * also if no unactive voices are found it means that 128 voices are playing
+                         * unlikely .. but
+                         * TODO needs fixing, create proper cue (fifo)
+                         */
+                    if (i>127)
+                    {
+                        std::cout << "index out of range" << std::endl;
+                        // return -1;
+                    }
+                    else {
+                        //set properties of voice and add to stack
+                        voices[i].active = true;
+                        voices[i].index= voice_index;
+                        voices[i].channel = channel;
+                        voices[i].notenumber = note;
+                        voices[i].velocity = velocity;
+                        voices[i].pitchbend = pitchbend;
+                        voices[i].gain = (float) velocity / 127.0f;
+                        voices[i].slice = &v_slices[channel];
+                        voices[i].adsr.initADSR();
+                        voices[i].adsr.setADSR(0.1f, 0.1f ,1.0f ,0.1f);
+                        voices[i].playbackIndex = 0;
+                        voices[i].multiplierIndex = 0;
+                        transpose= note-60;
+                        voices[i].multiplier=pow(2.0, (float)transpose / 12.0);
+                        // all set . add to stack
+                        stack.add_Voice(&voices[i]);
+                        //
+                        voice_index++;
+                        voice_index=voice_index%128;
+                    } // else
+
+                } // case 0x90
 
                     break;
                 } // switch
 
                 
-              curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
-              }
-              // get all voices playing
-              	int max = stack.get_Stack_Size();
-              	if (max > 0)
-              	{
-              	// loop through active voices
-              		for (int i = 0; i < max ; ++i)
-              		{
-              			/*get the raw samples from the voice
-              	TODOD mono/stereo handling ..
-              	float* pointer will allow any amount of samples to be pulled in
-              	*/
+                curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
+            }
+            // get all voices playing
+            int max = stack.get_Stack_Size();
+            if (max > 0)
+            {
+                // loop through active voices
+                for (int i = 0; i < max ; ++i)
+                {
+                    /*get the raw samples from the voice
+                TODOD mono/stereo handling ..
+                float* pointer will allow any amount of samples to be pulled in
+                */
 
-              			/*debug stuff
-				int pos_debug = stack.get_Position(i);
+                    /*debug stuff
+                int pos_debug = stack.get_Position(i);
                 int start_debug = stack.get_Slice_Start(i);
-              	int end_debug = stack.get_Slice_End(i);
-              	cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
-                        if (stack.get_Voice_Active(i))
-                        {
+                int end_debug = stack.get_Slice_End(i);
+                cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
+                    if (stack.get_Voice_Active(i))
+                    {
                         float* sample = stack.get_Sample(i, &sampleVector);
-              			// cout << *sample << " - " << *(sample+1) << endl;
+                        // cout << *sample << " - " << *(sample+1) << endl;
 
-              			float sampleL { *sample };
-              			float sampleR { *(sample + 1) };
-              			// get gain factor
-              			// process adsr to get the gain back
-              			float adsr_gain = stack.runADSR(i);
+                        float sampleL { *sample };
+                        float sampleR { *(sample + 1) };
+                        // get gain factor
+                        // process adsr to get the gain back
+                        float adsr_gain = stack.runADSR(i);
                         // std::cout<<"adsr_gain =" << adsr_gain << std::endl;
 
-              			gain = stack.get_Gain(i) * adsr_gain;
-              			// cout << "Pos :"<< pos_debug << " Gain :" << gain << endl;
+                        gain = stack.get_Gain(i) * adsr_gain;
+                        // cout << "Pos :"<< pos_debug << " Gain :" << gain << endl;
 
-              			sampleL = sampleL * gain;
-              			sampleR = sampleR * gain;
-              			// put samples in mixer
-              			mixL.add_Sample(sampleL);
-              			mixR.add_Sample(sampleR);
-              			// increase the sample position
-              			int channels = SampleObject.getSampleChannels();
-              			// cout << "sample channels :#" << channels << endl;
-              			stack.inc_Position(i, channels);
-                        }
-                        else
-                        {
-                            stack.remove_Voice(i);
-                            mixL.add_Sample(0.0f);
-                            mixR.add_Sample(0.0f);
-                        }
-              		} // end for loop through active voices
-              		// get mixer
-              		float left = mixL.get_Mix();
-              		float right = mixR.get_Mix();
-					outL[framesDone] = left;
-              		outR[framesDone] = right;
-              	} // if max > 0
-              	else
-              	{
-              		// no voices playing
-              		outL[framesDone] = 0; // output 0 == silence
-              		outR[framesDone] = 0;
-              	}
-
-
-/*				OLDS !!
-              	switch(sample_is_playing) // are we playing a sample ??
-				{
-					case 1 : // we are !!
+                        sampleL = sampleL * gain;
+                        sampleR = sampleR * gain;
+                        // put samples in mixer
+                        mixL.add_Sample(sampleL);
+                        mixR.add_Sample(sampleR);
+                        // increase the sample position
+                        int channels = SampleObject.getSampleChannels();
+                        stack.inc_Position(i, channels);
+                    }
+                    else
                     {
-					  if ( playbackIndex >= (sampleVector.size()-1) ) // reset index if we are at the end of the sample
+                        stack.remove_Voice(i);
+                        mixL.add_Sample(0.0f);
+                        mixR.add_Sample(0.0f);
+                    }
+                } // end for loop through active voices
+                // get mixer
+                float left = mixL.get_Mix();
+                float right = mixR.get_Mix();
+                outL[framesDone] = left;
+                outR[framesDone] = right;
+            } // if max > 0
+            else
+            {
+                // no voices playing
+                outL[framesDone] = 0; // output 0 == silence
+                outR[framesDone] = 0;
+            }
+
+
+            /*
+                switch(sample_is_playing) // are we playing a sample ??
+                {
+                    case 1 : // we are !!
+                    {
+                      if ( playbackIndex >= (sampleVector.size()-1) ) // reset index if we are at the end of the sample
                       {
                       playbackIndex = 0;
                       multiplierIndex = 0;
+                      /*
                       std::cout << "index reset" << playbackIndex << "-" << multiplierIndex << std::endl; // debug output
-                      std::cout << sampleVector.size()<< std::endl; // debug outpu
+                      std::cout << sampleVector.size()<< std::endl; // debug output
+
                       }
                       outL[framesDone] = sampleVector[playbackIndex]; // copy sampledata to buffer
                       outR[framesDone] = sampleVector[playbackIndex+1];
-                      multiplierIndex = multiplierIndex + multiplier; 
-                       there's two index running. this one is needed to pitch the sample
-                      * 1 = normal speed .. we use every frame in the sample
+
+                      /* there's two index running. this one is needed to pitch the sample
+                       1 = normal speed .. we use every frame in the sample
                       * 0.5 = half speed .. we use every frame twice
                       * 2 = double speed .. we skip a frame
                       * this results in different pitch
-                      int tmp = multiplierIndex; // 'cat the float to int
-                      tmp*=2; // double it to to sample align it to the stereo .playbackIndex should was be a power of 2 (0,2,4,6,8 ..)
-                      playbackIndex = tmp; // could possibly skip some steps here, but to me at least it makes sense
-                      
-                       debug stuff .. this brings playback to a screaching halt!!!
+
+                      multiplierIndex = multiplierIndex + multiplier;
+                      int tmp = (int) multiplierIndex;
+                      tmp*=channels;
+                      playbackIndex = tmp ;
+                      int tmp = multiplierIndex; // cast the float to int
+                      tmp*=2; // double it to to sample-align it to the stereo .playbackIndex should was be a power of 2 (0,2,4,6,8 ..)
+                     playbackIndex=tmp; // could possibly skip some steps here, but to me at least it makes sense
+
+                      /* debug stuff .. this brings playback to a screaching halt!!!
                        * std::cout << std::fixed << sampleVector[playbackIndex] << ":" << sampleVector[playbackIndex+1] << "-" << playbackIndex << " | ";
                        * std::cout << multiplierIndex << "|"  << playbackIndex << ":";
 
+
                     break;
                     }
-					case 0 :  // sample is not playing
+                    case 0 :  // sample is not playing
                     {
-					   outL[framesDone] = 0; // output 0 == silence
-					   outR[framesDone] = 0;
-					 copy zeros
-					break;
+                       outL[framesDone] = 0; // output 0 == silence
+                       outR[framesDone] = 0;
+                     //copy zeros
+                    break;
                     }
-				}*/
-			++framesDone;	
-    } // the frames loop 
+                }*/
+
+            ++framesDone;
+        } // the frames loop
     } // run()
 
 
