@@ -12,6 +12,7 @@
 #include "Voice.h"
 #include <vector>
 #include "Slice.h"
+#include "ADSR.h"
 
 class Stack {
 public:

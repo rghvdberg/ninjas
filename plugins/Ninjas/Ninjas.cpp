@@ -43,7 +43,7 @@ public:
         play_sample = 1.0f;
         sampleVector = SampleObject.getSampleVector();
         SampleObject.createSlices(&v_slices,slices);
-        v_slices[0].setSlicePlayMode(Slice::LOOP_FWD);
+        v_slices[0].setSlicePlayMode(Slice::ONE_SHOT_REV);
 
     }
 
@@ -191,8 +191,9 @@ protected:
                     // check if note is playing
                     bool voice_playing = stack.check_Voice_Playing(channel, note);
 
-                    std::cout << "voice_playing = " << voice_playing << std::endl;
+                    //std::cout << "voice_playing = " << voice_playing << std::endl;
                     if (voice_playing == false)
+
                         break; // note wasn't playing anyway .. ignore
                     if (voice_playing)
                     {
@@ -205,7 +206,6 @@ protected:
                         std::cout << "Line 204 : ADSRstage =" << vp->adsr.ADSRstage << std::endl;
                         /* TODO .. think about how this works for pitchbend*/
                     }
-                    // sample_is_playing = 0; // turn the sample playing off
                     break;
                 }
 
@@ -241,8 +241,16 @@ protected:
                         voices[i].slice = &v_slices[channel];
                         voices[i].adsr.initADSR();
                         voices[i].adsr.setADSR(0.1f, 0.1f ,1.0f ,0.1f);
+                        if (voices[i].slice->getSlicePlayMode() == Slice::LOOP_REV || voices[i].slice->getSlicePlayMode() == Slice::ONE_SHOT_REV)
+                        {
+                            voices[i].playbackIndex = voices[i].slice->getSliceEnd();
+                            voices[i].multiplierIndex = voices[i].multiplierIndex = (voices[i].slice->getSliceEnd() - voices[i].slice->getSliceStart())/SampleObject.getSampleChannels();
+                        }
+                        else
+                        {
                         voices[i].playbackIndex = 0;
                         voices[i].multiplierIndex = 0;
+                        }
                         transpose= note-60;
                         voices[i].multiplier=pow(2.0, (float)transpose / 12.0);
                         // all set . add to stack
