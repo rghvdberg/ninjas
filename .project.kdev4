@@ -1,9 +1,0 @@
-[Project]
-Manager=KDevCustomMakeManager
-Name=DPF Plugins
-
-[Filters]
-Excludes=*/.*,*/*~,*/*.a,*/*.d,*/*.o,*/*.so
-
-[Project]
-VersionControlSupport=kdevgit
