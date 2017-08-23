@@ -53,8 +53,8 @@ Sample::Sample(std::string fp)
             slices->at(j).setSliceStart(i);
             slices->at(j).setSliceStart( i );
             slices->at(j).setSliceEnd(i+sliceSize-1);
-        //	cout << j << " : "  << i << " -> " << i+sliceSize-1 << endl;
-        //	cout << "Slice :" << j << " : " << 	v_slices[j].getSliceStart() << "->" << v_slices[j].getSliceEnd() << endl;
+            //cout << j << " : "  << i << " -> " << i+sliceSize-1 << endl;
+            std::cout << "Slice :" << j << " : " << slices->at(j).getSliceStart() << "->" << slices->at(j).getSliceEnd() << std::endl;
             ++j;
 
         }

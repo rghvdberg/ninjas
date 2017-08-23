@@ -76,7 +76,7 @@ void Stack::inc_Position(int i, int channels)
 {
     int sliceStart    = voice_stack[i]->slice->getSliceStart();
     int sliceEnd      = voice_stack[i]->slice->getSliceEnd();
-    int playbackIndex = voice_stack[i]->playbackIndex;
+    //int playbackIndex = voice_stack[i]->playbackIndex;
     float multiplier = voice_stack[i]->multiplier;
     //float multiplierIndex = voice_stack[i]->multiplierIndex;
     Slice::slicePlayMode playmode = voice_stack[i]->slice->getSlicePlayMode();
@@ -105,7 +105,7 @@ void Stack::inc_Position(int i, int channels)
     {
     case Slice::LOOP_FWD:
     {
-        if (sliceStart + tmp >= (sliceEnd-channels))
+        if (tmp >= (sliceEnd-channels))
         {
             voice_stack[i]->playbackIndex = 0;
             voice_stack[i]->multiplierIndex = 0;
@@ -132,9 +132,12 @@ void Stack::inc_Position(int i, int channels)
     {
         if (sliceStart + tmp >= (sliceEnd-channels))
         {
+            std::cout << "tmp = " << tmp << std::endl;
+
             remove_Voice(i);
         }
         else voice_stack[i]->playbackIndex = tmp;
+        std::cout << voice_stack[i]->playbackIndex << std::endl;
         break;
     }
     case Slice::ONE_SHOT_REV:
@@ -142,9 +145,7 @@ void Stack::inc_Position(int i, int channels)
         //std::cout << sliceStart << " , " << tmp << " , " << sliceEnd << std::endl;
         if (sliceStart + tmp <= sliceStart)
         {
-            voice_stack[i]->active=false;
-            voice_stack[i]->playbackIndex = sliceEnd ;
-            voice_stack[i]->multiplierIndex = (sliceEnd -sliceStart)/channels;
+            remove_Voice(i);
         }
         else
             voice_stack[i]->playbackIndex = tmp;

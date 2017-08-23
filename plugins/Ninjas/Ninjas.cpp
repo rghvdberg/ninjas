@@ -42,8 +42,9 @@ public:
     {
         play_sample = 1.0f;
         sampleVector = SampleObject.getSampleVector();
+        std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
         SampleObject.createSlices(&v_slices,slices);
-        v_slices[0].setSlicePlayMode(Slice::ONE_SHOT_REV);
+        v_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
 
     }
 
@@ -305,6 +306,7 @@ protected:
                         sampleL = sampleL * gain;
                         sampleR = sampleR * gain;
                         // put samples in mixer
+
                         mixL.add_Sample(sampleL);
                         mixR.add_Sample(sampleR);
                         // increase the sample read index
@@ -313,6 +315,7 @@ protected:
                     }
                     else
                     {
+                        std::cout << "removing voice " << i << std::endl;
                         stack.remove_Voice(i);
                         mixL.add_Sample(0.0f);
                         mixR.add_Sample(0.0f);
