@@ -85,8 +85,8 @@ void Stack::inc_Position(int i, int channels)
 
 //    std::cout << "function Stack::inc_Position(int i, int channels)" << std::endl;
 //    std::cout << "slicePlayMode = " << playmode << std::endl;
-//    std::cout << "sliceStart    = " << sliceStart << std::endl;
-//    std::cout << "sliceEnd      = " << sliceEnd << std::endl;
+    std::cout << "sliceStart    = " << sliceStart << std::endl;
+    std::cout << "sliceEnd      = " << sliceEnd << std::endl;
 //    std::cout << "playbackIndex = " << playbackIndex << std::endl;
 //    std::cout << "multiplier    = " << multiplier << std::endl;
 
@@ -100,14 +100,14 @@ void Stack::inc_Position(int i, int channels)
     voice_stack[i]->multiplierIndex += multiplier;
     int tmp = (int) voice_stack[i]->multiplierIndex;
     tmp*=channels;
-    std::cout << "tmp           = " << tmp << std::endl;
+    //std::cout << "tmp           = " << tmp << std::endl;
     std::cout << "start + tmp   = " << start+tmp << std::endl;
     // check bounderies according to playmode: loop or oneshot.
     switch (playmode)
     {
     case Slice::LOOP_FWD:
     {
-        if (start + tmp > (sliceEnd-channels))
+        if (start + tmp >= (sliceEnd-channels))
         {
             voice_stack[i]->playbackIndex = 0;
             voice_stack[i]->multiplierIndex = 0;
@@ -116,7 +116,9 @@ void Stack::inc_Position(int i, int channels)
         {
             voice_stack[i]->playbackIndex = tmp;
         }
+
     }
+        break;
     case Slice::LOOP_REV:
     {
         if (start + tmp <= sliceStart)

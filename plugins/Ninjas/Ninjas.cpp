@@ -43,7 +43,7 @@ public:
         play_sample = 1.0f;
         sampleVector = SampleObject.getSampleVector();
         SampleObject.createSlices(&v_slices,slices);
-        v_slices[0].setSlicePlayMode(Slice::LOOP_REV);
+        v_slices[0].setSlicePlayMode(Slice::LOOP_FWD);
 
     }
 
