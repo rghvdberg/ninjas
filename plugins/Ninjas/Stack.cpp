@@ -74,23 +74,63 @@ float Stack::get_Gain(int i){
 
 void Stack::inc_Position(int i, int channels)
 {
-    int start = voice_stack[i]->playbackIndex + voice_stack[i]->slice->getSliceStart();
-    int end = voice_stack[i]->slice->getSliceEnd();
-    voice_stack[i]->multiplierIndex += voice_stack[i]->multiplier;
+    int sliceStart    = voice_stack[i]->slice->getSliceStart();
+    int sliceEnd      = voice_stack[i]->slice->getSliceEnd();
+    int playbackIndex = voice_stack[i]->playbackIndex;
+    float multiplier = voice_stack[i]->multiplier;
+    float multiplierIndex = voice_stack[i]->multiplierIndex;
+    Slice::slicePlayMode playmode = voice_stack[i]->slice->getSlicePlayMode();
+
+    int start =  sliceStart + playbackIndex;
+
+//    std::cout << "function Stack::inc_Position(int i, int channels)" << std::endl;
+//    std::cout << "slicePlayMode = " << playmode << std::endl;
+//    std::cout << "sliceStart    = " << sliceStart << std::endl;
+//    std::cout << "sliceEnd      = " << sliceEnd << std::endl;
+//    std::cout << "playbackIndex = " << playbackIndex << std::endl;
+//    std::cout << "multiplier    = " << multiplier << std::endl;
+
+
+
+    // set multiplier to negative if direction is reverse
+    if (playmode == Slice::LOOP_REV || playmode == Slice::ONE_SHOT_REV)
+        multiplier=-multiplier;
+
+    // add the multiplier, when it's negative this should substract
+    voice_stack[i]->multiplierIndex += multiplier;
     int tmp = (int) voice_stack[i]->multiplierIndex;
     tmp*=channels;
+    std::cout << "tmp           = " << tmp << std::endl;
+    std::cout << "start + tmp   = " << start+tmp << std::endl;
+    // check bounderies according to playmode: loop or oneshot.
+    switch (playmode)
+    {
+    case Slice::LOOP_FWD:
+    {
+        if (start + tmp > (sliceEnd-channels))
+        {
+            voice_stack[i]->playbackIndex = 0;
+            voice_stack[i]->multiplierIndex = 0;
+        }
+        else
+        {
+            voice_stack[i]->playbackIndex = tmp;
+        }
+    }
+    case Slice::LOOP_REV:
+    {
+        if (start + tmp <= sliceStart)
+        {
+            voice_stack[i]->playbackIndex = sliceEnd ;
+            voice_stack[i]->multiplierIndex = (sliceEnd -sliceStart)/channels;
+        }
+        else
+            voice_stack[i]->playbackIndex = tmp;
 
-    if (start + tmp > (end-channels))
-    {
-        voice_stack[i]->playbackIndex = 0;
-        voice_stack[i]->multiplierIndex = 0;
     }
-    else
-    {
-        voice_stack[i]->playbackIndex = tmp;
     }
+
 }
-
 float Stack::runADSR(int i)
 {
 	bool * active = &voice_stack[i]->active;

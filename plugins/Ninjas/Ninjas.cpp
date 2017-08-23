@@ -43,6 +43,7 @@ public:
         play_sample = 1.0f;
         sampleVector = SampleObject.getSampleVector();
         SampleObject.createSlices(&v_slices,slices);
+        v_slices[0].setSlicePlayMode(Slice::LOOP_REV);
 
     }
 
@@ -282,7 +283,9 @@ protected:
                         // cout << *sample << " - " << *(sample+1) << endl;
 
                         float sampleL { *sample };
-                        float sampleR { *(sample + 1) };
+                        float sampleR { *(sample + (SampleObject.getSampleChannels() -1) ) };
+                        // TODO should make variable for channels
+
                         // get gain factor
                         // process adsr to get the gain back
                         float adsr_gain = stack.runADSR(i);
@@ -296,7 +299,7 @@ protected:
                         // put samples in mixer
                         mixL.add_Sample(sampleL);
                         mixR.add_Sample(sampleR);
-                        // increase the sample position
+                        // increase the sample read index
                         int channels = SampleObject.getSampleChannels();
                         stack.inc_Position(i, channels);
                     }
