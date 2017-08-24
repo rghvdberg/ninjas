@@ -132,12 +132,12 @@ void Stack::inc_Position(int i, int channels)
     {
         if (sliceStart + tmp >= (sliceEnd-channels))
         {
-            std::cout << "tmp = " << tmp << std::endl;
+         //   std::cout << "tmp = " << tmp << std::endl;
 
             remove_Voice(i);
         }
         else voice_stack[i]->playbackIndex = tmp;
-        std::cout << voice_stack[i]->playbackIndex << std::endl;
+      //  std::cout << voice_stack[i]->playbackIndex << std::endl;
         break;
     }
     case Slice::ONE_SHOT_REV:

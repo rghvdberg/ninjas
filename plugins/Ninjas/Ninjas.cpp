@@ -184,6 +184,19 @@ protected:
                 int message = status & 0xF0 ; // get midi message
                 int note = midiEvents[curEventIndex].data[1];// note number
                 int velocity = midiEvents[curEventIndex].data[2]; //
+                std::cout << std::hex << "Status : " << status << std::endl;
+                std::cout << std::hex << "Channel : " << channel << std::endl;
+                std::cout << std::hex << "Message : " << message << std::endl;
+                std::cout << std::hex << "Note : " << note << std::endl;
+                std::cout << std::hex << "Velocity : " << velocity << std::endl;
+
+                // skip if midi received on channel bigger than the # of slices
+                // note : each slice has it's own midi channel
+                if (channel > (v_slices.size()-1))
+                {
+                    curEventIndex++;
+                    continue;
+                }
                 /* TODO pitchbend .. */
                 switch(message)
                 {
