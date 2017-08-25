@@ -15,6 +15,7 @@
  */
 
 #include "DistrhoPlugin.hpp"
+#include "Ninjas.hpp"
 #include <sndfile.hh>
 #include <vector>
 #include <iostream>
@@ -25,6 +26,7 @@
 #include "ADSR.h"
 #include "Mixer.h"
 #include "Stack.h"
+
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------------------------------------------
@@ -66,7 +68,7 @@ protected:
     */
     const char* getDescription() const override
     {
-        return "Ninjas is not just another slicer";
+        return "Ninjas Is Not Just Another Slicer";
     }
 
    /**
@@ -82,7 +84,7 @@ protected:
     */
     const char* getHomePage() const override
     {
-        return "https://github.com/DISTRHO/plugin-examples";
+        return "https://rghvdberg.github.io/";
     }
 
    /**
@@ -126,12 +128,90 @@ protected:
          * I chose a boolean so that it shows up as a toggle in generic ui
          * all paramater should be float, even if it acts like a boolean
          */
-        parameter.hints      = kParameterIsAutomable|kParameterIsBoolean;
-        parameter.ranges.def = 1.0f;
-        parameter.ranges.min = 0.0f;
-        parameter.ranges.max = 1.0f;
-        parameter.name   = "Play Sample";
-        parameter.symbol = "play_sample";
+        switch(index)
+        {
+        case 0:
+        {
+            //parameter.hints      = ;
+            parameter.ranges.def = 0.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "Attack";
+            parameter.symbol = "attack";
+            break;
+        }
+        case 1:
+        {
+            //parameter.hints      = ;
+            parameter.ranges.def = 0.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "Decay";
+            parameter.symbol = "decay";
+            break;
+        }
+        case 2:
+        {
+            //parameter.hints      = ;
+            parameter.ranges.def = 1.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "Sustain";
+            parameter.symbol = "sustain";
+            break;
+        }
+        case 3:
+        {
+            //parameter.hints      = ;
+            parameter.ranges.def = 0.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "Release";
+            parameter.symbol = "release";
+            break;
+        }
+        case 4:
+        {
+            parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
+            parameter.ranges.def = 1.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "One Shot Forward";
+            parameter.symbol = "one_shot_fwd";
+            break;
+        }
+        case 5:
+        {
+            parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
+            parameter.ranges.def = 0.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "One Shot Reverse";
+            parameter.symbol = "one_shot_rev";
+            break;
+        }
+        case 6:
+        {
+            parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
+            parameter.ranges.def = 0.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "Looped Play Forward";
+            parameter.symbol = "loop_fwd";
+            break;
+        }
+        case 7:
+        {
+            parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
+            parameter.ranges.def = 0.0f;
+            parameter.ranges.min = 0.0f;
+            parameter.ranges.max = 1.0f;
+            parameter.name   = "Looped Play Reverse";
+            parameter.symbol = "loop_rev";
+            break;
+        }
+        } // switch
+
 
     }
 
@@ -265,7 +345,7 @@ protected:
                         voices[i].playbackIndex = 0;
                         voices[i].multiplierIndex = 0;
                         }
-                        transpose= note-60;
+                        int transpose= note-60;
                         voices[i].multiplier=pow(2.0, (float)transpose / 12.0);
                         // all set . add to stack
                         stack.add_Voice(&voices[i]);
@@ -404,35 +484,12 @@ protected:
 
 private:
     // Parameters
-    float play_sample;
-    
-    // variables needed in run()
-    int playbackIndex = 0;
-    float multiplierIndex = 0.0; // the 'speed' of the sample .. this translates in pitch 
-    int transpose = 0; // offset from C4 in semitones
-    float multiplier = pow(2.0, (float)transpose / 12.0); 
-    // sample variables
-    // empty sample object
-    std::vector<float> sampleVector; // this holds the sample data
-    Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg"};
-    int sample_is_playing = 0; // flag if the sample is playing
 
-    /* create Mixer objects
-    One for each audio channel
-    after each iteration mix is put in audiobuffer
-     */
-    Mixer mixL;
-    Mixer mixR;
+    // empty sample object    
 
-    /*Voice stack
-    here we keep track of voices playing
-     */
-    Stack stack { };
 
-    /*by example of the cars plugin create array of voices
-    tried to create them 'on the fly' but that won't work.
-     */
-    Voice voices[128] { };
+
+
 
     /*Status   lsb      msb
      * 1110nnnn 0lllllll 0mmmmmmm
@@ -441,28 +498,6 @@ private:
      * Sensitivity is a function of the receiver, but may be set using RPN 0. (lllllll)
      * are the least significant 7 bits. (mmmmmmm) are the most significant 7 bits.
      */
-
-    int pitchbend { 8192 };
-    float gain { 1.0f };
-
-    int voice_index { 0 };
-    std::vector<Slice> v_slices ;
-    int slices = 1;
-    int sliceSize;
-    /*	std::cout << "sliceSize :" << sliceSize << std::endl;
-    	for (int i=0, j=0 ; i < mySize; i+=sliceSize )
-    	{
-    		v_slices.push_back( Slice() ); // create slice
-    		// set start and end
-    		v_slices[j].setSliceStart( i );
-    		v_slices[j].setSliceEnd(i+sliceSize-1);
-    		debug
-    		cout << j << " : "  << i << " -> " << i+sliceSize-1 << endl;
-    		cout << "Slice :" << j << " : " << 	v_slices[j].getSliceStart() << "->" << v_slices[j].getSliceEnd() << endl;
-
-    		++j;
-    	}
-*/
 
 
    /**

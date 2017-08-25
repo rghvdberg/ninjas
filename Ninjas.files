@@ -111,6 +111,7 @@ plugins/Ninjas/ADSR.h
 plugins/Ninjas/Aubio.cpp
 plugins/Ninjas/Aubio.h
 plugins/Ninjas/DistrhoPluginInfo.h
+plugins/Ninjas/Ninjas.hpp
 plugins/Ninjas/globals.h
 plugins/Ninjas/main.cpp
 plugins/Ninjas/Mixer.cpp
