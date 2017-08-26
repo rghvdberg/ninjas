@@ -14,120 +14,44 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "DistrhoPlugin.hpp"
+//#include "DistrhoPlugin.hpp"
 #include "Ninjas.hpp"
-#include <sndfile.hh>
-#include <vector>
-#include <iostream>
-#include "Sample.h"
-#include <string>
-#include "Slice.h"
-#include "Voice.h"
-#include "ADSR.h"
-#include "Mixer.h"
-#include "Stack.h"
+//#include <sndfile.hh>
+//#include <vector>
+//#include <iostream>
+//#include "Sample.h"
+//#include <string>
+//#include "Slice.h"
+//#include "Voice.h"
+//#include "ADSR.h"
+//#include "Mixer.h"
+//#include "Stack.h"
 
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------------------------------------------
 
-/**
-  this will hopefuly become a sample Ninjas plugin
- */
 
 // constructor
-class NinjasPlugin : public Plugin
-{
-public:
-    NinjasPlugin()
-        : Plugin(1, 0, 0) //1 parameter, 0 programs (presets) , 0 states
+NinjasPlugin::NinjasPlugin()
+      : Plugin(paramCount, 0, 0) //1 parameter, 0 programs (presets) , 0 states
     {
-        play_sample = 1.0f;
         sampleVector = SampleObject.getSampleVector();
         std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
         SampleObject.createSlices(&v_slices,slices);
         v_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
-
-    }
-
-protected:
-   /* --------------------------------------------------------------------------------------------------------
-    * Information */
-
-   /**
-      Get the plugin label.
-      This label is a short restricted name consisting of only _, a-z, A-Z and 0-9 characters.
-    */
-    const char* getLabel() const override
-    {
-        return "Ninjas";
-    }
-
-   /**
-      Get an extensive comment/description about the plugin.
-    */
-    const char* getDescription() const override
-    {
-        return "Ninjas Is Not Just Another Slicer";
-    }
-
-   /**
-      Get the plugin author/maker.
-    */
-    const char* getMaker() const override
-    {
-        return "Clearly Broken Software";
-    }
-
-   /**
-      Get the plugin homepage.
-    */
-    const char* getHomePage() const override
-    {
-        return "https://rghvdberg.github.io/";
-    }
-
-   /**
-      Get the plugin license name (a single line of text).
-      For commercial plugins this should return some short copyright information.
-    */
-    const char* getLicense() const override
-    {
-        return "ISC";
-    }
-
-   /**
-      Get the plugin version, in hexadecimal.
-    */
-    uint32_t getVersion() const override
-    {
-        return d_version(1, 0, 0);
-    }
-
-   /**
-      Get the plugin unique Id.
-      This value is used by LADSPA, DSSI and VST plugin formats.
-    */
-   
-   // don't bother too much about this :-) 
-    int64_t getUniqueId() const override
-    {
-        return d_cconst('N', 'i', 'N', 'j');
     }
 
    /* --------------------------------------------------------------------------------------------------------
-    * Init */
+    * Init
+   */
 
-   /**
+   /*
       Initialize the parameters.
       This function will be called once, shortly after the plugin is created.
     */
-    void initParameter(uint32_t index, Parameter& parameter) override
+    void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     {
-        /* I've added 1 paramater, actually not used anymore in current state of the code
-         * I chose a boolean so that it shows up as a toggle in generic ui
-         * all paramater should be float, even if it acts like a boolean
-         */
         switch(index)
         {
         case 0:
@@ -216,15 +140,16 @@ protected:
     }
 
    /* --------------------------------------------------------------------------------------------------------
-    * Internal data */
+    * Internal data
+   */
 
    /**
       Get the current value of a parameter.
       The host may call this function from any context, including realtime processing.
     */
-    float getParameterValue(uint32_t index) const override
+    float NinjasPlugin::getParameterValue(uint32_t index) const
     {
-        return play_sample;
+        return 0;
 
     }
 
@@ -234,16 +159,16 @@ protected:
       When a parameter is marked as automable, you must ensure no non-realtime operations are performed.
       @note This function will only be called for parameter inputs.
     */
-    void setParameterValue(uint32_t index, float value) override
+    void NinjasPlugin::setParameterValue(uint32_t index, float value)
     {
-        play_sample = value;
+        // TODO handle stuff
     }
 
    /* --------------------------------------------------------------------------------------------------------
     * Audio/MIDI Processing */
    
    /*       inputs unused , outputs        , size of block we process, pointer to midi data       , number of midie events in current block */  
-    void run(const float**, float** outputs, uint32_t frames,          const MidiEvent* midiEvents, uint32_t midiEventCount)
+    void NinjasPlugin::run(const float**, float** outputs, uint32_t frames,          const MidiEvent* midiEvents, uint32_t midiEventCount)
     {
         float* const outL = outputs[0]; // output ports , stereo
         float* const outR = outputs[1];
@@ -479,32 +404,6 @@ protected:
         } // the frames loop
     } // run()
 
-
-    // -------------------------------------------------------------------------------------------------------
-
-private:
-    // Parameters
-
-    // empty sample object    
-
-
-
-
-
-    /*Status   lsb      msb
-     * 1110nnnn 0lllllll 0mmmmmmm
-     * Pitch Bend Change. This message is sent to indicate a change in the pitch bender (wheel or lever, typically).
-     * The pitch bender is measured by a fourteen bit value. Center (no pitch change) is 2000H.
-     * Sensitivity is a function of the receiver, but may be set using RPN 0. (lllllll)
-     * are the least significant 7 bits. (mmmmmmm) are the most significant 7 bits.
-     */
-
-
-   /**
-      Set our plugin class as non-copyable and add a leak detector just in case.
-    */
-    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasPlugin)
-};
 
 /* ------------------------------------------------------------------------------------------------------------
  * Plugin entry point, called by DPF to create a new plugin instance. */

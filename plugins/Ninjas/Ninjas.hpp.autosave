@@ -145,6 +145,10 @@ private:
     int slices = 1;
     int sliceSize;
 
+    /**
+       Set our plugin class as non-copyable and add a leak detector just in case.
+     */
+
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasPlugin)
 };
