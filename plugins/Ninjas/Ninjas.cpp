@@ -14,7 +14,7 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-//#include "DistrhoPlugin.hpp"
+#include "DistrhoPlugin.hpp"
 #include "Ninjas.hpp"
 //#include <sndfile.hh>
 //#include <vector>

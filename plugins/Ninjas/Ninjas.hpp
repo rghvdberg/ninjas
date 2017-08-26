@@ -103,7 +103,7 @@ protected:
     // -------------------------------------------------------------------
     // Process
 
-    void activate() override;
+    //void activate() override;
     void run(const float**, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount) override;
 
     // -------------------------------------------------------------------
@@ -144,6 +144,10 @@ private:
     std::vector<Slice> v_slices ;
     int slices = 1;
     int sliceSize;
+
+    /**
+       Set our plugin class as non-copyable and add a leak detector just in case.
+     */
 
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasPlugin)
