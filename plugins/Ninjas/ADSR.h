@@ -20,6 +20,15 @@ public:
 
 	float getADSR_gain(); // returns gain factor for current frame
 	void setADSR(float a, float d, float s, float r); // setter, don't see the value of setting each param separately
+    void setAttack(float a)
+    {
+        attack = a;
+    }
+
+    float getAttack() const
+    {
+        return attack;
+    }
 
 	float  ADSRrun(bool * active); //only call this when Voice.active == true
 	enum stage_of_ADSR {

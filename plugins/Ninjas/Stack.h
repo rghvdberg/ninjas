@@ -26,12 +26,14 @@ public:
 	int get_Stack_Size();
 	float* get_Sample(int i, std::vector<float> * samplevector);
 	float get_Gain(int index);
-	void inc_Position(int index, int increment);
-	float runADSR(int index);
+    void inc_Position(int index, int channels, Slice* slices);
+    // float runADSR(int index);
 	int get_Position(int index);
 	int get_Slice_Start(int index);
 	int get_Slice_End(int index);
     bool get_Voice_Active(int index);
+    bool * get_VoiceActivePointer(int index);
+    int get_midiChannel(int index);
 
 private:
 	std::vector<Voice*> voice_stack;

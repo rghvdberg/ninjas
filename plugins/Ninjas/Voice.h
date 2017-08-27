@@ -25,13 +25,11 @@ public:
     int channel;  //midi channel, channel is also linked to slice
     int notenumber;
     int velocity;
-    int pitchbend;
     float gain; // linked to adsr
     Slice* slice; // the part of the sample this voice plays
     float multiplierIndex; // frame of slice (sample) playing
     float multiplier;
     int playbackIndex;
-    ADSR adsr; // ADSR of voice
 
 };
 

@@ -141,9 +141,10 @@ private:
     int pitchbend { 8192 };
     float gain { 1.0f };
     int voice_index { 0 };
-    std::vector<Slice> v_slices ;
+    Slice a_slices[16] ;
     int slices = 1;
     int sliceSize;
+    ADSR a_adsr[16];
 
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.

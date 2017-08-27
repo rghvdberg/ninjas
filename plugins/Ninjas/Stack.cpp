@@ -8,6 +8,7 @@
 #include "Stack.h"
 #include <vector>
 #include <iostream>
+#include "Slice.h"
 
 
 Stack::Stack() {
@@ -72,14 +73,15 @@ float Stack::get_Gain(int i){
 	return voice_stack[i]->gain;
 }
 
-void Stack::inc_Position(int i, int channels)
+void Stack::inc_Position(int i, int channels, Slice* slices)
 {
-    int sliceStart    = voice_stack[i]->slice->getSliceStart();
-    int sliceEnd      = voice_stack[i]->slice->getSliceEnd();
+    int midichannel = get_midiChannel(i);
+    int sliceStart    = slices[midichannel].getSliceStart();
+    int sliceEnd      = slices[midichannel].getSliceEnd();
     //int playbackIndex = voice_stack[i]->playbackIndex;
     float multiplier = voice_stack[i]->multiplier;
     //float multiplierIndex = voice_stack[i]->multiplierIndex;
-    Slice::slicePlayMode playmode = voice_stack[i]->slice->getSlicePlayMode();
+    Slice::slicePlayMode playmode =slices[midichannel].getSlicePlayMode();
 
     //    std::cout << "function Stack::inc_Position(int i, int channels)" << std::endl;
     //   std::cout << "slicePlayMode = " << playmode << std::endl;
@@ -156,13 +158,14 @@ void Stack::inc_Position(int i, int channels)
 
 }
 
-float Stack::runADSR(int i)
+/* float Stack::runADSR(int i)
 {
 	bool * active = &voice_stack[i]->active;
 	float adsr_gain = voice_stack[i]->adsr.ADSRrun(active);
     //std::cout << "ADSRstage = "<< voice_stack[i]->adsr.ADSRstage << std::endl;
 	return adsr_gain;
 }
+*/
 
 int Stack::get_Position(int i)
 {
@@ -184,3 +187,12 @@ bool Stack::get_Voice_Active(int i)
     return voice_stack[i]->active;
 }
 
+int Stack::get_midiChannel(int i)
+{
+    return voice_stack[i]->channel;
+}
+
+bool * Stack::get_VoiceActivePointer(int i)
+{
+    return & voice_stack[i]->active;
+}

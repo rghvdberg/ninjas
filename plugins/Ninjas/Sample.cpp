@@ -42,19 +42,15 @@ Sample::Sample(std::string fp)
 
   return 0;
 }
-    void Sample::createSlices(std::vector<Slice>* slices, int n_slices)
+    void Sample::createSlices( Slice* slices, int n_slices)
     {
        int sliceSize = (size*channels) / n_slices;
-        //cout << "sliceSize :" << sliceSize << endl;
         for (int i=0, j=0 ; i < size; i+=sliceSize )
         {
-            slices->push_back(Slice());
             // set start and end
-            slices->at(j).setSliceStart(i);
-            slices->at(j).setSliceStart( i );
-            slices->at(j).setSliceEnd(i+sliceSize-1);
-            //cout << j << " : "  << i << " -> " << i+sliceSize-1 << endl;
-            std::cout << "Slice :" << j << " : " << slices->at(j).getSliceStart() << "->" << slices->at(j).getSliceEnd() << std::endl;
+            slices[j].setSliceStart(i);
+            slices[j].setSliceStart( i );
+            slices[j].setSliceEnd(i+sliceSize-1);
             ++j;
 
         }
