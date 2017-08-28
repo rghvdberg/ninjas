@@ -40,7 +40,7 @@ void Stack::remove_Voice(int i)
 
 void Stack::remove_inactive_voices()
 {
-  voice_stack.erase(std::remove_if(voice_stack.begin(), voice_stack.end(), [](const Voice& v) { return !v.active; }), voice_stack.end());
+    voice_stack.erase(std::remove_if(voice_stack.begin(), voice_stack.end(), []( Voice*& v) { return !v->active; }), voice_stack.end());
 }
 
 Voice* Stack::get_Voice(int ch, int nn)
