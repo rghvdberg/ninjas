@@ -1,7 +1,6 @@
 #ifndef VOICE_H
 #define VOICE_H
 #include "Slice.h"
-#include <tuple>
 #include "ADSR.h"
 
 // int channel, notenumber, velocity, pitchbend, position; float gain; bool active; Slice slice; Voice voice(notenumber, velocity, channel, pitchbend, gain, active, slice, position);
