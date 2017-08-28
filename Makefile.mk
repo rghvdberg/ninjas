@@ -24,8 +24,6 @@ endif
 
 BASE_FLAGS = -Wall -Wextra -pipe
 BASE_OPTS  = -O2 -ffast-math -mtune=generic -msse -msse2 -fdata-sections -ffunction-sections
-#BASE_OPTS  = -Og -ffast-math -mtune=generic -msse -msse2 -fdata-sections -ffunction-sections -v -da -Q
-
 
 ifneq ($(MACOS),true)
 # MacOS doesn't support this

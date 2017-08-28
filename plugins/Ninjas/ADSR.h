@@ -14,53 +14,14 @@
 
 class ADSR {
 public:
-    // ctor
-
-    ADSR();
+	ADSR();
 	ADSR(float a, float d, float s, float r);
-    //dtor
-    virtual ~ADSR();
-    // getters
+	virtual ~ADSR();
+
 	float getADSR_gain(); // returns gain factor for current frame
-    float getAttack() const {return attack;}
+	void setADSR(float a, float d, float s, float r); // setter, don't see the value of setting each param separately
 
-    float getDecay() const
-    {
-        return decay;
-    }
-    float getSustain() const
-    {
-        return sustain;
-    }
-    float getRelease() const
-    {
-        return release;
-    }
-
-
-    void setADSR(float a, float d, float s, float r); // setter, don't see the value of setting each param separately
-
-    void setAttack(float a)
-    {
-        attack = a;
-    }
-
-    void setDecay(float d)
-    {
-        attack = d;
-    }
-    void setSustain(float s)
-    {
-        attack = s;
-    }
-    void setRelease(float r)
-    {
-        attack = r;
-    }
-
-
-
-    float  ADSRrun(bool * active); //only call this when Voice.active == true
+	float  ADSRrun(bool * active); //only call this when Voice.active == true
 	enum stage_of_ADSR {
 				ATTACK,
 				DECAY,
