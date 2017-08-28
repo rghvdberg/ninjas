@@ -30,7 +30,10 @@ void Stack::remove_Voice(int ch, int nn)
 	for(int i = 0; i <= (int) voice_stack.size(); i++)
 	{
 			if ( (voice_stack[i]->channel == ch) && (voice_stack[i]->notenumber == nn))
+            {
+                std::cout << "remove_Voice(int ch, int nn) :" << i << std::endl;
 				voice_stack.erase(voice_stack.begin()+i);
+            }
 	}
 }
 
@@ -63,10 +66,12 @@ int Stack::get_Stack_Size(){
 	return voice_stack.size();
 }
 
-float* Stack::get_Sample(int i , std::vector<float> * samplevector){
-	int start = voice_stack[i]->slice->getSliceStart();
+float* Stack::get_Sample(int i , std::vector<float> * samplevector, Slice * slices){
+    int channel = get_midiChannel(i);
+    int start = slices[channel].getSliceStart();
     int pos { voice_stack[i]->playbackIndex };
-	float* sample = &samplevector->at(start+pos);
+    //std::cout << "Stack::get_Sample : channel = " << channel << " start = " << start << " playbackindex = " << pos << std::endl;
+    float* sample = &samplevector->at(start+pos);
 			return sample;
 }
 float Stack::get_Gain(int i){

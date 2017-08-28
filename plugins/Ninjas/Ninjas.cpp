@@ -40,6 +40,11 @@ NinjasPlugin::NinjasPlugin()
     std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
     SampleObject.createSlices(a_slices,slices);
     a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+    std::cout << "ADSRstage  : "<< a_adsr[0].ADSRstage << std::endl;
+    std::cout << "ADSR Attack   : "<< a_adsr[0].getAttack() << std::endl;
+    std::cout << "ADSR Decay  : "<< a_adsr[0].getDecay() << std::endl;
+    std::cout << "ADSR Sustain  : "<< a_adsr[0].getSustain() << std::endl;
+    std::cout << "ADSR Release  : "<< a_adsr[0].getRelease() << std::endl;
 
 }
 
@@ -204,12 +209,13 @@ void NinjasPlugin::run(const float**, float** outputs, uint32_t frames,         
             int message = status & 0xF0 ; // get midi message
             int note = midiEvents[curEventIndex].data[1];// note number
             int velocity = midiEvents[curEventIndex].data[2]; //
+            std::cout << "BEGIN---------------------------------------------" << std::endl;
             std::cout << std::hex << "Status : " << status << std::endl;
             std::cout << std::hex << "Channel : " << channel << std::endl;
             std::cout << std::hex << "Message : " << message << std::endl;
             std::cout << std::hex << "Note : " << note << std::endl;
             std::cout << std::hex << "Velocity : " << velocity << std::endl;
-
+            std::cout << "END---------------------------------------------" << std::endl;
             // skip if midi received on channel bigger than the # of slices
             // note : each slice has it's own midi channel
             if (channel > (slices-1))
@@ -284,6 +290,7 @@ void NinjasPlugin::run(const float**, float** outputs, uint32_t frames,         
                     voices[i].multiplier=pow(2.0, (float)transpose / 12.0);
                     // all set . add to stack
                     stack.add_Voice(&voices[i]);
+                    a_adsr[channel].ADSRstage=ADSR::ATTACK;
                     //
                     voice_index++;
                     voice_index=voice_index%128;
@@ -316,7 +323,7 @@ void NinjasPlugin::run(const float**, float** outputs, uint32_t frames,         
                 cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
                 if (stack.get_Voice_Active(i))
                 {
-                    float* sample = stack.get_Sample(i, &sampleVector);
+                    float* sample = stack.get_Sample(i, &sampleVector,a_slices);
                     // cout << *sample << " - " << *(sample+1) << endl;
 
                     float sampleL { *sample };

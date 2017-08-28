@@ -14,15 +14,12 @@
 ADSR::ADSR()
 {
 attack = 0.0; // instant on
-attack_gain = 0.0;
 decay = 0.0;
-decay_gain = 0.0;
 sustain = 1.0;
 release = 0.0;
-release_gain = 0.0;
 ADSRstage = ATTACK;
-adsr_gain = 0.0;
- }
+calcADRGain();
+}
 
 
 
@@ -111,6 +108,7 @@ float ADSR::ADSRrun(bool * active){
             }
 
         }
+        //std::cout << "ADSR::ADSRrun(bool * active) : adsr_gain =" << adsr_gain << std::endl;
         return adsr_gain;
 	}
 

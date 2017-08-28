@@ -24,7 +24,7 @@ public:
 	Voice* get_Voice(int ch, int nn);
 	bool check_Voice_Playing (int ch, int nn);
 	int get_Stack_Size();
-	float* get_Sample(int i, std::vector<float> * samplevector);
+    float* get_Sample(int i, std::vector<float> * samplevector, Slice* slices);
 	float get_Gain(int index);
     void inc_Position(int index, int channels, Slice* slices);
     // float runADSR(int index);
