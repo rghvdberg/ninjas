@@ -16,16 +16,16 @@
 
 #include "DistrhoPlugin.hpp"
 #include "Ninjas.hpp"
-//#include <sndfile.hh>
-//#include <vector>
-//#include <iostream>
-//#include "Sample.h"
-//#include <string>
-//#include "Slice.h"
-//#include "Voice.h"
-//#include "ADSR.h"
-//#include "Mixer.h"
-//#include "Stack.h"
+#include <sndfile.hh>
+#include <vector>
+#include <iostream>
+#include "Sample.h"
+#include <string>
+#include "Slice.h"
+#include "Voice.h"
+#include "ADSR.h"
+#include "Mixer.h"
+#include "Stack.h"
 
 START_NAMESPACE_DISTRHO
 
@@ -148,8 +148,43 @@ NinjasPlugin::NinjasPlugin()
       The host may call this function from any context, including realtime processing.
     */
     float NinjasPlugin::getParameterValue(uint32_t index) const
+    
     {
-        return 0;
+      float return_Value = 0;
+         switch(index)
+      {
+	// a_slices[0] midichannel == a_slices index
+	 case 0:
+	   return_Value = p_Attack[0];
+	break;
+
+	case 4: // one shot forward
+	  if (a_slices[0].getSlicePlayMode() == Slice::ONE_SHOT_FWD)
+	    return_Value = 1;
+	  else
+	    return_Value = 0;
+	    break;
+	case 5: // one shot Reverse
+	  if (a_slices[0].getSlicePlayMode() == Slice::ONE_SHOT_REV)
+	    return_Value = 1;
+	  else
+	    return_Value = 0;
+	    break;
+	case 6: // Loop Fwd
+	   if (a_slices[0].getSlicePlayMode() == Slice::LOOP_FWD)
+	    return_Value = 1;
+	  else
+	    return_Value = 0;
+	 break;
+	case 7: // Loop Rev
+	   if (a_slices[0].getSlicePlayMode() == Slice::LOOP_REV)
+	     return_Value = 1;
+	  else
+	    return_Value = 0;
+	 break;
+      }
+        
+      return return_Value;
 
     }
 
@@ -161,7 +196,31 @@ NinjasPlugin::NinjasPlugin()
     */
     void NinjasPlugin::setParameterValue(uint32_t index, float value)
     {
-        // TODO handle stuff
+        
+      switch(index)
+      {
+	// a_slices[0] midichannel == a_slices index
+	case 0:
+	   p_Attack[0] = value;
+	  break;
+	case 4: // one shot forward
+	  if (value == 1)
+	   a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+	   break;
+	case 5: // one shot Reverse
+	  if (value == 1)
+	   a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_REV);
+	  break;
+	case 6: // Loop Fwd
+	  if (value == 1)
+	    a_slices[0].setSlicePlayMode(Slice::LOOP_FWD);
+	 break;
+	case 7: // Loop Rev
+	  if (value == 1)
+	  a_slices[0].setSlicePlayMode(Slice::LOOP_REV);
+	  break;
+      }
+      
     }
 
    /* --------------------------------------------------------------------------------------------------------
@@ -257,7 +316,7 @@ NinjasPlugin::NinjasPlugin()
                         voices[i].velocity = velocity;
                         voices[i].gain = (float) velocity / 127.0f;
                         voices[i].adsr.initADSR();
-                        voices[i].adsr.setADSR(0.1f, 0.1f ,1.0f ,0.1f);
+                        voices[i].adsr.setADSR(p_Attack[channel], p_Decay[channel] ,p_Sustain[channel],p_Release[channel]);
                         if (a_slices[channel].getSlicePlayMode() == Slice::LOOP_REV || a_slices[channel].getSlicePlayMode() == Slice::ONE_SHOT_REV)
                         {
                             voices[i].playbackIndex = a_slices[channel].getSliceEnd();
@@ -297,12 +356,7 @@ NinjasPlugin::NinjasPlugin()
                 float* pointer will allow any amount of samples to be pulled in
                 */
 
-                    /*debug stuff
-                int pos_debug = stack.get_Position(i);
-                int start_debug = stack.get_Slice_Start(i);
-                int end_debug = stack.get_Slice_End(i);
-                cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
-                    if (stack.get_Voice_Active(i))
+                 if (stack.get_Voice_Active(i))
                     {
                         float* sample = stack.get_Sample(i, &sampleVector, a_slices);
                         // cout << *sample << " - " << *(sample+1) << endl;
@@ -339,11 +393,7 @@ NinjasPlugin::NinjasPlugin()
                 } // end for loop through active voices
                 
 		stack.remove_inactive_voices();
-                
-                
-                
-                
-                // get mixer
+                 // get mixer
                 float left = mixL.get_Mix();
                 float right = mixR.get_Mix();
                 outL[framesDone] = left;
@@ -356,53 +406,7 @@ NinjasPlugin::NinjasPlugin()
                 outR[framesDone] = 0;
             }
 
-
-            /*
-                switch(sample_is_playing) // are we playing a sample ??
-                {
-                    case 1 : // we are !!
-                    {
-                      if ( playbackIndex >= (sampleVector.size()-1) ) // reset index if we are at the end of the sample
-                      {
-                      playbackIndex = 0;
-                      multiplierIndex = 0;
-                      /*
-                      std::cout << "index reset" << playbackIndex << "-" << multiplierIndex << std::endl; // debug output
-                      std::cout << sampleVector.size()<< std::endl; // debug output
-
-                      }
-                      outL[framesDone] = sampleVector[playbackIndex]; // copy sampledata to buffer
-                      outR[framesDone] = sampleVector[playbackIndex+1];
-
-                      /* there's two index running. this one is needed to pitch the sample
-                       1 = normal speed .. we use every frame in the sample
-                      * 0.5 = half speed .. we use every frame twice
-                      * 2 = double speed .. we skip a frame
-                      * this results in different pitch
-
-                      multiplierIndex = multiplierIndex + multiplier;
-                      int tmp = (int) multiplierIndex;
-                      tmp*=channels;
-                      playbackIndex = tmp ;
-                      int tmp = multiplierIndex; // cast the float to int
-                      tmp*=2; // double it to to sample-align it to the stereo .playbackIndex should was be a power of 2 (0,2,4,6,8 ..)
-                     playbackIndex=tmp; // could possibly skip some steps here, but to me at least it makes sense
-
-                      /* debug stuff .. this brings playback to a screaching halt!!!
-                       * std::cout << std::fixed << sampleVector[playbackIndex] << ":" << sampleVector[playbackIndex+1] << "-" << playbackIndex << " | ";
-                       * std::cout << multiplierIndex << "|"  << playbackIndex << ":";
-
-
-                    break;
-                    }
-                    case 0 :  // sample is not playing
-                    {
-                       outL[framesDone] = 0; // output 0 == silence
-                       outR[framesDone] = 0;
-                     //copy zeros
-                    break;
-                    }
-                }*/
+          
 
             ++framesDone;
         } // the frames loop

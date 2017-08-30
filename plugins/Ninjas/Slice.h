@@ -40,17 +40,17 @@ public:
 
     // getter functions
 
-    int getSliceStart ()
+    int getSliceStart () const
     {
         return sliceStart;
     }
 
-    int getSliceEnd ()
+    int getSliceEnd () const
     {
         return sliceEnd;
     }
 
-    slicePlayMode getSlicePlayMode()
+    slicePlayMode getSlicePlayMode() const
     {
         return slicePlay;
     }
@@ -60,9 +60,6 @@ private:
     int sliceStart;
     int sliceEnd;
     slicePlayMode slicePlay;
-    void initSlice();
-
-
-};
+ };
 
 #endif // SLICE_H

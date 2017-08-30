@@ -56,7 +56,7 @@ Voice* Stack::get_Voice(int ch, int nn)
 
 bool Stack::check_Voice_Playing(int ch, int nn)
 {
-	for(int i = 0; i <= (int) voice_stack.size(); i++){
+	for(int i = 0; i < (int) voice_stack.size(); i++){
 		if ( (voice_stack[i]->channel == ch) && (voice_stack[i]->notenumber == nn))
 			return true;
 	}

@@ -109,15 +109,15 @@ protected:
     // -------------------------------------------------------------------
 
 private:
-    // Paramaters
-    float p_Attack;
-    float p_Decay;
-    float p_Sustain;
-    float p_Release;
-    float p_OneShotFwd;
-    float p_OneShotRev;
-    float p_LoopFwd;
-    float p_LoopRev;
+    // Paramaters * 16 for 16 slices ... maybe like this
+    float p_Attack[16];
+    float p_Decay[16];
+    float p_Sustain[16] { 1,1,1,1, 1,1,1,1, 1,1,1,1 ,1,1,1,1 };
+    float p_Release[16];
+    float p_OneShotFwd[16];
+    float p_OneShotRev[16];
+    float p_LoopFwd[16];
+    float p_LoopRev[16];
 
     // empty sample object
     std::vector<float> sampleVector; // this holds the sample data
