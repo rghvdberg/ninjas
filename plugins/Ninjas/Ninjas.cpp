@@ -38,8 +38,8 @@ NinjasPlugin::NinjasPlugin()
     {
         sampleVector = SampleObject.getSampleVector();
         std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
-        SampleObject.createSlices(&v_slices,slices);
-        v_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+        SampleObject.createSlices(a_slices,slices);
+        a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
     }
 
    /* --------------------------------------------------------------------------------------------------------
@@ -197,7 +197,7 @@ NinjasPlugin::NinjasPlugin()
 
                 // skip if midi received on channel bigger than the # of slices
                 // note : each slice has it's own midi channel
-                if (channel > (v_slices.size()-1))
+                if (channel > slices -1)
                 {
                     curEventIndex++;
                     continue;
@@ -255,15 +255,13 @@ NinjasPlugin::NinjasPlugin()
                         voices[i].channel = channel;
                         voices[i].notenumber = note;
                         voices[i].velocity = velocity;
-                        voices[i].pitchbend = pitchbend;
                         voices[i].gain = (float) velocity / 127.0f;
-                        voices[i].slice = &v_slices[channel];
                         voices[i].adsr.initADSR();
                         voices[i].adsr.setADSR(0.1f, 0.1f ,1.0f ,0.1f);
-                        if (voices[i].slice->getSlicePlayMode() == Slice::LOOP_REV || voices[i].slice->getSlicePlayMode() == Slice::ONE_SHOT_REV)
+                        if (a_slices[channel].getSlicePlayMode() == Slice::LOOP_REV || a_slices[channel].getSlicePlayMode() == Slice::ONE_SHOT_REV)
                         {
-                            voices[i].playbackIndex = voices[i].slice->getSliceEnd();
-                            voices[i].multiplierIndex = voices[i].multiplierIndex = (voices[i].slice->getSliceEnd() - voices[i].slice->getSliceStart())/SampleObject.getSampleChannels();
+                            voices[i].playbackIndex = a_slices[channel].getSliceEnd();
+                            voices[i].multiplierIndex = ( a_slices[channel].getSliceEnd() - a_slices[channel].getSliceStart()) /SampleObject.getSampleChannels();
                         }
                         else
                         {
@@ -306,7 +304,7 @@ NinjasPlugin::NinjasPlugin()
                 cout << pos_debug << " | " << start_debug + pos_debug << " - " << end_debug << endl;*/
                     if (stack.get_Voice_Active(i))
                     {
-                        float* sample = stack.get_Sample(i, &sampleVector);
+                        float* sample = stack.get_Sample(i, &sampleVector, a_slices);
                         // cout << *sample << " - " << *(sample+1) << endl;
 
                         float sampleL { *sample };
@@ -329,7 +327,7 @@ NinjasPlugin::NinjasPlugin()
                         mixR.add_Sample(sampleR);
                         // increase the sample read index
                         int channels = SampleObject.getSampleChannels();
-                        stack.inc_Position(i, channels);
+                        stack.inc_Position(i, channels, a_slices);
                     }
                     else
                     {

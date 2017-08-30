@@ -8,9 +8,7 @@ Voice::Voice()
     active = false;
     notenumber = 0;
     velocity =127;
-    pitchbend = 0x2000;
     gain = 1.0;
-    slice = nullptr ;
     multiplierIndex = 0.0;
     multiplier=1.0;
     playbackIndex=0;

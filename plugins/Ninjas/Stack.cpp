@@ -8,7 +8,7 @@
 #include "Stack.h"
 #include <vector>
 #include <iostream>
-#include<algorithm>
+#include <algorithm>
 
 Stack::Stack() {
 
@@ -67,9 +67,10 @@ int Stack::get_Stack_Size(){
 	return voice_stack.size();
 }
 
-float* Stack::get_Sample(int i , std::vector<float> * samplevector){
-	int start = voice_stack[i]->slice->getSliceStart();
-    int pos { voice_stack[i]->playbackIndex };
+float* Stack::get_Sample(int i , std::vector<float> * samplevector, Slice* slices){
+	int midichannel = get_midiChannel(i);
+	int start = slices[midichannel].getSliceStart();
+	int pos { voice_stack[i]->playbackIndex };
 	float* sample = &samplevector->at(start+pos);
 			return sample;
 }
@@ -77,14 +78,14 @@ float Stack::get_Gain(int i){
 	return voice_stack[i]->gain;
 }
 
-void Stack::inc_Position(int i, int channels)
+void Stack::inc_Position(int i, int channels, Slice* slices)
 {
-    int sliceStart    = voice_stack[i]->slice->getSliceStart();
-    int sliceEnd      = voice_stack[i]->slice->getSliceEnd();
-    //int playbackIndex = voice_stack[i]->playbackIndex;
+    int midichannel = get_midiChannel(i);
+    int sliceStart    = slices[midichannel].getSliceStart();
+    int sliceEnd      = slices[midichannel].getSliceEnd();
     float multiplier = voice_stack[i]->multiplier;
     //float multiplierIndex = voice_stack[i]->multiplierIndex;
-    Slice::slicePlayMode playmode = voice_stack[i]->slice->getSlicePlayMode();
+    Slice::slicePlayMode playmode = slices[midichannel].getSlicePlayMode();
 
     //    std::cout << "function Stack::inc_Position(int i, int channels)" << std::endl;
     //   std::cout << "slicePlayMode = " << playmode << std::endl;
@@ -174,18 +175,22 @@ int Stack::get_Position(int i)
     return voice_stack[i]->playbackIndex;
 }
 
-int Stack::get_Slice_Start(int i)
-{
-	return voice_stack[i]->slice->getSliceStart();
-}
+// int Stack::get_Slice_Start(int i)
+// {
+// 	return voice_stack[i]->slice->getSliceStart();
+// }
 
-int Stack::get_Slice_End(int i)
-{
-	return voice_stack[i]->slice->getSliceEnd();
-}
+// int Stack::get_Slice_End(int i)
+// {
+// 	return voice_stack[i]->slice->getSliceEnd();
+// }
 
 bool Stack::get_Voice_Active(int i)
 {
     return voice_stack[i]->active;
 }
 
+int Stack::get_midiChannel(int i)
+{
+    return voice_stack[i]->channel;
+}
