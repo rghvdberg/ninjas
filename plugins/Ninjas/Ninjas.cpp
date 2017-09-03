@@ -214,7 +214,14 @@ NinjasPlugin::NinjasPlugin()
 	 case 0:
 	   return_Value = p_Attack[ch];
 	break;
-
+     case 1:
+         return_Value = p_Decay[ch];
+         break;
+     case 2:
+         return_Value = p_Sustain[ch];
+         break;
+     case 3:
+         return_Value = p_Release[ch]
 	case 4: // one shot forward
 	  if (a_slices[ch].getSlicePlayMode() == Slice::ONE_SHOT_FWD)
 	    return_Value = 1;
@@ -239,7 +246,12 @@ NinjasPlugin::NinjasPlugin()
 	  else
 	    return_Value = 0;
 	 break;
-      }
+    case 8: 
+        return_Value = (float) a_slices[ch].getSliceStart /  (float) SampleObject.getSampleSize();
+        break;
+        case 9
+        return_Value = (float) a_slices[ch].getSliceEnd / (float) SampleObject.getSampleSize():
+        }
         
       return return_Value;
 
@@ -253,38 +265,42 @@ NinjasPlugin::NinjasPlugin()
     */
     void NinjasPlugin::setParameterValue(uint32_t index, float value)
     {
-        
-      switch(index)
+      int id = index % 11;
+      int ch = index / 11;
+      
+      switch(id)
       {
 	// a_slices[0] midichannel == a_slices index
 	case 0:
-	   p_Attack[0] = value;
+	   p_Attack[ch] = value;
 	  break;
 	case 1:
-	   p_Attack[0] = value;
+	   p_Attack[ch] = value;
 	  break;
 	  case 2:
-	   p_Attack[0] = value;
+	   p_Attack[ch] = value;
 	  break;
 	  case 3:
-	   p_Attack[0] = value;
+	   p_Attack[ch] = value;
 	  break;
 	case 4: // one shot forward
 	  if (value == 1)
-	   a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+	   a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_FWD);
 	   break;
 	case 5: // one shot Reverse
 	  if (value == 1)
-	   a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_REV);
+	   a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_REV);
 	  break;
 	case 6: // Loop Fwd
 	  if (value == 1)
-	    a_slices[0].setSlicePlayMode(Slice::LOOP_FWD);
+	    a_slices[ch].setSlicePlayMode(Slice::LOOP_FWD);
 	 break;
 	case 7: // Loop Rev
 	  if (value == 1)
-	  a_slices[0].setSlicePlayMode(Slice::LOOP_REV);
+	  a_slices[ch].setSlicePlayMode(Slice::LOOP_REV);
 	  break;
+    case 8:
+        int tmp = SampleObject.getSampleSize()
       }
       
     }
