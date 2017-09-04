@@ -230,7 +230,7 @@ public:
       paramSliceStart15,
       paramSliceEnd15,
       paramSliceActive15,
-      
+      paramNumberOfSlices,
       paramCount
     };
 
@@ -307,6 +307,7 @@ private:
     float p_SliceStart[16];
     float p_SliceEnd[16];
     float p_Slice_Active[16];
+    float p_NumberOfSlices;
     
     
 

@@ -17,7 +17,7 @@ class Sample
     int length;
     int channels;
     int loadSample(std::string fp);
-    int size;
+    int size; // in frames !!!
 
     public:
         Sample();
@@ -27,17 +27,18 @@ class Sample
         std::vector<float> getSampleVector()
          {
              return sampleVector;
-             }
+	 }
 
-        int getSampleSize()
+        int getSampleSize() const
         {
             return size;
         }
 
-        int getSampleChannels()
+        int getSampleChannels() const
         {
             return channels;
         }
+        
         void createSlices( Slice* slices, int number);
 };
 

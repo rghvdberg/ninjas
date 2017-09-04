@@ -52,6 +52,7 @@ Sample::Sample(std::string fp)
             slices[j].setSliceStart(i);
             slices[j].setSliceStart(i);
             slices[j].setSliceEnd(i+sliceSize-1);
+	    slices[j].setSliceActive(true);
             //std::cout << "Slice :" << j << " : " << slices[j].getSliceStart() << "->" << slices[j].getSliceEnd() << std::endl;
             ++j;
 
