@@ -24,8 +24,8 @@ OBJS_DSP = \
 
 	
 
-#OBJS_UI  = \
-#	SlicerUI.cpp.o
+OBJS_UI  = \
+	NinjasUI.cpp.o
 
 # --------------------------------------------------------------
 # Do some magic
