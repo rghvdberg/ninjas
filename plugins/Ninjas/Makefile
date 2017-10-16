@@ -25,7 +25,8 @@ OBJS_DSP = \
 	
 
 OBJS_UI  = \
-	NinjasUI.cpp.o
+	NinjasUI.cpp.o \
+	NinjasArtwork.cpp.o
 
 # --------------------------------------------------------------
 # Do some magic
