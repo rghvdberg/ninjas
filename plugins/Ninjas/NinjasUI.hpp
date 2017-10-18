@@ -23,16 +23,20 @@
 
 #include "NinjasArtwork.hpp"
 
-#include "DistrhoPluginInfo.h"
+
+
 
 START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
 
-class NinjasUI : public UI
+class NinjasUI : public UI,
+		 public ImageSwitch::Callback
+
 {
 public:
-    NinjasUI ();
+    NinjasUI();
+   
 
 protected:
     // -------------------------------------------------------------------
@@ -42,11 +46,13 @@ protected:
 
     // -------------------------------------------------------------------
     // Widget Callbacks
+    void imageSwitchClicked(ImageSwitch* ImageSwitch, bool down) override;
 
     void onDisplay() override;
 
 private:
     Image fImgBackground;
+    ScopedPointer<ImageSwitch> fSwitchFwd;
  
    
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
@@ -56,4 +62,4 @@ private:
 
 END_NAMESPACE_DISTRHO
 
-#endif // DISTRHO_UI_KARS_HPP_INCLUDED
+#endif // 

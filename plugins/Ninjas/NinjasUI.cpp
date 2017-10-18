@@ -18,6 +18,8 @@
 #include "DistrhoUI.hpp"
 #include "NinjasUI.hpp"
 #include "NinjasArtwork.hpp"
+#include "Ninjas.hpp"
+
 
 START_NAMESPACE_DISTRHO
 
@@ -26,23 +28,42 @@ namespace Art = NinjasArtwork;
 // -----------------------------------------------------------------------------------------------------------
 NinjasUI::NinjasUI()
     : UI(Art::backgroundWidth, Art::backgroundHeight),
-      fImgBackground(Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight)
+      fImgBackground(Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR)
 {
+  // switches
+  fSwitchFwd = new ImageSwitch(this,
+				  Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+				  Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+  fSwitchFwd->setId(1);
+  fSwitchFwd->setAbsolutePos(441,242);
+  fSwitchFwd->setCallback(this);
 }
-
-
-
 
    /**
       A parameter has changed on the plugin side.
       This is called by the host to inform the UI about parameter changes.
     */
-    void parameterChanged(uint32_t index, float value)
+void NinjasUI::parameterChanged(uint32_t index, float value)
     {
-        //fParameters[index] = value;
-        //repaint();
+  switch (index)
+    {
+    case 1:
+        fSwitchFwd->setDown(value > 0.5f);
+        break;
+   
     }
- 
+}
+/* ----------------------------------------------------------------------------------------------------------
+ * Widget Callbacks
+ *----------------------------------------------------------------------------------------------------------*/
+ void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
+{
+    const uint buttonId(imageSwitch->getId());
+
+    editParameter(buttonId, true);
+    setParameterValue(buttonId, down ? 1.0f : 0.0f);
+    editParameter(buttonId, false);
+}
     
 
 void NinjasUI::onDisplay()
