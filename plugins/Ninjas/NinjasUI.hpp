@@ -31,7 +31,8 @@ START_NAMESPACE_DISTRHO
 // -----------------------------------------------------------------------
 
 class NinjasUI : public UI,
-		 public ImageSwitch::Callback
+		 public ImageSwitch::Callback,
+		 public ImageKnob::Callback
 
 {
 public:
@@ -47,12 +48,17 @@ protected:
     // -------------------------------------------------------------------
     // Widget Callbacks
     void imageSwitchClicked(ImageSwitch* ImageSwitch, bool down) override;
-
+    
+    void imageKnobDragStarted(ImageKnob* knob) override;
+    void imageKnobDragFinished(ImageKnob* knob) override;
+    void imageKnobValueChanged(ImageKnob* knob, float value) override;
+    
     void onDisplay() override;
 
 private:
     Image fImgBackground;
     ScopedPointer<ImageSwitch> fSwitchFwd;
+    ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
  
    
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
