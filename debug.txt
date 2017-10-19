@@ -1,0 +1,248 @@
+GNU gdb (Ubuntu 8.0.1-0ubuntu1) 8.0.1
+Copyright (C) 2017 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i686-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from jalv.gtk...(no debugging symbols found)...done.
+(gdb) r
+Starting program: /usr/bin/jalv.gtk https://github.com/rghvdberg/plugin-examples
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/i386-linux-gnu/libthread_db.so.1".
+[New Thread 0xb6468b40 (LWP 21830)]
+[New Thread 0xb63e7b40 (LWP 21831)]
+Plugin:       https://github.com/rghvdberg/plugin-examples
+JACK Name:    Ninjas
+Block length: 1024 frames
+MIDI buffers: 32768 bytes
+file path =/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg
+Loaded a file with 2 channels, and a samplerate of 48000 with 405496 samples, so its duration is 8 seconds long.
+sample loading flag: 0
+sampleVector size =810992
+attack0             = 0,000000
+decay1              = 0,000000
+sustain2            = 1,000000
+release3            = 1,000000
+one_shot_fwd4       = 1,000000
+one_shot_rev5       = 0,000000
+loop_fwd6           = 0,000000
+loop_rev7           = 0,000000
+slice_start8        = 0,000000
+slice_end9          = 0,999999
+slice_active10      = 1,000000
+attack11            = 0,000000
+decay12             = 0,000000
+sustain13           = 1,000000
+release14           = 1,000000
+one_shot_fwd15      = 1,000000
+one_shot_rev16      = 0,000000
+loop_fwd17          = 0,000000
+loop_rev18          = 0,000000
+slice_start19       = 0,000000
+slice_end20         = 0,000000
+slice_active21      = 0,000000
+attack22            = 0,000000
+decay23             = 0,000000
+sustain24           = 1,000000
+release25           = 1,000000
+one_shot_fwd26      = 1,000000
+one_shot_rev27      = 0,000000
+loop_fwd28          = 0,000000
+loop_rev29          = 0,000000
+slice_start30       = 0,000000
+slice_end31         = 0,000000
+slice_active32      = 0,000000
+attack33            = 0,000000
+decay34             = 0,000000
+sustain35           = 1,000000
+release36           = 1,000000
+one_shot_fwd37      = 1,000000
+one_shot_rev38      = 0,000000
+loop_fwd39          = 0,000000
+loop_rev40          = 0,000000
+slice_start41       = 0,000000
+slice_end42         = 0,000000
+slice_active43      = 0,000000
+attack44            = 0,000000
+decay45             = 0,000000
+sustain46           = 1,000000
+release47           = 1,000000
+one_shot_fwd48      = 1,000000
+one_shot_rev49      = 0,000000
+loop_fwd50          = 0,000000
+loop_rev51          = 0,000000
+slice_start52       = 0,000000
+slice_end53         = 0,000000
+slice_active54      = 0,000000
+attack55            = 0,000000
+decay56             = 0,000000
+sustain57           = 1,000000
+release58           = 1,000000
+one_shot_fwd59      = 1,000000
+one_shot_rev60      = 0,000000
+loop_fwd61          = 0,000000
+loop_rev62          = 0,000000
+slice_start63       = 0,000000
+slice_end64         = 0,000000
+slice_active65      = 0,000000
+attack66            = 0,000000
+decay67             = 0,000000
+sustain68           = 1,000000
+release69           = 1,000000
+one_shot_fwd70      = 1,000000
+one_shot_rev71      = 0,000000
+loop_fwd72          = 0,000000
+loop_rev73          = 0,000000
+slice_start74       = 0,000000
+slice_end75         = 0,000000
+slice_active76      = 0,000000
+attack77            = 0,000000
+decay78             = 0,000000
+sustain79           = 1,000000
+release80           = 1,000000
+one_shot_fwd81      = 1,000000
+one_shot_rev82      = 0,000000
+loop_fwd83          = 0,000000
+loop_rev84          = 0,000000
+slice_start85       = 0,000000
+slice_end86         = 0,000000
+slice_active87      = 0,000000
+attack88            = 0,000000
+decay89             = 0,000000
+sustain90           = 1,000000
+release91           = 1,000000
+one_shot_fwd92      = 1,000000
+one_shot_rev93      = 0,000000
+loop_fwd94          = 0,000000
+loop_rev95          = 0,000000
+slice_start96       = 0,000000
+slice_end97         = 0,000000
+slice_active98      = 0,000000
+attack99            = 0,000000
+decay100            = 0,000000
+sustain101          = 1,000000
+release102          = 1,000000
+one_shot_fwd103     = 1,000000
+one_shot_rev104     = 0,000000
+loop_fwd105         = 0,000000
+loop_rev106         = 0,000000
+slice_start107      = 0,000000
+slice_end108        = 0,000000
+slice_active109     = 0,000000
+attack110           = 0,000000
+decay111            = 0,000000
+sustain112          = 1,000000
+release113          = 1,000000
+one_shot_fwd114     = 1,000000
+one_shot_rev115     = 0,000000
+loop_fwd116         = 0,000000
+loop_rev117         = 0,000000
+slice_start118      = 0,000000
+slice_end119        = 0,000000
+slice_active120     = 0,000000
+attack121           = 0,000000
+decay122            = 0,000000
+sustain123          = 1,000000
+release124          = 1,000000
+one_shot_fwd125     = 1,000000
+one_shot_rev126     = 0,000000
+loop_fwd127         = 0,000000
+loop_rev128         = 0,000000
+slice_start129      = 0,000000
+slice_end130        = 0,000000
+slice_active131     = 0,000000
+atta[New Thread 0xaf3cab40 (LWP 21832)]
+
+Thread 1 "jalv.gtk" received signal SIGSEGV, Segmentation fault.
+0xa9970257 in ?? ()
+(gdb) 
+(gdb) backtrace
+#0  0xa9970257 in  ()
+#1  0xae709678 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#2  0xae709c0f in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#3  0xae623439 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#4  0xae61c300 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#5  0xae61c7f7 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#6  0xae847fab in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#7  0xae661192 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#8  0xae8499ff in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#9  0xae666037 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#10 0xae83dcfe in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#11 0xae83fa47 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#12 0xae5e0fcb in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#13 0xae5e1aed in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#14 0xaf012bb8 in  () at /usr/lib/i386-linux-gnu/mesa/libGL.so.1
+#15 0xaf01301c in  () at /usr/lib/i386-linux-gnu/mesa/libGL.so.1
+#16 0xaefe7c59 in glXSwapBuffers () at /usr/lib/i386-linux-gnu/mesa/libGL.so.1
+#17 0xaf08df7d in puglLeaveContext(PuglView*, bool) (view=0x81b4190, flush=true) at src/pugl/pugl_x11.c:225
+#18 0xaf08e5c2 in puglDisplay(PuglView*) (view=0x81b4190) at src/pugl/pugl_x11.c:379
+#19 0xaf08ef61 in puglProcessEvents(PuglView*) (view=0x81b4190) at src/pugl/pugl_x11.c:600
+#20 0xaf0917c9 in DGL::Window::PrivateData::idle() (this=0x81b2bb0) at src/Window.cpp:641
+#21 0xaf08f970 in DGL::Window::_idle() (this=0x81b413c) at src/Window.cpp:1154
+#22 0xaf06de0f in DGL::Application::idle() (this=0x81b4130) at src/Application.cpp:37
+#23 0xaf06c68b in DISTRHO::UIExporter::idle() (this=0x81b4130) at ../../dpf/distrho/src/DistrhoUIInternal.hpp:358
+#24 0xaf06d1de in DISTRHO::UiLv2::lv2ui_idle() (this=0x81b4130) at ../../dpf/distrho/src/DistrhoUILV2.cpp:145
+#25 0xaf06bc74 in DISTRHO::lv2ui_idle(LV2UI_Handle) (ui=0x81b4130) at ../../dpf/distrho/src/DistrhoUILV2.cpp:444
+#26 0xb633081d in  () at /opt/kxstudio/lib/suil-0/libsuil_x11_in_gtk2.so
+#27 0xb77f8711 in  () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#28 0xb77f7b04 in g_main_context_dispatch () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#29 0xb77f7f19 in  () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#30 0xb77f82c9 in g_main_loop_run () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#31 0xb7a5ec85 in gtk_main () at /usr/lib/i386-linux-gnu/libgtk-x11-2.0.so.0
+#32 0x08054f05 in  ()
+#33 0x0804d6ec in  ()
+#34 0xb75f2986 in __libc_start_main (main=0x804c240, argc=2, argv=0xbffff224, init=
+    0x807faf0, fini=0x807fb50, rtld_fini=0xb7fe8e50 <_dl_fini>, stack_end=0xbffff21c) at ../csu/libc-start.c:308
+#35 0x0804dcf3 in  ()
+(gdb) 
+#0  0xa9970257 in  ()
+#1  0xae709678 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#2  0xae709c0f in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#3  0xae623439 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#4  0xae61c300 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#5  0xae61c7f7 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#6  0xae847fab in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#7  0xae661192 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#8  0xae8499ff in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#9  0xae666037 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#10 0xae83dcfe in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#11 0xae83fa47 in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#12 0xae5e0fcb in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#13 0xae5e1aed in  () at /usr/lib/i386-linux-gnu/dri/r300_dri.so
+#14 0xaf012bb8 in  () at /usr/lib/i386-linux-gnu/mesa/libGL.so.1
+#15 0xaf01301c in  () at /usr/lib/i386-linux-gnu/mesa/libGL.so.1
+#16 0xaefe7c59 in glXSwapBuffers () at /usr/lib/i386-linux-gnu/mesa/libGL.so.1
+#17 0xaf08df7d in puglLeaveContext(PuglView*, bool) (view=0x81b4190, flush=true) at src/pugl/pugl_x11.c:225
+#18 0xaf08e5c2 in puglDisplay(PuglView*) (view=0x81b4190) at src/pugl/pugl_x11.c:379
+#19 0xaf08ef61 in puglProcessEvents(PuglView*) (view=0x81b4190) at src/pugl/pugl_x11.c:600
+#20 0xaf0917c9 in DGL::Window::PrivateData::idle() (this=0x81b2bb0) at src/Window.cpp:641
+#21 0xaf08f970 in DGL::Window::_idle() (this=0x81b413c) at src/Window.cpp:1154
+#22 0xaf06de0f in DGL::Application::idle() (this=0x81b4130) at src/Application.cpp:37
+#23 0xaf06c68b in DISTRHO::UIExporter::idle() (this=0x81b4130) at ../../dpf/distrho/src/DistrhoUIInternal.hpp:358
+#24 0xaf06d1de in DISTRHO::UiLv2::lv2ui_idle() (this=0x81b4130) at ../../dpf/distrho/src/DistrhoUILV2.cpp:145
+#25 0xaf06bc74 in DISTRHO::lv2ui_idle(LV2UI_Handle) (ui=0x81b4130) at ../../dpf/distrho/src/DistrhoUILV2.cpp:444
+#26 0xb633081d in  () at /opt/kxstudio/lib/suil-0/libsuil_x11_in_gtk2.so
+#27 0xb77f8711 in  () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#28 0xb77f7b04 in g_main_context_dispatch () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#29 0xb77f7f19 in  () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#30 0xb77f82c9 in g_main_loop_run () at /lib/i386-linux-gnu/libglib-2.0.so.0
+#31 0xb7a5ec85 in gtk_main () at /usr/lib/i386-linux-gnu/libgtk-x11-2.0.so.0
+#32 0x08054f05 in  ()
+#33 0x0804d6ec in  ()
+#34 0xb75f2986 in __libc_start_main (main=0x804c240, argc=2, argv=0xbffff224, init=
+    0x807faf0, fini=0x807fb50, rtld_fini=0xb7fe8e50 <_dl_fini>, stack_end=0xbffff21c) at ../csu/libc-start.c:308
+#35 0x0804dcf3 in  ()
+(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 21826] will be killed.
+
+Quit anyway? (y or n) EOF [assumed Y]
