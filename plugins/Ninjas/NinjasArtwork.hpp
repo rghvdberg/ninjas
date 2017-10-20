@@ -11,24 +11,24 @@ namespace NinjasArtwork
     const unsigned int backgroundHeight   = 351;
 
     extern const char* floppy_offData;
-    const unsigned int floppy_offDataSize = 12258;
-    const unsigned int floppy_offWidth    = 227;
-    const unsigned int floppy_offHeight   = 18;
+    const unsigned int floppy_offDataSize = 78912;
+    const unsigned int floppy_offWidth    = 274;
+    const unsigned int floppy_offHeight   = 96;
 
     extern const char* floppy_onData;
-    const unsigned int floppy_onDataSize = 12258;
-    const unsigned int floppy_onWidth    = 227;
-    const unsigned int floppy_onHeight   = 18;
+    const unsigned int floppy_onDataSize = 78912;
+    const unsigned int floppy_onWidth    = 274;
+    const unsigned int floppy_onHeight   = 96;
 
     extern const char* rotary_adsrData;
-    const unsigned int rotary_adsrDataSize = 7396;
-    const unsigned int rotary_adsrWidth    = 43;
-    const unsigned int rotary_adsrHeight   = 43;
+    const unsigned int rotary_adsrDataSize = 7744;
+    const unsigned int rotary_adsrWidth    = 44;
+    const unsigned int rotary_adsrHeight   = 44;
 
     extern const char* rotary_slicesData;
-    const unsigned int rotary_slicesDataSize = 4900;
-    const unsigned int rotary_slicesWidth    = 35;
-    const unsigned int rotary_slicesHeight   = 35;
+    const unsigned int rotary_slicesDataSize = 88752;
+    const unsigned int rotary_slicesWidth    = 43;
+    const unsigned int rotary_slicesHeight   = 688;
 
     extern const char* switch_offData;
     const unsigned int switch_offDataSize = 2610;

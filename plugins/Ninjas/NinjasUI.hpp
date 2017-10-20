@@ -57,7 +57,7 @@ protected:
 
 private:
     Image fImgBackground;
-    ScopedPointer<ImageSwitch> fSwitchFwd;
+    ScopedPointer<ImageSwitch> fSwitchFwd, fSwitchFloppy;
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
  
    
