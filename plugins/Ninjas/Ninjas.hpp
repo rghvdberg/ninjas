@@ -113,14 +113,18 @@ private:
     
 
     // empty sample object
+    
     std::vector<float> sampleVector; // this holds the sample data
+    //Sample SampleObject();
     Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg"};
+    
     /* create Mixer objects
     One for each audio channel
     after each iteration mix is put in audiouffer
      */
     Mixer mixL;
     Mixer mixR;
+    
     /*Voice stack
     here we keep track of voices playing
      */
@@ -137,6 +141,7 @@ private:
     Slice a_slices[16];
     int slices = 1;
     int sliceSize;
+    double samplerate = getSampleRate();
 
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.

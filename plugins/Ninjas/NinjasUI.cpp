@@ -142,14 +142,32 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
        break;
        
     }
+ 
 }
+
+void NinjasUI::uiFileBrowserSelected(const char* filename)
+{
+	// if a file was selected, tell DSP
+	if (filename != nullptr)
+	{
+	  
+	  std::cout << filename << std::endl;
+	}
+	//	setState("filepath", filename);
+}
+
 /* ----------------------------------------------------------------------------------------------------------
  * Widget Callbacks
  *----------------------------------------------------------------------------------------------------------*/
  void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
 {
     const uint buttonId(imageSwitch->getId());
-
+if (buttonId ==  7)
+{
+  DGL::Window::FileBrowserOptions opts;
+  opts.title = "Load audio file";
+  getParentWindow().openFileBrowser(opts);
+}
     editParameter(buttonId, true);
     setParameterValue(buttonId, down ? 1.0f : 0.0f);
     editParameter(buttonId, false);
