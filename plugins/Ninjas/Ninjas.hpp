@@ -115,8 +115,9 @@ private:
     // empty sample object
     
     std::vector<float> sampleVector; // this holds the sample data
-    //Sample SampleObject();
-    Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg"};
+    Sample SampleObject;
+   
+    //Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg"};
     
     /* create Mixer objects
     One for each audio channel

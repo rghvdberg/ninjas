@@ -39,10 +39,10 @@ START_NAMESPACE_DISTRHO
 NinjasPlugin::NinjasPlugin()
       : Plugin(paramCount, 0, 0) //1 parameter, 0 programs (presets) , 0 states
     {
-	sampleVector = SampleObject.getSampleVector();
-	std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
-	SampleObject.createSlices(a_slices,slices);
-	a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+	//sampleVector = SampleObject.getSampleVector();
+	//std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
+	//SampleObject.createSlices(a_slices,slices);
+	//a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
     }
 
   /* --------------------------------------------------------------------------------------------------------
@@ -55,67 +55,65 @@ NinjasPlugin::NinjasPlugin()
     */
     void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     {
-      int id = index % 11;
-	switch(id)
+      	switch(index)
 	{
-	case 0:
-	{
-	    //parameter.hints      = ;
-	    parameter.ranges.def = 0.0f;
-	    parameter.ranges.min = 0.0f;
-	    parameter.ranges.max = 5.0f;
-	    parameter.name   = "Attack";
-	    parameter.symbol = "attack"+String(index);
-	    break;
-	}
+	  case 0:
+	     {
+	       parameter.hints      = kParameterIsAutomable|kParameterIsInteger;
+	       parameter.ranges.def = 1.0f;
+	       parameter.ranges.min = 1.0f;
+	       parameter.ranges.max = 16.0f;
+	       parameter.name   = "Slices";
+	       parameter.symbol  = "number_of_slices";
+	     }
 	case 1:
 	{
 	    //parameter.hints      = ;
 	    parameter.ranges.def = 0.0f;
 	    parameter.ranges.min = 0.0f;
-	    parameter.ranges.max = 5.0f;
-	    parameter.name   = "Decay";
-	    parameter.symbol =  "decay"+String(index);
+	    parameter.ranges.max = 1.0f;
+	    parameter.name   = "Attack";
+	    parameter.symbol = "attack";
 	    break;
 	}
 	case 2:
+	{
+	    //parameter.hints      = ;
+	    parameter.ranges.def = 0.0f;
+	    parameter.ranges.min = 0.0f;
+	    parameter.ranges.max = 1.0f;
+	    parameter.name   = "Decay";
+	    parameter.symbol =  "decay";
+	    break;
+	}
+	case 3:
 	{
 	    //parameter.hints      = ;
 	    parameter.ranges.def = 1.0f;
 	    parameter.ranges.min = 0.0f;
 	    parameter.ranges.max = 1.0f;
 	    parameter.name = "Sustain";
-	    parameter.symbol = "sustain"+String(index);
+	    parameter.symbol = "sustain";
 	    break;
 	}
-	case 3:
+	case 4:
 	{
 	    //parameter.hints      = ;
 	    parameter.ranges.def = 0.0f;
 	    parameter.ranges.min = 0.0f;
-	    parameter.ranges.max = 5.0f;
+	    parameter.ranges.max = 1.0f;
 	    parameter.name   = "Release";
-	    parameter.symbol = "release"+String(index);
+	    parameter.symbol = "release";
 	    break;
 	}
-	case 4:
+	case 5:
 	{
 	    parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
 	    parameter.ranges.def = 1.0f;
 	    parameter.ranges.min = 0.0f;
 	    parameter.ranges.max = 1.0f;
 	    parameter.name   = "One Shot Forward";
-	    parameter.symbol  = "one_shot_fwd"+String(index);
-	    break;
-	}
-	case 5:
-	{
-	    parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
-	    parameter.ranges.def = 0.0f;
-	    parameter.ranges.min = 0.0f;
-	    parameter.ranges.max = 1.0f;
-	    parameter.name   = "One Shot Reverse";
-	    parameter.symbol  = "one_shot_rev"+String(index);
+	    parameter.symbol  = "one_shot_fwd";
 	    break;
 	}
 	case 6:
@@ -124,8 +122,8 @@ NinjasPlugin::NinjasPlugin()
 	    parameter.ranges.def = 0.0f;
 	    parameter.ranges.min = 0.0f;
 	    parameter.ranges.max = 1.0f;
-	    parameter.name   = "Looped Play Forward";
-	    parameter.symbol  = "loop_fwd"+String(index);
+	    parameter.name   = "One Shot Reverse";
+	    parameter.symbol  = "one_shot_rev";
 	    break;
 	}
 	case 7:
@@ -134,53 +132,31 @@ NinjasPlugin::NinjasPlugin()
 	    parameter.ranges.def = 0.0f;
 	    parameter.ranges.min = 0.0f;
 	    parameter.ranges.max = 1.0f;
-	    parameter.name   = "Looped Play Reverse";
-	    parameter.symbol  = "loop_rev"+String(index);
+	    parameter.name   = "Looped Play Forward";
+	    parameter.symbol  = "loop_fwd";
 	    break;
 	}
 	case 8:
-	{
-	    parameter.hints      = kParameterIsAutomable;
-	    parameter.ranges.def = 0.0f;
-	    parameter.ranges.min = 0.0f;
-	    parameter.ranges.max = 1.0f;
-	    parameter.name   = "Slice Start";
-	    parameter.symbol  = "slice_start"+String(index);
-		    break;
-	}
-	case 9:
-	{
-	    parameter.hints      = kParameterIsAutomable ;
-	    parameter.ranges.def = 1.0f;
-	    parameter.ranges.min = 0.0f;
-	    parameter.ranges.max = 1.0f;
-	    parameter.name   = "Slice End";
-	    parameter.symbol  = "slice_end"+String(index);
-	      break;
-	}
-	case 10:
 	{
 	    parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
 	    parameter.ranges.def = 0.0f;
 	    parameter.ranges.min = 0.0f;
 	    parameter.ranges.max = 1.0f;
-	    parameter.name   = "Slice Active";
-	    parameter.symbol  = "slice_active"+String(index);
+	    parameter.name   = "Looped Play Reverse";
+	    parameter.symbol  = "loop_rev";
 	    break;
 	}
-	default:
-	  std::cout << "Parameter index out of range. id = " << id << std::endl;
-	  break;
 	} // switch
-    if (index == 176)
-    {
-      parameter.hints      = kParameterIsAutomable|kParameterIsInteger;
-      parameter.ranges.def = 1.0f;
-      parameter.ranges.min = 1.0f;
-      parameter.ranges.max = 16.0f;
-      parameter.name   = "Slices";
-      parameter.symbol  = "number_of_slices"+String(index);
-    }
+    if (index > 8)
+    	{
+	    parameter.hints      = kParameterIsBoolean;
+	    parameter.ranges.def = 0.0f;
+	    parameter.ranges.min = 0.0f;
+	    parameter.ranges.max = 1.0f;
+	    parameter.name   = "Switch "+String(index-8);
+	    parameter.symbol  = "switch"+String(index-8);
+	}
+   
    }
     
 
@@ -263,21 +239,18 @@ NinjasPlugin::NinjasPlugin()
     */
     void NinjasPlugin::setParameterValue(uint32_t index, float value)
     {
-      if (index == 176)
+      if (index == 0)
       {
-	slices = (int) value;
+      	slices = (int) value;
 	SampleObject.createSlices(a_slices,slices);
       }
-      else 
-      {
       
-      int id = index % 11;
-      int ch = index / 11;
-      
-      switch(id)
+	//TODO rework this !!!
+	/*
+	switch(id)
       {
 	// a_slices[0] midichannel == a_slices index
-	case 0:
+	case 1:
 	  p_Attack[ch] = value;
 	  break;
 	case 1:
@@ -328,7 +301,7 @@ NinjasPlugin::NinjasPlugin()
 	  break;
 	} // switch
       } // else 
-      
+      */
     } // setParameterValue
 
   /* --------------------------------------------------------------------------------------------------------

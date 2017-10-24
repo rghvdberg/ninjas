@@ -7,23 +7,28 @@
 
 // Constructor
 
+Sample::Sample()
+{
+
+}
+
+
+
 Sample::Sample(std::string fp)
 {
     int ok = loadSample(fp);
     std::cout << "sample loading flag: " << ok << std::endl;
 }
 
-    int Sample::loadSample(std::string fp)
-
+int Sample::loadSample(std::string fp)
     {
-        // create a "Sndfile" handle, it's part of the sndfile library we
-        // use to load samples
+        // create a "Sndfile" handle, it's part of the sndfile library we use to load samples
         std::cout << "file path =" << fp << std::endl;
-          SndfileHandle fileHandle( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
+        SndfileHandle fileHandle( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
         // get the number of frames in the sample
-          size  = fileHandle.frames();
-          if ( size == 0 )
-            {
+        size  = fileHandle.frames();
+        if ( size == 0 )
+	  {
                 //file doesn't exist or is of incompatible type, main handles the -1
                 std::cout << "Something went wrong" << std::endl;
                 return 1;

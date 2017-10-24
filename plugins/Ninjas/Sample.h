@@ -16,7 +16,6 @@ class Sample
     int samplerate;
     int length;
     int channels;
-    int loadSample(std::string fp);
     int size; // in frames !!!
 
     public:
@@ -40,6 +39,8 @@ class Sample
         }
         
         void createSlices( Slice* slices, int number);
+	
+	int loadSample(std::string fp);
 };
 
 #endif // SAMPLE_H

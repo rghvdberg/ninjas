@@ -19,6 +19,7 @@
 #include "NinjasUI.hpp"
 #include "NinjasArtwork.hpp"
 #include "Ninjas.hpp"
+#include <string>
 
 
 START_NAMESPACE_DISTRHO
@@ -150,8 +151,9 @@ void NinjasUI::uiFileBrowserSelected(const char* filename)
 	// if a file was selected, tell DSP
 	if (filename != nullptr)
 	{
-	  
-	  std::cout << filename << std::endl;
+	  std::string fp = filename;
+	  //int ok = SampleObject.loadSample(fp);
+	  std::cout << fp << std::endl;
 	}
 	//	setState("filepath", filename);
 }

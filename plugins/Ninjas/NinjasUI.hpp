@@ -18,10 +18,9 @@
 #define NINJAS_UI_HPP_INCLUDED
 
 #include "DistrhoUI.hpp"
-
 #include "ImageWidgets.hpp"
-
 #include "NinjasArtwork.hpp"
+
 
 
 
