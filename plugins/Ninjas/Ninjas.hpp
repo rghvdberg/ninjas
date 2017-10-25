@@ -107,7 +107,6 @@ private:
     float p_LoopRev[16];
     float p_SliceStart[16];
     float p_SliceEnd[16];
-    float p_Slice_Active[16];
     float p_NumberOfSlices;
     
     
@@ -143,6 +142,7 @@ private:
     int slices = 1;
     int sliceSize;
     double samplerate = getSampleRate();
+    int currentSlice {0};
 
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.
