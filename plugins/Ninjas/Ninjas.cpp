@@ -66,6 +66,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.ranges.max = 16.0f;
         parameter.name   = "Slices";
         parameter.symbol  = "number_of_slices";
+	break;
     }
      case paramAttack:
     {
@@ -148,13 +149,18 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         break;
     }
     case paramFloppy:
+    {
         parameter.hints = kParameterIsBoolean;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
         parameter.name   = "Floppy";
         parameter.symbol  = "floppy";
+	break;
     }
+    }
+    
+    
 
     if (index > 9 )
     {

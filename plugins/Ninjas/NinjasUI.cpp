@@ -36,7 +36,7 @@ NinjasUI::NinjasUI()
 
     fKnobSlices = new ImageKnob(this,
                                 Image(Art::rotary_slicesData, Art::rotary_slicesWidth, Art::rotary_slicesHeight, GL_BGR));
-    fKnobSlices->setId(paramNumberOfSlices); // TODO: implement proper parameters
+    fKnobSlices->setId(paramNumberOfSlices); 
     fKnobSlices->setAbsolutePos(279, 80);
     fKnobSlices->setRange(1.0f, 16.0f);
     fKnobSlices->setDefault(1.0f);
@@ -48,51 +48,43 @@ NinjasUI::NinjasUI()
     // ADSR
     fKnobAttack = new ImageKnob(this,
                                 Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobAttack->setId(paramAttack); // TODO: implement proper parameters
+    fKnobAttack->setId(paramAttack); 
     fKnobAttack->setAbsolutePos(560, 256);
     fKnobAttack->setRange(0.0f, 1.0f);
     fKnobAttack->setDefault(0.0f);
     fKnobAttack->setValue(0.0f);
     fKnobAttack->setRotationAngle(300);
-    //fKnobAttack->setImageLayerCount(16);
-    //fKnobAttack->setStep(1.0f);
     fKnobAttack->setCallback(this);
 
     fKnobDecay = new ImageKnob(this,
                                Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobDecay->setId(paramDecay); // TODO: implement proper parameters
+    fKnobDecay->setId(paramDecay); 
     fKnobDecay->setAbsolutePos(637, 256);
     fKnobDecay->setRange(0.0f, 1.0f);
     fKnobDecay->setDefault(0.0f);
     fKnobDecay->setValue(0.0f);
     fKnobDecay->setRotationAngle(300);
-    //fKnobDecay->setImageLayerCount(16);
-    //fKnobDecay->setStep(1.0f);
     fKnobDecay->setCallback(this);
 
     fKnobSustain = new ImageKnob(this,
                                  Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobSustain->setId(paramSustain); // TODO: implement proper parameters
+    fKnobSustain->setId(paramSustain); 
     fKnobSustain->setAbsolutePos(715, 256);
     fKnobSustain->setRange(0.0f, 1.0f);
     fKnobSustain->setDefault(1.0f);
     fKnobSustain->setValue(1.0f);
     fKnobSustain->setRotationAngle(300);
-    //fKnobSustain->setImageLayerCount(16);
-    //fKnobSustain->setStep(1.0f);
-    fKnobSustain->setCallback(this);
+  fKnobSustain->setCallback(this);
 
     fKnobRelease = new ImageKnob(this,
                                  Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobRelease->setId(paramRelease); // TODO: implement proper parameters
+    fKnobRelease->setId(paramRelease);
     fKnobRelease->setAbsolutePos(792, 256);
     fKnobRelease->setRange(0.0f, 1.0f);
     fKnobRelease->setDefault(0.0f);
     fKnobRelease->setValue(0.0f);
     fKnobRelease->setRotationAngle(300);
-    //fKnobRelease->setImageLayerCount(16);
-    //fKnobRelease->setStep(1.0f);
-    fKnobRelease->setCallback(this);
+     fKnobRelease->setCallback(this);
     //
 
 
@@ -143,6 +135,7 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
     switch (index)
     {
     case paramNumberOfSlices:
+      std::cout << "parameterChanged - value =" << value << std::endl;
         fKnobSlices->setValue(value);
         break;
     // Play Modes
