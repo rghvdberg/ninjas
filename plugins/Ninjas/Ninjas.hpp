@@ -108,23 +108,23 @@ private:
     float p_SliceStart[16];
     float p_SliceEnd[16];
     float p_NumberOfSlices;
-    
-    
+
+
 
     // empty sample object
-    
+
     std::vector<float> sampleVector; // this holds the sample data
     Sample SampleObject;
-   
+
     //Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg"};
-    
+
     /* create Mixer objects
     One for each audio channel
     after each iteration mix is put in audiouffer
      */
     Mixer mixL;
     Mixer mixR;
-    
+
     /*Voice stack
     here we keep track of voices playing
      */

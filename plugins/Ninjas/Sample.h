@@ -10,7 +10,7 @@
 
 class Sample
 {
-    private:
+private:
     std::string filepath;
     std::vector <float> sampleVector;
     int samplerate;
@@ -18,29 +18,29 @@ class Sample
     int channels;
     int size; // in frames !!!
 
-    public:
-        Sample();
+public:
+    Sample();
 
-        Sample(std::string filepath);
+    Sample(std::string filepath);
 
-        std::vector<float> getSampleVector()
-         {
-             return sampleVector;
-	 }
+    std::vector<float> getSampleVector()
+    {
+        return sampleVector;
+    }
 
-        int getSampleSize() const
-        {
-            return size;
-        }
+    int getSampleSize() const
+    {
+        return size;
+    }
 
-        int getSampleChannels() const
-        {
-            return channels;
-        }
-        
-        void createSlices( Slice* slices, int number);
-	
-	int loadSample(std::string fp);
+    int getSampleChannels() const
+    {
+        return channels;
+    }
+
+    void createSlices( Slice* slices, int number);
+
+    int loadSample(std::string fp);
 };
 
 #endif // SAMPLE_H

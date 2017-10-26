@@ -10,26 +10,26 @@
 
 
 Mixer::Mixer()
-: mix {0}, channels {0}, average {0}
+    : mix {0}, channels {0}, average {0}
 
 {
 
 }
 
 Mixer::~Mixer() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 void Mixer::add_Sample(float s)
 {
-	mix +=s;
-	++channels;
+    mix +=s;
+    ++channels;
 }
 
 float Mixer::get_Mix()
 {
-	average = mix/channels;
-	mix = 0;
-	channels = 0;
-	return average;
+    average = mix/channels;
+    mix = 0;
+    channels = 0;
+    return average;
 }

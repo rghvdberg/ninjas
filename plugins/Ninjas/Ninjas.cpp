@@ -29,6 +29,7 @@
 #include "Mixer.h"
 #include "Stack.h"
 
+#include "DistrhoPluginInfo.h"
 
 START_NAMESPACE_DISTRHO
 
@@ -57,7 +58,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
 {
     switch(index)
     {
-    case 0:
+    case paramNumberOfSlices:
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsInteger;
         parameter.ranges.def = 1.0f;
@@ -66,7 +67,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.name   = "Slices";
         parameter.symbol  = "number_of_slices";
     }
-    case 1:
+     case paramAttack:
     {
         //parameter.hints      = ;
         parameter.ranges.def = 0.0f;
@@ -76,7 +77,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol = "attack";
         break;
     }
-    case 2:
+    case paramDecay:
     {
         //parameter.hints      = ;
         parameter.ranges.def = 0.0f;
@@ -86,7 +87,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol =  "decay";
         break;
     }
-    case 3:
+    case paramSustain:
     {
         //parameter.hints      = ;
         parameter.ranges.def = 1.0f;
@@ -96,7 +97,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol = "sustain";
         break;
     }
-    case 4:
+    case paramRelease:
     {
         //parameter.hints      = ;
         parameter.ranges.def = 0.0f;
@@ -106,7 +107,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol = "release";
         break;
     }
-    case 5:
+    case paramOneShotFwd:
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 1.0f;
@@ -116,7 +117,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol  = "one_shot_fwd";
         break;
     }
-    case 6:
+    case paramOneShotRev:
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
@@ -126,7 +127,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol  = "one_shot_rev";
         break;
     }
-    case 7:
+    case paramLoopFwd:
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
@@ -136,7 +137,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol  = "loop_fwd";
         break;
     }
-    case 8:
+    case paramLoopRev:
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
@@ -146,15 +147,23 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
         parameter.symbol  = "loop_rev";
         break;
     }
-    } // switch
-    if (index > 8)
+    case paramFloppy:
+        parameter.hints = kParameterIsBoolean;
+        parameter.ranges.def = 0.0f;
+        parameter.ranges.min = 0.0f;
+        parameter.ranges.max = 1.0f;
+        parameter.name   = "Floppy";
+        parameter.symbol  = "floppy";
+    }
+
+    if (index > 9 )
     {
         parameter.hints      = kParameterIsBoolean;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
-        parameter.name   = "Switch "+String(index-8);
-        parameter.symbol  = "switch"+String(index-8);
+        parameter.name   = "Switch "+String(index-9);
+        parameter.symbol  = "switch"+String(index-9);
     }
 
 }
@@ -172,50 +181,50 @@ float NinjasPlugin::getParameterValue(uint32_t index) const
 
 {
     float return_Value = 0;
-    /* TODO derive channel from switch matrix */
-    int ch = 0;
+    /* TODO derive channel from switch matrix | might be fixed ? */
+    int ch = currentSlice;
     switch(index)
     {
-    case 0:
+    case paramNumberOfSlices:
         return_Value = slices;
-    case 1:
+    case paramAttack:
         return_Value = p_Attack[ch];
         break;
-    case 2:
+    case paramDecay:
         return_Value = p_Decay[ch];
         break;
-    case 3:
+    case paramSustain:
         return_Value = p_Sustain[ch];
         break;
-    case 4:
+    case paramRelease:
         return_Value = p_Release[ch];
         break;
-    case 5: // one shot forward
+    case paramOneShotFwd: // one shot forward
         if (a_slices[ch].getSlicePlayMode() == Slice::ONE_SHOT_FWD)
             return_Value = 1;
         else
             return_Value = 0;
         break;
-    case 6: // one shot Reverse
+    case paramOneShotRev: // one shot Reverse
         if (a_slices[ch].getSlicePlayMode() == Slice::ONE_SHOT_REV)
             return_Value = 1;
         else
             return_Value = 0;
         break;
-    case 7: // Loop Fwd
+    case paramLoopFwd: // Loop Fwd
         if (a_slices[ch].getSlicePlayMode() == Slice::LOOP_FWD)
             return_Value = 1;
         else
             return_Value = 0;
         break;
-    case 8: // Loop Rev
+    case paramLoopRev: // Loop Rev
         if (a_slices[ch].getSlicePlayMode() == Slice::LOOP_REV)
             return_Value = 1;
         else
             return_Value = 0;
         break;
     }
-    if (index > 8)
+    if (index > 9)
     {
         return_Value = (float) currentSlice;
     }
@@ -231,44 +240,47 @@ float NinjasPlugin::getParameterValue(uint32_t index) const
   */
 void NinjasPlugin::setParameterValue(uint32_t index, float value)
 {
-    int ch = 0; /* TODO calc channel */
+    int ch = currentSlice; /* TODO calc channel | maybe this is fixed now */
 
     //TODO rework this !!!
     switch(index)
     {
-    case 0:
+    case paramNumberOfSlices:
         slices = (int) value;
         SampleObject.createSlices(a_slices,slices);
         break;
-    case 1:
+    case paramAttack:
         p_Attack[ch] = value;
         break;
-    case 2:
+    case paramDecay:
         p_Decay[ch] = value;
         break;
-    case 3:
+    case paramSustain:
         p_Sustain[ch] = value;
         break;
-    case 4:
+    case paramRelease:
         p_Release[ch] = value;
         break;
-    case 5: // one shot forward
+    case paramOneShotFwd: // one shot forward
         if (value == 1)
             a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_FWD);
         break;
-    case 6: // one shot Reverse
+    case paramOneShotRev: // one shot Reverse
         if (value == 1)
             a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_REV);
         break;
-    case 7: // Loop Fwd
+    case paramLoopFwd: // Loop Fwd
         if (value == 1)
             a_slices[ch].setSlicePlayMode(Slice::LOOP_FWD);
         break;
-    case 8: // Loop Rev
+    case paramLoopRev: // Loop Rev
         if (value == 1)
             a_slices[ch].setSlicePlayMode(Slice::LOOP_REV);
         break;
+
     } // switch
+    if (index > 9)
+      currentSlice = index - 9; 
 } // setParameterValue
 
 /* --------------------------------------------------------------------------------------------------------

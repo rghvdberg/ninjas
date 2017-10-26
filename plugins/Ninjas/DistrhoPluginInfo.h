@@ -28,35 +28,37 @@
 //#define DISTRHO_PLUGIN_WANT_STATE   1
 
 
- enum Parameters
-    {
-      paramNumberOfSlices = 0,
-      paramAttack,
-      paramDecay,
-      paramSustain,
-      paramRelease,
-      paramOneShotFwd,
-      paramOneShotRev,
-      paramLoopFwd,
-      paramLoopRev,
-      paramSwitch01,
-      paramSwitch02,
-      paramSwitch03,
-      paramSwitch04,
-      paramSwitch05,
-      paramSwitch06,
-      paramSwitch07,
-      paramSwitch08,
-      paramSwitch09,
-      paramSwitch10,
-      paramSwitch11,
-      paramSwitch12,
-      paramSwitch13,
-      paramSwitch14,
-      paramSwitch15,
-      paramSwitch16,
-      paramCount
-    };
+enum Parameters
+{
+    paramNumberOfSlices = 0,
+    paramAttack,
+    paramDecay,
+    paramSustain,
+    paramRelease,
+    paramOneShotFwd,
+    paramOneShotRev,
+    paramLoopFwd,
+    paramLoopRev,
+    paramFloppy,
+    
+    paramSwitch01,
+    paramSwitch02,
+    paramSwitch03,
+    paramSwitch04,
+    paramSwitch05,
+    paramSwitch06,
+    paramSwitch07,
+    paramSwitch08,
+    paramSwitch09,
+    paramSwitch10,
+    paramSwitch11,
+    paramSwitch12,
+    paramSwitch13,
+    paramSwitch14,
+    paramSwitch15,
+    paramSwitch16,
+    paramCount
+};
 
 
 #endif // DISTRHO_PLUGIN_INFO_H_INCLUDED

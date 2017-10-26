@@ -10,16 +10,16 @@
 
 class Mixer {
 public:
-	Mixer();
-	virtual ~Mixer();
+    Mixer();
+    virtual ~Mixer();
 
-	void add_Sample(float s);
-	float get_Mix();
+    void add_Sample(float s);
+    float get_Mix();
 
 private:
-	float mix;
-	int channels;
-	float average;
+    float mix;
+    int channels;
+    float average;
 };
 
 

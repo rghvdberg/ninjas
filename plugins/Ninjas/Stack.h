@@ -16,27 +16,27 @@
 
 class Stack {
 public:
-	Stack();
-	virtual ~Stack();
-	void add_Voice( Voice* voice);
-	void remove_Voice(int ch, int nn);
-	void remove_Voice(int i);
-	void remove_inactive_voices();
-	Voice* get_Voice(int ch, int nn);
-	bool check_Voice_Playing (int ch, int nn);
-	int get_Stack_Size();
-	float* get_Sample(int i, std::vector<float> * samplevector, Slice* slices);
-	float get_Gain(int index);
-	void inc_Position(int index, int increment, Slice* slices);
-	float runADSR(int index);
-	int get_Position(int index);
-	int get_Slice_Start(int index);
-	int get_Slice_End(int index);
-	bool get_Voice_Active(int index);
-	int get_midiChannel(int i);
+    Stack();
+    virtual ~Stack();
+    void add_Voice( Voice* voice);
+    void remove_Voice(int ch, int nn);
+    void remove_Voice(int i);
+    void remove_inactive_voices();
+    Voice* get_Voice(int ch, int nn);
+    bool check_Voice_Playing (int ch, int nn);
+    int get_Stack_Size();
+    float* get_Sample(int i, std::vector<float> * samplevector, Slice* slices);
+    float get_Gain(int index);
+    void inc_Position(int index, int increment, Slice* slices);
+    float runADSR(int index);
+    int get_Position(int index);
+    int get_Slice_Start(int index);
+    int get_Slice_End(int index);
+    bool get_Voice_Active(int index);
+    int get_midiChannel(int i);
 
 private:
-	std::vector<Voice*> voice_stack;
+    std::vector<Voice*> voice_stack;
 
 };
 

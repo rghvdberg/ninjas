@@ -14,12 +14,13 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "DistrhoPluginInfo.h"
+
 #include "DistrhoUI.hpp"
 #include "NinjasUI.hpp"
 #include "NinjasArtwork.hpp"
 #include "Ninjas.hpp"
 #include <string>
+#include "DistrhoPluginInfo.h"
 
 
 START_NAMESPACE_DISTRHO
@@ -31,11 +32,11 @@ NinjasUI::NinjasUI()
     : UI(Art::backgroundWidth, Art::backgroundHeight),
       fImgBackground(Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR)
 {
-  // knobs
-  
-  fKnobSlices = new ImageKnob(this,
-		    Image(Art::rotary_slicesData, Art::rotary_slicesWidth, Art::rotary_slicesHeight, GL_BGR));
-    fKnobSlices->setId(2); // TODO: implement proper parameters
+    // knobs
+
+    fKnobSlices = new ImageKnob(this,
+                                Image(Art::rotary_slicesData, Art::rotary_slicesWidth, Art::rotary_slicesHeight, GL_BGR));
+    fKnobSlices->setId(paramNumberOfSlices); // TODO: implement proper parameters
     fKnobSlices->setAbsolutePos(279, 80);
     fKnobSlices->setRange(1.0f, 16.0f);
     fKnobSlices->setDefault(1.0f);
@@ -43,11 +44,11 @@ NinjasUI::NinjasUI()
     fKnobSlices->setImageLayerCount(16);
     fKnobSlices->setStep(1.0f);
     fKnobSlices->setCallback(this);
-    
-  // ADSR   
+
+    // ADSR
     fKnobAttack = new ImageKnob(this,
-		    Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobAttack->setId(3); // TODO: implement proper parameters
+                                Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
+    fKnobAttack->setId(paramAttack); // TODO: implement proper parameters
     fKnobAttack->setAbsolutePos(560, 256);
     fKnobAttack->setRange(0.0f, 1.0f);
     fKnobAttack->setDefault(0.0f);
@@ -56,10 +57,10 @@ NinjasUI::NinjasUI()
     //fKnobAttack->setImageLayerCount(16);
     //fKnobAttack->setStep(1.0f);
     fKnobAttack->setCallback(this);
-    
+
     fKnobDecay = new ImageKnob(this,
-		    Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobDecay->setId(4); // TODO: implement proper parameters
+                               Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
+    fKnobDecay->setId(paramDecay); // TODO: implement proper parameters
     fKnobDecay->setAbsolutePos(637, 256);
     fKnobDecay->setRange(0.0f, 1.0f);
     fKnobDecay->setDefault(0.0f);
@@ -68,10 +69,10 @@ NinjasUI::NinjasUI()
     //fKnobDecay->setImageLayerCount(16);
     //fKnobDecay->setStep(1.0f);
     fKnobDecay->setCallback(this);
-    
+
     fKnobSustain = new ImageKnob(this,
-		    Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobSustain->setId(5); // TODO: implement proper parameters
+                                 Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
+    fKnobSustain->setId(paramSustain); // TODO: implement proper parameters
     fKnobSustain->setAbsolutePos(715, 256);
     fKnobSustain->setRange(0.0f, 1.0f);
     fKnobSustain->setDefault(1.0f);
@@ -80,10 +81,10 @@ NinjasUI::NinjasUI()
     //fKnobSustain->setImageLayerCount(16);
     //fKnobSustain->setStep(1.0f);
     fKnobSustain->setCallback(this);
-    
+
     fKnobRelease = new ImageKnob(this,
-		    Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobRelease->setId(6); // TODO: implement proper parameters
+                                 Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
+    fKnobRelease->setId(paramRelease); // TODO: implement proper parameters
     fKnobRelease->setAbsolutePos(792, 256);
     fKnobRelease->setRange(0.0f, 1.0f);
     fKnobRelease->setDefault(0.0f);
@@ -92,84 +93,119 @@ NinjasUI::NinjasUI()
     //fKnobRelease->setImageLayerCount(16);
     //fKnobRelease->setStep(1.0f);
     fKnobRelease->setCallback(this);
-  // 
-  
-  
-  // switches
-  fSwitchFwd = new ImageSwitch(this,
-				  Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
-				  Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
-  fSwitchFwd->setId(1);
-  fSwitchFwd->setAbsolutePos(441,242);
-  fSwitchFwd->setCallback(this);
-  
-  fSwitchFloppy = new ImageSwitch(this,
-				  Image(Art::floppy_offData, Art::floppy_offWidth, Art::floppy_offHeight, GL_BGR),
-				  Image(Art::floppy_onData, Art::floppy_onWidth, Art::floppy_onHeight, GL_BGR));
-  fSwitchFloppy->setId(7);
-  fSwitchFloppy->setAbsolutePos(92,220);
-  fSwitchFloppy->setCallback(this);
-  
+    //
+
+
+    // switches
+    fSwitchFwd = new ImageSwitch(this,
+                                 Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                 Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fSwitchFwd->setId(paramOneShotFwd);
+    fSwitchFwd->setAbsolutePos(441,242);
+    fSwitchFwd->setCallback(this);
+
+    fSwitchRev = new ImageSwitch(this,
+                                 Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                 Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fSwitchRev->setId(paramOneShotRev);
+    fSwitchRev->setAbsolutePos(479,242);
+    fSwitchRev->setCallback(this);
+
+    fSwitchLoopFwd = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fSwitchLoopFwd->setId(paramLoopFwd);
+    fSwitchLoopFwd->setAbsolutePos(441,291);
+    fSwitchLoopFwd->setCallback(this);
+
+    fSwitchLoopRev = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fSwitchLoopRev->setId(paramLoopRev);
+    fSwitchLoopRev->setAbsolutePos(479,291);
+    fSwitchLoopRev->setCallback(this);
+
+    fSwitchFloppy = new ImageSwitch(this,
+                                    Image(Art::floppy_offData, Art::floppy_offWidth, Art::floppy_offHeight, GL_BGR),
+                                    Image(Art::floppy_onData, Art::floppy_onWidth, Art::floppy_onHeight, GL_BGR));
+    fSwitchFloppy->setId(paramFloppy);
+    fSwitchFloppy->setAbsolutePos(92,220);
+    fSwitchFloppy->setCallback(this);
+
 }
 
-   /**
-      A parameter has changed on the plugin side.
-      This is called by the host to inform the UI about parameter changes.
-    */
+/**
+   A parameter has changed on the plugin side.
+   This is called by the host to inform the UI about parameter changes.
+ */
 void NinjasUI::parameterChanged(uint32_t index, float value)
+{
+    switch (index)
     {
-  switch (index)
-    {
-    case 1:
+    case paramNumberOfSlices:
+        fKnobSlices->setValue(value);
+        break;
+    // Play Modes
+    case paramOneShotFwd:
         fSwitchFwd->setDown(value > 0.5f);
         break;
-    case 2:
-       fKnobSlices->setValue(value);
-       break;
-    case 3:
-       fKnobAttack->setValue(value);
-       break;
-    case 4:
-       fKnobDecay->setValue(value);
-       break;
-    case 5:
-       fKnobSustain->setValue(value);
-       break;
-    case 6:
-       fKnobRelease->setValue(value);
-       break;
-    case 7:
-       fSwitchFwd->setDown(value > 0.5f);
-       break;
-       
+    case paramOneShotRev:
+        fSwitchRev->setDown(value > 0.5f);
+        break;
+    case paramLoopFwd:
+        fSwitchLoopFwd->setDown(value > 0.5f);
+        break;
+    case paramLoopRev:
+        fSwitchLoopRev->setDown(value > 0.5f);
+        break;
+    // ADSR
+    case paramAttack:
+        fKnobAttack->setValue(value);
+        break;
+    case paramDecay:
+        fKnobDecay->setValue(value);
+        break;
+    case paramSustain:
+        fKnobSustain->setValue(value);
+        break;
+    case paramRelease:
+        fKnobRelease->setValue(value);
+        break;
+	
+    // floppy
+    case paramFloppy:
+        fSwitchFloppy->setDown(value > 0.5f);
+        break;
+
     }
- 
+
 }
 
 void NinjasUI::uiFileBrowserSelected(const char* filename)
 {
-	// if a file was selected, tell DSP
-	if (filename != nullptr)
-	{
-	  std::string fp = filename;
-	  //int ok = SampleObject.loadSample(fp);
-	  std::cout << fp << std::endl;
-	}
-	//	setState("filepath", filename);
+    // if a file was selected, tell DSP
+    if (filename != nullptr)
+    {
+        std::string fp = filename;
+        //int ok = SampleObject.loadSample(fp);
+        std::cout << fp << std::endl;
+    }
+    //	setState("filepath", filename);
 }
 
 /* ----------------------------------------------------------------------------------------------------------
  * Widget Callbacks
  *----------------------------------------------------------------------------------------------------------*/
- void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
+void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
 {
     const uint buttonId(imageSwitch->getId());
-if (buttonId ==  7)
-{
-  DGL::Window::FileBrowserOptions opts;
-  opts.title = "Load audio file";
-  getParentWindow().openFileBrowser(opts);
-}
+    std::cout << "buttonId = " << buttonId << std::endl;
+    if (buttonId ==  paramFloppy)
+    {
+        DGL::Window::FileBrowserOptions opts;
+        opts.title = "Load audio file";
+        getParentWindow().openFileBrowser(opts);
+    }
     editParameter(buttonId, true);
     setParameterValue(buttonId, down ? 1.0f : 0.0f);
     editParameter(buttonId, false);
@@ -177,16 +213,21 @@ if (buttonId ==  7)
 
 void NinjasUI::imageKnobDragStarted(ImageKnob* knob)
 {
+    std::cout << "knobID = " << knob->getId() << std::endl;
     editParameter(knob->getId(), true);
 }
 
 void NinjasUI::imageKnobDragFinished(ImageKnob* knob)
 {
-    editParameter(knob->getId(), false);
+  std::cout << "knobID = " << knob->getId() << std::endl;
+      
+  editParameter(knob->getId(), false);
 }
 
 void NinjasUI::imageKnobValueChanged(ImageKnob* knob, float value)
 {
+  std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
+    
     setParameterValue(knob->getId(), value);
 }
 

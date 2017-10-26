@@ -6,13 +6,13 @@
 
 class Aubio
 {
-    public:
-        Aubio();
-        virtual ~Aubio();
+public:
+    Aubio();
+    virtual ~Aubio();
 
-    protected:
+protected:
 
-    private:
+private:
 };
 
 #endif // AUBIO_H

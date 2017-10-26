@@ -38,7 +38,7 @@ public:
 
     void setSliceActive ( bool active)
     {
-      sliceActive = active;
+        sliceActive = active;
     }
 
 
@@ -58,10 +58,10 @@ public:
     {
         return slicePlay;
     }
-    
+
     bool getSliceActive() const
     {
-      return sliceActive;
+        return sliceActive;
     }
 
 
@@ -70,6 +70,6 @@ private:
     int sliceEnd;
     slicePlayMode slicePlay;
     bool sliceActive;
- };
+};
 
 #endif // SLICE_H
