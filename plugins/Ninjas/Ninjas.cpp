@@ -41,8 +41,7 @@ NinjasPlugin::NinjasPlugin()
     : Plugin(paramCount, 0, 0) //1 parameter, 0 programs (presets) , 0 states
 {
     slices = 1;
-      
-}
+}    
 
 /* --------------------------------------------------------------------------------------------------------
   * Init
@@ -191,6 +190,7 @@ float NinjasPlugin::getParameterValue(uint32_t index) const
     {
     case paramNumberOfSlices:
         return_Value = (float) slices;
+	break;
     case paramAttack:
         return_Value = p_Attack[ch];
         break;
