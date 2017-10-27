@@ -40,10 +40,8 @@ START_NAMESPACE_DISTRHO
 NinjasPlugin::NinjasPlugin()
     : Plugin(paramCount, 0, 0) //1 parameter, 0 programs (presets) , 0 states
 {
-    //sampleVector = SampleObject.getSampleVector();
-    //std::cout << "sampleVector size =" << sampleVector.size() << std::endl;
-    //SampleObject.createSlices(a_slices,slices);
-    //a_slices[0].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+    slices = 1;
+      
 }
 
 /* --------------------------------------------------------------------------------------------------------
@@ -70,7 +68,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     }
      case paramAttack:
     {
-        //parameter.hints      = ;
+        parameter.hints      = kParameterIsAutomable ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -80,7 +78,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     }
     case paramDecay:
     {
-        //parameter.hints      = ;
+        parameter.hints      = kParameterIsAutomable ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -90,7 +88,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     }
     case paramSustain:
     {
-        //parameter.hints      = ;
+        parameter.hints      = kParameterIsAutomable ;
         parameter.ranges.def = 1.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -100,7 +98,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     }
     case paramRelease:
     {
-        //parameter.hints      = ;
+        parameter.hints      = kParameterIsAutomable ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -150,7 +148,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     }
     case paramFloppy:
     {
-        parameter.hints = kParameterIsBoolean;
+        parameter.hints = kParameterIsAutomable|kParameterIsBoolean ;;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -164,7 +162,7 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
 
     if (index > 9 )
     {
-        parameter.hints      = kParameterIsBoolean;
+        parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -192,7 +190,7 @@ float NinjasPlugin::getParameterValue(uint32_t index) const
     switch(index)
     {
     case paramNumberOfSlices:
-        return_Value = slices;
+        return_Value = (float) slices;
     case paramAttack:
         return_Value = p_Attack[ch];
         break;

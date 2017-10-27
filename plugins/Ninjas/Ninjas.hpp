@@ -107,7 +107,7 @@ private:
     float p_LoopRev[16];
     float p_SliceStart[16];
     float p_SliceEnd[16];
-    float p_NumberOfSlices;
+    // float p_NumberOfSlices;
 
 
 
@@ -115,9 +115,7 @@ private:
 
     std::vector<float> sampleVector; // this holds the sample data
     Sample SampleObject;
-
-    //Sample SampleObject{"/home/rob/git/plugin-examples/plugins/Ninjas/sample.ogg"};
-
+   
     /* create Mixer objects
     One for each audio channel
     after each iteration mix is put in audiouffer
@@ -139,7 +137,7 @@ private:
     float gain { 1.0f };
     int voice_index { 0 };
     Slice a_slices[16];
-    int slices = 1;
+    int slices ;
     int sliceSize;
     double samplerate = getSampleRate();
     int currentSlice {0};
