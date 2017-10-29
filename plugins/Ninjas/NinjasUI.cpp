@@ -180,8 +180,9 @@ void NinjasUI::uiFileBrowserSelected(const char* filename)
     if (filename != nullptr)
     {
         std::string fp = filename;
-        //int ok = SampleObject.loadSample(fp);
-        std::cout << fp << std::endl;
+	
+	SampleObject.loadSample(fp);
+	std::cout << fp << std::endl;
     }
     //	setState("filepath", filename);
 }

@@ -36,6 +36,7 @@ class NinjasPlugin : public Plugin
 public:
 
     NinjasPlugin();
+    Sample SampleObject;
 
 protected:
     // -------------------------------------------------------------------
@@ -114,8 +115,7 @@ private:
     // empty sample object
 
     std::vector<float> sampleVector; // this holds the sample data
-    Sample SampleObject;
-   
+    
     /* create Mixer objects
     One for each audio channel
     after each iteration mix is put in audiouffer

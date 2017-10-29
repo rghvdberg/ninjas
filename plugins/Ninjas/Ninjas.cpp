@@ -40,7 +40,7 @@ START_NAMESPACE_DISTRHO
 NinjasPlugin::NinjasPlugin()
     : Plugin(paramCount, 0, 0) //1 parameter, 0 programs (presets) , 0 states
 {
-    slices = 1;
+   
 }    
 
 /* --------------------------------------------------------------------------------------------------------
