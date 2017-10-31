@@ -21,7 +21,7 @@ private:
 public:
     Sample();
 
-    Sample(std::string filepath);
+    Sample(std::string filepath, std::vector <float> * memory);
 
     std::vector<float> getSampleVector()
     {
@@ -40,7 +40,7 @@ public:
 
     void createSlices( Slice* slices, int number);
 
-    int loadSample(std::string fp);
+    int loadSample(std::string fp, std::vector <float>* sampleVector);
 };
 
 #endif // SAMPLE_H

@@ -14,17 +14,17 @@ Sample::Sample()
 
 
 
-Sample::Sample(std::string fp)
+Sample::Sample(std::string fp, std::vector <float> * memory)
 {
-    int ok = loadSample(fp);
-    std::cout << "sample loading flag: " << ok << std::endl;
+    // 
 }
 
-int Sample::loadSample(std::string fp)
+int Sample::loadSample(std::string fp, std::vector <float> * sample_vector)
 {
     // create a "Sndfile" handle, it's part of the sndfile library we use to load samples
-    std::cout << "file path =" << fp << std::endl;
+    
     SndfileHandle fileHandle( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
+   
     // get the number of frames in the sample
     size  = fileHandle.frames();
     if ( size == 0 )
@@ -35,18 +35,20 @@ int Sample::loadSample(std::string fp)
     }
     // get some more info of the sample
     channels   = fileHandle.channels();
-
     samplerate = fileHandle.samplerate();
-    // we declared sampleVector earlier, now we resize it
-    sampleVector.resize(size * channels);
-    // this tells sndfile to
-    fileHandle.read( &sampleVector.at(0) , size * channels );
+    
+    // resize vector 
+    
+    sample_vector->resize(size * channels);
+    
+    fileHandle.read( sample_vector->at(0) , size * channels );
+   
     std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " <<
               samplerate << " with " << size << " samples, so its duration is " <<
               size / samplerate << " seconds long." << std::endl;
-
     return 0;
 }
+
 void Sample::createSlices(Slice* slices, int n_slices)
 {
     int sliceSize = (size*channels) / n_slices;

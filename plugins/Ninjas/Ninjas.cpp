@@ -188,7 +188,7 @@ void NinjasPlugin::setState(const char* key, const char* value)
     {
      std::string fp = value;
      std::cout << "setState value = " << fp << std::endl;
-     SampleObject.loadSample(fp);
+     SampleObject.loadSample(fp, &sampleVector);
      
     }
 
