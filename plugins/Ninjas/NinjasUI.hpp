@@ -44,6 +44,7 @@ protected:
 
     void parameterChanged(uint32_t index, float value) override;
     void uiFileBrowserSelected(const char* filename) override;
+    void stateChanged(const char* key, const char*) override;
 
     // -------------------------------------------------------------------
     // Widget Callbacks
@@ -59,7 +60,7 @@ private:
     Image fImgBackground;
     ScopedPointer<ImageSwitch> fSwitchFwd, fSwitchFloppy, fSwitchRev, fSwitchLoopFwd, fSwitchLoopRev;
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
-    char* filepath;
+    // char* filepath;
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
 };

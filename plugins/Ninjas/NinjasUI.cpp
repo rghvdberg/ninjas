@@ -174,19 +174,23 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
 
 }
 
+void NinjasUI::stateChanged(const char* key, const char*)
+{
+  if (std::strcmp(key, "filepath") == 0 )
+  {
+    std::printf("state changed ... do something?\n");
+  }
+}
+
+
 void NinjasUI::uiFileBrowserSelected(const char* filename)
 {
     // if a file was selected, tell DSP
     if (filename != nullptr)
     {
-        std::string fp = filename;
-	
-	SampleObject.loadSample(fp);
-	std::cout << fp << std::endl;
-    }
-    //	setState("filepath", filename);
+      setState("filepath", filename); 
+  }
 }
-
 /* ----------------------------------------------------------------------------------------------------------
  * Widget Callbacks
  *----------------------------------------------------------------------------------------------------------*/

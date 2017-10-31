@@ -17,6 +17,7 @@
 #ifndef DISTRHO_PLUGIN_INFO_H_INCLUDED
 #define DISTRHO_PLUGIN_INFO_H_INCLUDED
 
+#define DISTRHO_PLUGIN_BRAND "Clearly Broken Software"
 #define DISTRHO_PLUGIN_NAME  "Ninjas"
 #define DISTRHO_PLUGIN_URI   "https://github.com/rghvdberg/plugin-examples"
 
@@ -25,7 +26,7 @@
 #define DISTRHO_PLUGIN_IS_RT_SAFE   1
 #define DISTRHO_PLUGIN_NUM_INPUTS 0
 #define DISTRHO_PLUGIN_NUM_OUTPUTS  2
-//#define DISTRHO_PLUGIN_WANT_STATE   1
+#define DISTRHO_PLUGIN_WANT_STATE   1
 
 
 enum Parameters

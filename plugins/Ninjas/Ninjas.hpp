@@ -81,12 +81,16 @@ protected:
     // Init
 
     void initParameter(uint32_t index, Parameter& parameter);
+    void initState(uint32_t index, String& stateKey, String& defaultStateValue); 
 
     // -------------------------------------------------------------------
     // Internal data
 
     float getParameterValue(uint32_t index) const override;
     void  setParameterValue(uint32_t index, float value) override;
+    String getState(const char* key) const; 
+    void setState(const char* key, const char* value) override;
+    
 
     // -------------------------------------------------------------------
     // Process
@@ -141,6 +145,7 @@ private:
     int sliceSize;
     double samplerate = getSampleRate();
     int currentSlice {0};
+    std::string filepath = "";
 
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.

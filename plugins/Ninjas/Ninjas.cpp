@@ -38,7 +38,7 @@ START_NAMESPACE_DISTRHO
 
 // constructor
 NinjasPlugin::NinjasPlugin()
-    : Plugin(paramCount, 0, 0) //1 parameter, 0 programs (presets) , 0 states
+    : Plugin(paramCount, 0, 1) //1 parameter, 0 programs (presets) , 0 states
 {
    
 }    
@@ -171,6 +171,29 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
 
 }
 
+ void NinjasPlugin::initState(uint32_t index, String& stateKey, String& defaultStateValue)
+    {
+      if (index == 0)
+	stateKey ="filepath";
+      
+      defaultStateValue = "empty";
+    }
+    
+String NinjasPlugin::getState(const char* key) const 
+    {
+         return String("filepath");
+    }
+
+void NinjasPlugin::setState(const char* key, const char* value)  
+    {
+     std::string fp = value;
+     std::cout << "setState value = " << fp << std::endl;
+     SampleObject.loadSample(fp);
+     
+    }
+
+    
+    
 
 /* --------------------------------------------------------------------------------------------------------
   * Internal data
