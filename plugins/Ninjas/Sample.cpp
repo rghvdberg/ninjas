@@ -14,12 +14,12 @@ Sample::Sample()
 
 
 
-Sample::Sample(std::string fp, std::vector <float> * memory)
+Sample::Sample(std::string fp, std::vector <float> & samplevector)
 {
     // 
 }
 
-int Sample::loadSample(std::string fp, std::vector <float> * sample_vector)
+int Sample::loadSample(std::string fp, std::vector <float> & samplevector)
 {
     // create a "Sndfile" handle, it's part of the sndfile library we use to load samples
     
@@ -39,9 +39,10 @@ int Sample::loadSample(std::string fp, std::vector <float> * sample_vector)
     
     // resize vector 
     
-    sample_vector->resize(size * channels);
+    samplevector.resize(size * channels);
     
-    fileHandle.read( sample_vector->at(0) , size * channels );
+    
+    fileHandle.read( &samplevector.at(0) , size * channels );
    
     std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " <<
               samplerate << " with " << size << " samples, so its duration is " <<

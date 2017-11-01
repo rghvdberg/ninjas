@@ -12,7 +12,7 @@ class Sample
 {
 private:
     std::string filepath;
-    std::vector <float> sampleVector;
+    // std::vector <float> sampleVector;
     int samplerate;
     int length;
     int channels;
@@ -21,13 +21,14 @@ private:
 public:
     Sample();
 
-    Sample(std::string filepath, std::vector <float> * memory);
+    Sample(std::string filepath, std::vector <float> & samplevector);
 
+    /*
     std::vector<float> getSampleVector()
     {
         return sampleVector;
     }
-
+    */
     int getSampleSize() const
     {
         return size;
@@ -40,7 +41,7 @@ public:
 
     void createSlices( Slice* slices, int number);
 
-    int loadSample(std::string fp, std::vector <float>* sampleVector);
+    int loadSample(std::string fp, std::vector <float> & samplevector);
 };
 
 #endif // SAMPLE_H
