@@ -187,13 +187,13 @@ String NinjasPlugin::getState(const char* key) const
 void NinjasPlugin::setState(const char* key, const char* value)  
     {
      std::string fp = value;
-     std::cout << "setState value = " << fp << std::endl;
-     SampleObject.loadSample(fp, sampleVector);
+     // std::cout << "setState value = " << fp << std::endl;
      
+     // load file in sample memory
+     SampleObject.loadSample(fp, sampleVector);
+     // slice it up
+     SampleObject.createSlices(a_slices,slices);
     }
-
-    
-    
 
 /* --------------------------------------------------------------------------------------------------------
   * Internal data
@@ -267,14 +267,15 @@ float NinjasPlugin::getParameterValue(uint32_t index) const
   */
 void NinjasPlugin::setParameterValue(uint32_t index, float value)
 {
-    int ch = currentSlice; /* TODO calc channel | maybe this is fixed now */
+  std::cout << "setParameterValue index, value : " << index << " , " << value << std::endl;  
+  int ch = currentSlice; /* TODO calc channel | maybe this is fixed now */
 
     //TODO rework this !!!
     switch(index)
     {
     case paramNumberOfSlices:
         slices = (int) value;
-        SampleObject.createSlices(a_slices,slices);
+	 SampleObject.createSlices(a_slices,slices);
         break;
     case paramAttack:
         p_Attack[ch] = value;
@@ -290,8 +291,8 @@ void NinjasPlugin::setParameterValue(uint32_t index, float value)
         break;
     case paramOneShotFwd: // one shot forward
         if (value == 1)
-            a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_FWD);
-        break;
+	  a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_FWD);
+	break;
     case paramOneShotRev: // one shot Reverse
         if (value == 1)
             a_slices[ch].setSlicePlayMode(Slice::ONE_SHOT_REV);

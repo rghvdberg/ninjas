@@ -58,7 +58,8 @@ protected:
 
 private:
     Image fImgBackground;
-    ScopedPointer<ImageSwitch> fSwitchFwd, fSwitchFloppy, fSwitchRev, fSwitchLoopFwd, fSwitchLoopRev;
+    ScopedPointer<ImageSwitch> fSwitchFwd, fSwitchFloppy, fSwitchRev, fSwitchLoopFwd, fSwitchLoopRev,
+    fGrid01, fGrid02, fGrid03 , fGrid04 , fGrid05, fGrid06, fGrid07, fGrid08, fGrid09, fGrid10 ,fGrid11, fGrid12 ,fGrid13, fGrid14, fGrid15, fGrid16;
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
     // char* filepath;
 

@@ -36,7 +36,7 @@ NinjasUI::NinjasUI()
 
     fKnobSlices = new ImageKnob(this,
                                 Image(Art::rotary_slicesData, Art::rotary_slicesWidth, Art::rotary_slicesHeight, GL_BGR));
-    fKnobSlices->setId(paramNumberOfSlices);
+    fKnobSlices->setId(paramNumberOfSlices); 
     fKnobSlices->setAbsolutePos(279, 80);
     fKnobSlices->setRange(1.0f, 16.0f);
     fKnobSlices->setDefault(1.0f);
@@ -48,7 +48,7 @@ NinjasUI::NinjasUI()
     // ADSR
     fKnobAttack = new ImageKnob(this,
                                 Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobAttack->setId(paramAttack);
+    fKnobAttack->setId(paramAttack); 
     fKnobAttack->setAbsolutePos(560, 256);
     fKnobAttack->setRange(0.0f, 1.0f);
     fKnobAttack->setDefault(0.0f);
@@ -58,7 +58,7 @@ NinjasUI::NinjasUI()
 
     fKnobDecay = new ImageKnob(this,
                                Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobDecay->setId(paramDecay);
+    fKnobDecay->setId(paramDecay); 
     fKnobDecay->setAbsolutePos(637, 256);
     fKnobDecay->setRange(0.0f, 1.0f);
     fKnobDecay->setDefault(0.0f);
@@ -68,13 +68,13 @@ NinjasUI::NinjasUI()
 
     fKnobSustain = new ImageKnob(this,
                                  Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
-    fKnobSustain->setId(paramSustain);
+    fKnobSustain->setId(paramSustain); 
     fKnobSustain->setAbsolutePos(715, 256);
     fKnobSustain->setRange(0.0f, 1.0f);
     fKnobSustain->setDefault(1.0f);
     fKnobSustain->setValue(1.0f);
     fKnobSustain->setRotationAngle(300);
-    fKnobSustain->setCallback(this);
+  fKnobSustain->setCallback(this);
 
     fKnobRelease = new ImageKnob(this,
                                  Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
@@ -84,13 +84,11 @@ NinjasUI::NinjasUI()
     fKnobRelease->setDefault(0.0f);
     fKnobRelease->setValue(0.0f);
     fKnobRelease->setRotationAngle(300);
-    fKnobRelease->setCallback(this);
+     fKnobRelease->setCallback(this);
     //
 
 
     // switches
-    
-    // play modes
     fSwitchFwd = new ImageSwitch(this,
                                  Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
                                  Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
@@ -119,8 +117,6 @@ NinjasUI::NinjasUI()
     fSwitchLoopRev->setAbsolutePos(479,291);
     fSwitchLoopRev->setCallback(this);
 
-    // floppy
-    
     fSwitchFloppy = new ImageSwitch(this,
                                     Image(Art::floppy_offData, Art::floppy_offWidth, Art::floppy_offHeight, GL_BGR),
                                     Image(Art::floppy_onData, Art::floppy_onWidth, Art::floppy_onHeight, GL_BGR));
@@ -128,15 +124,7 @@ NinjasUI::NinjasUI()
     fSwitchFloppy->setAbsolutePos(92,220);
     fSwitchFloppy->setCallback(this);
 
-    // selector grid
-    
-    fGrid01 = new ImageSwitch(this,
-                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
-                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
-    fGrid01->setId(paramSwitch01);
-    fGrid01->setAbsolutePos(90,980);
-    fGrid01->setCallback(this);
-   }
+}
 
 /**
    A parameter has changed on the plugin side.
@@ -144,7 +132,7 @@ NinjasUI::NinjasUI()
  */
 void NinjasUI::parameterChanged(uint32_t index, float value)
 {
-    std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
+     std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
     switch (index)
     {
     case paramNumberOfSlices:
@@ -176,73 +164,22 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
     case paramRelease:
         fKnobRelease->setValue(value);
         break;
-
+	
     // floppy
     case paramFloppy:
         fSwitchFloppy->setDown(value > 0.5f);
         break;
-	
-    // selector grid	
-    case paramSwitch01:
-        fGrid01->setDown(value > 0.5f);
-        break;
-	
-    case paramSwitch02:
-        fGrid02->setDown(value > 0.5f);
-        break;
-	
-    case paramSwitch03:
-        fGrid03->setDown(value > 0.5f);
-        break;
-    case paramSwitch04:
-        fGrid04->setDown(value > 0.5f);
-        break;
-    case paramSwitch05:
-        fGrid05->setDown(value > 0.5f);
-        break;
-    case paramSwitch06:
-        fGrid06->setDown(value > 0.5f);
-        break;
-    case paramSwitch07:
-        fGrid07->setDown(value > 0.5f);
-        break;
-    case paramSwitch08:
-        fGrid08->setDown(value > 0.5f);
-        break;
-    case paramSwitch09:
-        fGrid09->setDown(value > 0.5f);
-        break;
-    case paramSwitch10:
-        fGrid10->setDown(value > 0.5f);
-        break;
-    case paramSwitch11:
-        fGrid11->setDown(value > 0.5f);
-        break;
-    case paramSwitch12:
-        fGrid12->setDown(value > 0.5f);
-        break;
-    case paramSwitch13:
-        fGrid13->setDown(value > 0.5f);
-        break;
-    case paramSwitch14:
-        fGrid14->setDown(value > 0.5f);
-        break;
-    case paramSwitch15:
-        fGrid15->setDown(value > 0.5f);
-        break;
-    case paramSwitch16:
-        fGrid16->setDown(value > 0.5f);
-        break;
-   }
-  
+
+    }
+
 }
 
 void NinjasUI::stateChanged(const char* key, const char*)
 {
-    if (std::strcmp(key, "filepath") == 0 )
-    {
-        std::printf("state changed ... do something?\n");
-    }
+  if (std::strcmp(key, "filepath") == 0 )
+  {
+    std::printf("state changed ... do something?\n");
+  }
 }
 
 
@@ -251,8 +188,8 @@ void NinjasUI::uiFileBrowserSelected(const char* filename)
     // if a file was selected, tell DSP
     if (filename != nullptr)
     {
-        setState("filepath", filename);
-    }
+      setState("filepath", filename); 
+  }
 }
 /* ----------------------------------------------------------------------------------------------------------
  * Widget Callbacks
@@ -267,107 +204,107 @@ void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
         opts.title = "Load audio file";
         getParentWindow().openFileBrowser(opts);
     }
-
+    
     switch (buttonId)
     {
-    case paramOneShotFwd:
-    {
-        editParameter(paramOneShotFwd, true);
-        editParameter(paramOneShotRev, true);
-        editParameter(paramLoopFwd, true);
-        editParameter(paramLoopRev, true);
-
-        setParameterValue(paramOneShotFwd, 1.0f);
-        setParameterValue(paramOneShotRev, 0.0f);
-        setParameterValue(paramLoopFwd, 0.0f);
-        setParameterValue(paramLoopRev, 0.0f);
-
-        fSwitchFwd->setDown(true);
-        fSwitchRev->setDown(false);
-        fSwitchLoopFwd->setDown(false);
-        fSwitchLoopRev->setDown(false);
-
-        editParameter(paramOneShotFwd, false);
-        editParameter(paramOneShotRev, false);
-        editParameter(paramLoopFwd, false);
-        editParameter(paramLoopRev, false);
-        break;
-    }
-    case paramOneShotRev:
-    {
-        editParameter(paramOneShotFwd, true);
-        editParameter(paramOneShotRev, true);
-        editParameter(paramLoopFwd, true);
-        editParameter(paramLoopRev, true);
-
-        setParameterValue(paramOneShotFwd, 0.0f);
-        setParameterValue(paramOneShotRev, 1.0f);
-        setParameterValue(paramLoopFwd, 0.0f);
-        setParameterValue(paramLoopRev, 0.0f);
-
-        fSwitchFwd->setDown(false);
-        fSwitchRev->setDown(true);
-        fSwitchLoopFwd->setDown(false);
-        fSwitchLoopRev->setDown(false);
-
-        editParameter(paramOneShotFwd, false);
-        editParameter(paramOneShotRev, false);
-        editParameter(paramLoopFwd, false);
-        editParameter(paramLoopRev, false);
-        break;
-    }
-    case paramLoopFwd:
-    {
-        editParameter(paramOneShotFwd, true);
-        editParameter(paramOneShotRev, true);
-        editParameter(paramLoopFwd, true);
-        editParameter(paramLoopRev, true);
-
-        setParameterValue(paramOneShotFwd, 0.0f);
-        setParameterValue(paramOneShotRev, 0.0f);
-        setParameterValue(paramLoopFwd, 1.0f);
-        setParameterValue(paramLoopRev, 0.0f);
-
-        fSwitchFwd->setDown(false);
-        fSwitchRev->setDown(false);
-        fSwitchLoopFwd->setDown(true);
-        fSwitchLoopRev->setDown(false);
-
-        editParameter(paramOneShotFwd, false);
-        editParameter(paramOneShotRev, false);
-        editParameter(paramLoopFwd, false);
-        editParameter(paramLoopRev, false);
-        break;
-    }
-    case paramLoopRev:
-    {
-        editParameter(paramOneShotFwd, true);
-        editParameter(paramOneShotRev, true);
-        editParameter(paramLoopFwd, true);
-        editParameter(paramLoopRev, true);
-
-        setParameterValue(paramOneShotFwd, 0.0f);
-        setParameterValue(paramOneShotRev, 0.0f);
-        setParameterValue(paramLoopFwd, 0.0f);
-        setParameterValue(paramLoopRev, 1.0f);
-
-        fSwitchFwd->setDown(false);
-        fSwitchRev->setDown(false);
-        fSwitchLoopFwd->setDown(false);
-        fSwitchLoopRev->setDown(true);
-
-        editParameter(paramOneShotFwd, false);
-        editParameter(paramOneShotRev, false);
-        editParameter(paramLoopFwd, false);
-        editParameter(paramLoopRev, false);
-        break;
-    }
-    default:
-        editParameter(buttonId, true);
-        setParameterValue(buttonId, down ? 1.0f : 0.0f);
-        editParameter(buttonId, false);
-
-
+      case paramOneShotFwd:
+	{
+       editParameter(paramOneShotFwd, true);
+       editParameter(paramOneShotRev, true);
+       editParameter(paramLoopFwd, true);
+       editParameter(paramLoopRev, true);
+       
+       setParameterValue(paramOneShotFwd, 1.0f);
+       setParameterValue(paramOneShotRev, 0.0f);
+       setParameterValue(paramLoopFwd, 0.0f);
+       setParameterValue(paramLoopRev, 0.0f);
+       
+       fSwitchFwd->setDown(true);
+       fSwitchRev->setDown(false);
+       fSwitchLoopFwd->setDown(false);
+       fSwitchLoopRev->setDown(false);
+       
+       editParameter(paramOneShotFwd, false);
+       editParameter(paramOneShotRev, false);
+       editParameter(paramLoopFwd, false);
+       editParameter(paramLoopRev, false);
+   	break;
+	}
+      case paramOneShotRev:
+{
+       editParameter(paramOneShotFwd, true);
+       editParameter(paramOneShotRev, true);
+       editParameter(paramLoopFwd, true);
+       editParameter(paramLoopRev, true);
+       
+       setParameterValue(paramOneShotFwd, 0.0f);
+       setParameterValue(paramOneShotRev, 1.0f);
+       setParameterValue(paramLoopFwd, 0.0f);
+       setParameterValue(paramLoopRev, 0.0f);
+       
+       fSwitchFwd->setDown(false);
+       fSwitchRev->setDown(true);
+       fSwitchLoopFwd->setDown(false);
+       fSwitchLoopRev->setDown(false);
+       
+       editParameter(paramOneShotFwd, false);
+       editParameter(paramOneShotRev, false);
+       editParameter(paramLoopFwd, false);
+       editParameter(paramLoopRev, false);
+   	break;
+	}
+      case paramLoopFwd:
+	{
+       editParameter(paramOneShotFwd, true);
+       editParameter(paramOneShotRev, true);
+       editParameter(paramLoopFwd, true);
+       editParameter(paramLoopRev, true);
+       
+       setParameterValue(paramOneShotFwd, 0.0f);
+       setParameterValue(paramOneShotRev, 0.0f);
+       setParameterValue(paramLoopFwd, 1.0f);
+       setParameterValue(paramLoopRev, 0.0f);
+       
+       fSwitchFwd->setDown(false);
+       fSwitchRev->setDown(false);
+       fSwitchLoopFwd->setDown(true);
+       fSwitchLoopRev->setDown(false);
+       
+       editParameter(paramOneShotFwd, false);
+       editParameter(paramOneShotRev, false);
+       editParameter(paramLoopFwd, false);
+       editParameter(paramLoopRev, false);
+   	break;
+	}
+      case paramLoopRev:
+	{
+       editParameter(paramOneShotFwd, true);
+       editParameter(paramOneShotRev, true);
+       editParameter(paramLoopFwd, true);
+       editParameter(paramLoopRev, true);
+       
+       setParameterValue(paramOneShotFwd, 0.0f);
+       setParameterValue(paramOneShotRev, 0.0f);
+       setParameterValue(paramLoopFwd, 0.0f);
+       setParameterValue(paramLoopRev, 1.0f);
+       
+       fSwitchFwd->setDown(false);
+       fSwitchRev->setDown(false);
+       fSwitchLoopFwd->setDown(false);
+       fSwitchLoopRev->setDown(true);
+       
+       editParameter(paramOneShotFwd, false);
+       editParameter(paramOneShotRev, false);
+       editParameter(paramLoopFwd, false);
+       editParameter(paramLoopRev, false);
+   	break;
+	}
+      default:
+	 editParameter(buttonId, true);
+    setParameterValue(buttonId, down ? 1.0f : 0.0f);
+    editParameter(buttonId, false);
+	
+	
     } // switch (buttonId)
 }
 
@@ -379,15 +316,15 @@ void NinjasUI::imageKnobDragStarted(ImageKnob* knob)
 
 void NinjasUI::imageKnobDragFinished(ImageKnob* knob)
 {
-    std::cout << "knobID = " << knob->getId() << std::endl;
-
-    editParameter(knob->getId(), false);
+  std::cout << "knobID = " << knob->getId() << std::endl;
+      
+  editParameter(knob->getId(), false);
 }
 
 void NinjasUI::imageKnobValueChanged(ImageKnob* knob, float value)
 {
-    std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
-
+  std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
+    
     setParameterValue(knob->getId(), value);
 }
 

@@ -16,13 +16,12 @@ Sample::Sample()
 
 Sample::Sample(std::string fp, std::vector <float> & samplevector)
 {
-    // 
+    // not sure Im gonna use this constructor
 }
 
 int Sample::loadSample(std::string fp, std::vector <float> & samplevector)
 {
     // create a "Sndfile" handle, it's part of the sndfile library we use to load samples
-    
     SndfileHandle fileHandle( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
    
     // get the number of frames in the sample
@@ -38,15 +37,14 @@ int Sample::loadSample(std::string fp, std::vector <float> & samplevector)
     samplerate = fileHandle.samplerate();
     
     // resize vector 
-    
     samplevector.resize(size * channels);
     
-    
+    // load sample memory in samplevector
     fileHandle.read( &samplevector.at(0) , size * channels );
    
     std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " <<
               samplerate << " with " << size << " samples, so its duration is " <<
-              size / samplerate << " seconds long." << std::endl;
+              size / samplerate << " seconds long." << std::endl;	      
     return 0;
 }
 
