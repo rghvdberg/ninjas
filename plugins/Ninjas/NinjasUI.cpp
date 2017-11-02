@@ -128,9 +128,9 @@ NinjasUI::NinjasUI()
     fSwitchFloppy->setAbsolutePos(92,220);
     fSwitchFloppy->setCallback(this);
 
-    // selector grid
+    /* selector grid
     
-    for ( int i = paramSwitch01, j =0 ; i <= paramSwitch16; ++i , ++j)
+    for ( int i = paramSwitch01, j =0 ; i <= paramSwitch01; ++i , ++j)
     {
     fGrid[j] = new ImageSwitch(this,
                                      Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
@@ -142,19 +142,21 @@ NinjasUI::NinjasUI()
     
     // set coordinates for grid
     // x = 980, y = 90 
-    for (int x = 0 ; x < 4 ; ++x)
+    for (int x = 0 ; x < 1 ; ++x)
     {
-      for (int y = 0 ; y < 4 ; ++y)
+      for (int y = 0 ; y < 1 ; ++y)
       {
 	int grid_x = 980 + (x * 41);
 	int grid_y = 90 + (y *46);
 	int grid_index = (x * 4) + (y * 4);
+	std::cout << "x,y = " << x << " , " << y << std::endl;
+	std::cout << "coordinates index, x,y :" << grid_index << grid_x << " , " << grid_y << std::endl;
 	fGrid[grid_index]->setAbsolutePos(grid_x,grid_y);
 	
       }
     }
     
-/*	
+    /*
     fGrid01->setAbsolutePos(980,90);
     fGrid02->setAbsolutePos(1021,90);
     fGrid03->setAbsolutePos(1062,90);
@@ -218,7 +220,8 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
         fSwitchFloppy->setDown(value > 0.5f);
         break;
 	
-    // selector grid	
+    /* selector grid	
+	
     case paramSwitch01:
         fGrid[0]->setDown(value > 0.5f);
         break;
@@ -267,6 +270,7 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
     case paramSwitch16:
         fGrid[15]->setDown(value > 0.5f);
         break;
+	*/
    }
   
 }
