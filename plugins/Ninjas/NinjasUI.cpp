@@ -134,9 +134,114 @@ NinjasUI::NinjasUI()
                                      Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
                                      Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
     fGrid01->setId(paramSwitch01);
-    fGrid01->setAbsolutePos(90,980);
+    fGrid01->setAbsolutePos(980,90);
     fGrid01->setCallback(this);
-   }
+  
+    fGrid02 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid02->setId(paramSwitch02);
+    fGrid02->setAbsolutePos(1021,90);
+    fGrid02->setCallback(this);
+   
+    fGrid03 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid03->setId(paramSwitch03);
+    fGrid03->setAbsolutePos(1062,90);
+    fGrid03->setCallback(this);
+   
+    fGrid04 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid04->setId(paramSwitch04);
+    fGrid04->setAbsolutePos(1103,90);
+    fGrid04->setCallback(this);
+  
+    fGrid05 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid05->setId(paramSwitch05);
+    fGrid05->setAbsolutePos(980,136);
+    fGrid05->setCallback(this);
+   
+    fGrid06 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid06->setId(paramSwitch06);
+    fGrid06->setAbsolutePos(1021,136);
+    fGrid06->setCallback(this);
+  
+    fGrid07 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid07->setId(paramSwitch07);
+    fGrid07->setAbsolutePos(1062,136);
+    fGrid07->setCallback(this);
+  
+    fGrid08 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid08->setId(paramSwitch08);
+    fGrid08->setAbsolutePos(1103,136);
+    fGrid08->setCallback(this);
+  
+    fGrid09 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid09->setId(paramSwitch09);
+    fGrid09->setAbsolutePos(980,182);
+    fGrid09->setCallback(this);
+  
+    fGrid10 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid10->setId(paramSwitch10);
+    fGrid10->setAbsolutePos(1021,182);
+    fGrid10->setCallback(this);
+  
+    fGrid11 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid11->setId(paramSwitch11);
+    fGrid11->setAbsolutePos(1062,182);
+    fGrid11->setCallback(this);
+  
+    fGrid12 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid12->setId(paramSwitch12);
+    fGrid12->setAbsolutePos(1103,182);
+    fGrid12->setCallback(this);
+  
+    fGrid13 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid13->setId(paramSwitch13);
+    fGrid13->setAbsolutePos(980,228);
+    fGrid13->setCallback(this);
+  
+    fGrid14 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid14->setId(paramSwitch14);
+    fGrid14->setAbsolutePos(1021,228);
+    fGrid14->setCallback(this);
+  
+    fGrid15 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid15->setId(paramSwitch15);
+    fGrid15->setAbsolutePos(1062,228);
+    fGrid15->setCallback(this);
+  
+    fGrid16 = new ImageSwitch(this,
+                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
+    fGrid16->setId(paramSwitch16);
+    fGrid16->setAbsolutePos(1103,228);
+    fGrid16->setCallback(this);
+}
 
 /**
    A parameter has changed on the plugin side.
