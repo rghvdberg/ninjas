@@ -130,43 +130,34 @@ NinjasUI::NinjasUI()
     
     // grid .. debug
     
-    fGrid[0] = new ImageSwitch(this,
+   
+    for ( int i = paramSwitch01, j =0 ; i <= paramSwitch16; ++i , ++j)
+    {
+      
+    fGrid[j] = new ImageSwitch(this,
 			       Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
 			       Image(Art::switch_onData, Art::switch_onWidth, Art::switch_onHeight, GL_BGR));
-    fGrid[0]->setId(paramSwitch01);
-    fGrid[0]->setAbsolutePos(980,90);
-    fGrid[0]->setCallback(this);
-    
-
-    /* selector grid
-    
-    for ( int i = paramSwitch01, j =0 ; i <= paramSwitch01; ++i , ++j)
-    {
-    fGrid[j] = new ImageSwitch(this,
-                                     Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
-                                     Image(Art::switch_onData, Art::switch_onWidth, Art::switch_offHeight, GL_BGR));
     fGrid[j]->setId(i);
-  
+    // fGrid[j]->setAbsolutePos(981+j*41,89);
     fGrid[j]->setCallback(this);
     }
-    
-    // set coordinates for grid
+
+        // set coordinates for grid
+     
     // x = 980, y = 90 
-    for (int x = 0 ; x < 1 ; ++x)
-    {
-      for (int y = 0 ; y < 1 ; ++y)
-      {
-	int grid_x = 980 + (x * 41);
-	int grid_y = 90 + (y *46);
-	int grid_index = (x * 4) + (y * 4);
-	std::cout << "x,y = " << x << " , " << y << std::endl;
-	std::cout << "coordinates index, x,y :" << grid_index << grid_x << " , " << grid_y << std::endl;
-	fGrid[grid_index]->setAbsolutePos(grid_x,grid_y);
-	
-      }
-    }
+
     
+        for (int y = 0 ; y < 4 ; ++y)
+	{
+	  for (int x = 0 ; x < 4 ; ++x)
+	  {
+	    int index = y * 4 + x;
+	    fGrid[index]->setAbsolutePos(981+x*41,89+y*46);
+	  }
+	}
+
     
+    /*
     fGrid01->setAbsolutePos(980,90);
     fGrid02->setAbsolutePos(1021,90);
     fGrid03->setAbsolutePos(1062,90);
@@ -410,13 +401,8 @@ void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
         editParameter(paramLoopRev, false);
         break;
     }
-   
-      /*
-        editParameter(buttonId, true);
-        setParameterValue(buttonId, down ? 1.0f : 0.0f);
-        editParameter(buttonId, false);
-      */
-
+  
+      
     } // switch (buttonId)
    
    // process the grid
@@ -424,9 +410,9 @@ void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
    if (buttonId >= paramSwitch01 && buttonId <= paramSwitch16)
     {
       
-      for (int i = paramSwitch01, j=0; i <= paramSwitch01; ++i,++j)
+      for (int i = paramSwitch01, j=0; i <= paramSwitch16; ++i,++j)
       {
-	
+	std::cout << (i==buttonId) << std::endl;
 	editParameter(i, true);
 	setParameterValue(i, i == buttonId ? 0.0f : 1.0f);
 	fGrid[j]->setDown(i == buttonId);
