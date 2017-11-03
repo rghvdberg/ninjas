@@ -127,6 +127,16 @@ NinjasUI::NinjasUI()
     fSwitchFloppy->setId(paramFloppy);
     fSwitchFloppy->setAbsolutePos(92,220);
     fSwitchFloppy->setCallback(this);
+    
+    // grid .. debug
+    
+    fGrid[0] = new ImageSwitch(this,
+			       Image(Art::switch_offData, Art::switch_offWidth, Art::switch_offHeight, GL_BGR),
+			       Image(Art::switch_onData, Art::switch_onWidth, Art::switch_onHeight, GL_BGR));
+    fGrid[0]->setId(paramSwitch01);
+    fGrid[0]->setAbsolutePos(980,90);
+    fGrid[0]->setCallback(this);
+    
 
     /* selector grid
     
@@ -156,7 +166,7 @@ NinjasUI::NinjasUI()
       }
     }
     
-    /*
+    
     fGrid01->setAbsolutePos(980,90);
     fGrid02->setAbsolutePos(1021,90);
     fGrid03->setAbsolutePos(1062,90);
@@ -414,7 +424,7 @@ void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
    if (buttonId >= paramSwitch01 && buttonId <= paramSwitch16)
     {
       
-      for (int i = paramSwitch01, j=0; i <= paramSwitch16; ++i,++j)
+      for (int i = paramSwitch01, j=0; i <= paramSwitch01; ++i,++j)
       {
 	
 	editParameter(i, true);
