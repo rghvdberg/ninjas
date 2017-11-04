@@ -414,7 +414,7 @@ void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
       {
 	std::cout << (i==buttonId) << std::endl;
 	editParameter(i, true);
-	setParameterValue(i, i == buttonId ? 0.0f : 1.0f);
+	setParameterValue(i, i == buttonId ? 1.0f : 0.0f);
 	fGrid[j]->setDown(i == buttonId);
 	editParameter(i, false);
       }

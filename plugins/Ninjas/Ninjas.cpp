@@ -157,16 +157,14 @@ void NinjasPlugin::initParameter(uint32_t index, Parameter& parameter)
     }
     }
     
-    
-
-    if (index > 9 )
+    if (index >= paramSwitch01 && index <= paramSwitch16)
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
-        parameter.name   = "Switch "+String(index-9);
-        parameter.symbol  = "switch"+String(index-9);
+        parameter.name   = "Switch "+String(index - 9);
+        parameter.symbol  = "switch"+String(index - 9);
     }
 
 }
