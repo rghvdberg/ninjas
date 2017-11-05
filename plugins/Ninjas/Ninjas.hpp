@@ -142,7 +142,7 @@ private:
     float gain { 1.0f };
     int voice_index { 0 };
     Slice a_slices[16];
-    int slices ;
+    int slices {1};
     int sliceSize;
     double samplerate = getSampleRate();
     int currentSlice {0};

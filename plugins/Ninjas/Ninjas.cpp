@@ -358,53 +358,41 @@ void NinjasPlugin::run(const float**, float** outputs, uint32_t frames,         
             case 0x80 : // note off
             {
 	        int index = data1-60;
-                // check if note is playing
-                bool voice_playing = stack.check_Voice_Playing(index, data1);
-
-                //std::cout << "voice_playing = " << voice_playing << std::endl;
-                if (voice_playing == false)
+                bool voice_playing = voices[index].active
+		if (voice_playing == false)
 
                     break; // note wasn't playing anyway .. ignore
                 if (voice_playing)
-                {
-                    // get the (pointer to) voice
-                    Voice* vp = stack.get_Voice(index, data1);
-                    if (!vp->active)
-                        stack.remove_Voice(index,data1);
-                    else
-                        vp->adsr.ADSRstage=ADSR::RELEASE;
-                    std::cout << "Line 204 : ADSRstage =" << vp->adsr.ADSRstage << std::endl;
-                    /* TODO .. think about how this works for pitchbend*/
-                }
-                break;
+                   voices[index].adsr.ADSRstage=ADSR::RELEASE;
+                  break;
             }
 
             case 0x90 :
             {
                 int index = data1 - 60;
-		    //set properties of voice and add to stack
+		    // new note .. let's activate
                     voices[index].active = true;
-                    voices[index].index= voice_index;
-             //       voices[index].channel = channel;
-             //       voices[index].notenumber = note;
                     voices[index].velocity = data2;
                     voices[index].gain = (float) data2 / 127.0f;
                     voices[index].adsr.initADSR();
-		      voices[index].adsr.setADSR(p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index]);
+		    voices[index].adsr.setADSR(p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index]);
+		    // check playmode 
+		    // if LOOP_REV or ONE_SHOT_REV set playback indici to end of slice
 		      if (a_slices[index].getSlicePlayMode() == Slice::LOOP_REV || a_slices[index].getSlicePlayMode() == Slice::ONE_SHOT_REV)
 		      {
 			  voices[index].playbackIndex = a_slices[index].getSliceEnd();
 			  voices[index].multiplierIndex = ( a_slices[index].getSliceEnd() - a_slices[index].getSliceStart()) /SampleObject.getSampleChannels();
 		      }
-		      else
+		      else // playmode is forward .. playback indici to start 
 		      {
 			  voices[index].playbackIndex = 0;
 			  voices[index].multiplierIndex = 0;
 		      }
+		      
 		      float transpose = (pitchbend/pitchbend_step) -12;
-                    voices[index].multiplier=pow(2.0, transpose / 12.0);
+		      voices[index].multiplier=pow(2.0, transpose / 12.0);
                     // all set . add to stack
-                    stack.add_Voice(&voices[index]);
+                    //stack.add_Voice(&voices[index]);
                     //
                    
 
@@ -423,22 +411,18 @@ void NinjasPlugin::run(const float**, float** outputs, uint32_t frames,         
 
             curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
         }
-        // get all voices playing
-        int max = stack.get_Stack_Size();
-        if (max > 0)
-        {
             // loop through active voices
-            for (int i = 0; i < max ; ++i)
+            for (int i = 0; i < slices ; i++}
             {
-                /*get the raw samples from the voice
-                float* pointer will allow any amount of samples to be pulled in
-                */
-
-                if (stack.get_Voice_Active(i))
+              
+                if (voices[i].active)
                 {
-                    float* sample = stack.get_Sample(i, &sampleVector, a_slices);
-                    // cout << *sample << " - " << *(sample+1) << endl;
-
+		    /*get the raw samples from the voice
+                 float* pointer will allow any amount of samples to be pulled in
+                */
+		    int start = slices[i].getSliceStart();
+		    int pos = voices[i].playbackIndex;
+		    float* sample = &samplevector->at(start+pos);
                     float sampleL { *sample };
                     float sampleR { *(sample + (SampleObject.getSampleChannels() -1) ) };
                     // TODO should make variable for channels
