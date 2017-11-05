@@ -135,9 +135,10 @@ private:
     /*by example of the cars plugin create array of voices
     tried to create them 'on the fly' but that won't work.
      */
-    Voice voices[128] { };
+    Voice voices[16] { };
 
     int pitchbend { 8192 };
+    float pitchbend_step = (float) pitchbend / 24;
     float gain { 1.0f };
     int voice_index { 0 };
     Slice a_slices[16];
