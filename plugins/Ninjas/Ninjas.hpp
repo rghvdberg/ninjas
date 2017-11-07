@@ -138,7 +138,8 @@ private:
     Voice voices[16] { };
 
     int pitchbend { 8192 };
-    float pitchbend_step = (float) pitchbend / 24;
+    int pitchbend_range { 24 };
+    float pitchbend_step = (float) 16384 / (float) pitchbend_range;
     float gain { 1.0f };
     int voice_index { 0 };
     Slice a_slices[16];
