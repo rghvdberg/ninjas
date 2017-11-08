@@ -50,20 +50,17 @@ int Sample::loadSample(std::string fp, std::vector <float> & samplevector)
 
 void Sample::createSlices(Slice* slices, int n_slices)
 {
-    int sliceSize = (size*channels) / n_slices;
+    float sliceSize = (float)(size*channels) / (float) n_slices;
     std::cout << "sliceSize :" << sliceSize 
     << " x " << n_slices << " n_slices = "
     << n_slices * sliceSize << std::endl;
     
-    for (int i=0, j=0 ; i < size; i+=sliceSize )
+    for (int i = 0 ; i < n_slices; i++)
     {
-        // set start and end
-        slices[j].setSliceStart(i);
-        slices[j].setSliceStart(i);
-        slices[j].setSliceEnd(i+sliceSize-1);
-        slices[j].setSliceActive(true);
-	std::cout << "Slice :" << j << " : " << slices[j].getSliceStart() << "->" << slices[j].getSliceEnd() << std::endl;
-        ++j;
-
+      slices[i].setSliceStart( (int) i * sliceSize);
+      slices[i].setSliceEnd(   ((int) (i+1) * sliceSize) - 1);
+      std::cout << "Slice :" << i << " : "
+      << slices[i].getSliceStart() << "->"
+      << slices[i].getSliceEnd() << std::endl;
     }
 }
