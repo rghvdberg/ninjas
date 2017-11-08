@@ -335,13 +335,12 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
             int message = status & 0xF0 ; // get midi message
             int data1 = midiEvents[curEventIndex].data[1];// note number
             int data2 = midiEvents[curEventIndex].data[2]; //
-
+/*
             std::cout << std::hex << "Status : " << status << std::endl;
-            //std::cout << std::hex << "Channel : " << channel << std::endl;
             std::cout << std::hex << "Message : " << message << std::endl;
             std::cout << std::hex << "Data1 : " << data1 << std::endl;
             std::cout << std::hex << "Data2 : " << data2 << std::endl;
-
+*/
 
             // discard notes outside the 16 notes range
             // aka only listen to notes in the c4
