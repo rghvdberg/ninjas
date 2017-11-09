@@ -25,11 +25,13 @@ void Mixer::add_Sample(float s)
 {
     mix +=s;
     ++channels;
+//    std::cout << "add_Sample - channels : " << channels << std::endl;
+  
 }
 
 float Mixer::get_Mix()
 {
-    std::cout << "get_Mix() channels" << channels << std::endl;
+    //std::cout << "get_Mix() channels" << channels << std::endl;
     average = mix/channels;
     mix = 0;
     channels = 0;

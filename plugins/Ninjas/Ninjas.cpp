@@ -414,7 +414,8 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
             curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
         }
         // loop through active voices
-        for ( int i {0} , voice_count {0}; i < slices ; i++ )
+        int voice_count {0};
+        for ( int i {0} ; i < slices ; i++ )
         {
 	  
 
@@ -516,12 +517,12 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 } //switch
             }// if voices[i].active
             // std::cout << "voice_count : " << voice_count << std::endl;;
+        } // end for loop through active voices
         if (voice_count == 0)
 	    {
              mixL.add_Sample(0);
 	     mixR.add_Sample(0);
 	    }
-        } // end for loop through active voices
        
         
         float left = mixL.get_Mix();
