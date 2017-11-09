@@ -373,6 +373,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 voices[index].active = true;
                 voices[index].velocity = data2;
                 voices[index].gain = ( float ) data2 / 127.0f;
+		std::cout << "Gain =" << voices[index].gain << std::endl;
                 voices[index].adsr.initADSR();
                 voices[index].adsr.setADSR ( p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index] );
                 // check playmode
@@ -413,26 +414,28 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
             curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
         }
         // loop through active voices
-        for ( int i = 0; i < slices ; i++ )
+        for ( int i {0} , voice_count {0}; i < slices ; i++ )
         {
+	  
 
-            if ( voices[i].active )
-            {
+            if ( voices[i].active ){
+	      voice_count++;
                 /*get the raw samples from the voice
-                   float* pointer will allow any amount of samples to be pulled in
-                  */
-                int start = a_slices[i].getSliceStart();
+		 * float* pointer will allow any amount of samples to be pulled in
+		 */
+                int sliceStart = a_slices[i].getSliceStart();
+                int sliceEnd = a_slices[i].getSliceEnd();
                 int pos = voices[i].playbackIndex;
-                float* sample = &sampleVector.at ( start+pos );
+		int channels = SampleObject.getSampleChannels();
+                float* sample = &sampleVector.at ( sliceStart+pos );
                 float sampleL { *sample };
-                float sampleR { * ( sample + ( SampleObject.getSampleChannels() -1 ) ) };
-
-                // TODO should make variable for channels
-
-                // get gain factor
+                float sampleR { * ( sample + ( channels -1 ) ) };
                 // process adsr to get the gain back
                 float adsr_gain = voices[i].adsr.ADSRrun ( &voices[i].active );
+		//std::cout << "adsr_gain : " << adsr_gain << std::endl;
                 gain = voices[i].gain * adsr_gain;
+		//std::cout << "gain : " << gain << std::endl;
+                
                 sampleL = sampleL * gain;
                 sampleR = sampleR * gain;
 
@@ -441,16 +444,12 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 mixL.add_Sample ( sampleL );
                 mixR.add_Sample ( sampleR );
 
-                // increase the sample read index
-                float transpose = ( pitchbend/pitchbend_step ) -12;
+		// increase sample reading position
+		float transpose = ( pitchbend/pitchbend_step ) -12;
                 voices[i].multiplier=pow ( 2.0, transpose / 12.0 );
-                int channels = SampleObject.getSampleChannels();
-                int sliceStart    = a_slices[i].getSliceStart();
-                int sliceEnd      = a_slices[i].getSliceEnd();
                 float multiplier = voices[i].multiplier;
-                // std::cout << "multiplier = " << multiplier << std::endl;
-
-                Slice::slicePlayMode playmode = a_slices[i].getSlicePlayMode();
+              
+		Slice::slicePlayMode playmode = a_slices[i].getSlicePlayMode();
 
                 // set multiplier to negative if direction is reverse
 
@@ -514,14 +513,17 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     break;
                 }
 
-                }
-            }
-            else
-            {
-                mixL.add_Sample ( 0.0f );
-                mixR.add_Sample ( 0.0f );
-            }
+                } //switch
+            }// if voices[i].active
+            // std::cout << "voice_count : " << voice_count << std::endl;;
+        if (voice_count == 0)
+	    {
+             mixL.add_Sample(0);
+	     mixR.add_Sample(0);
+	    }
         } // end for loop through active voices
+       
+        
         float left = mixL.get_Mix();
         float right = mixR.get_Mix();
         outL[framesDone] = left;

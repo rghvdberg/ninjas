@@ -6,6 +6,7 @@
  */
 
 #include "Mixer.h"
+#include <iostream>
 
 
 
@@ -28,6 +29,7 @@ void Mixer::add_Sample(float s)
 
 float Mixer::get_Mix()
 {
+    std::cout << "get_Mix() channels" << channels << std::endl;
     average = mix/channels;
     mix = 0;
     channels = 0;
