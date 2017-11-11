@@ -1,9 +1,0 @@
-dpf/dgl/src/nanovg
-dpf/dgl/src/pugl
-dpf/dgl/src/sofd
-dpf/distrho/src
-dpf/distrho/src/dssi
-dpf/distrho/src/ladspa
-dpf/distrho/src/lv2
-dpf/distrho/src/vestige
-plugins/Ninjas

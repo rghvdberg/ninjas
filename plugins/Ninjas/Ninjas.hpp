@@ -69,34 +69,34 @@ protected:
 
     uint32_t getVersion() const noexcept override
     {
-        return d_version(1, 0, 0);
+        return d_version ( 1, 0, 0 );
     }
 
     int64_t getUniqueId() const noexcept override
     {
-        return d_cconst('N', 'i', 'N', 'j');
+        return d_cconst ( 'N', 'i', 'N', 'j' );
     }
 
     // -------------------------------------------------------------------
     // Init
 
-    void initParameter(uint32_t index, Parameter& parameter);
-    void initState(uint32_t index, String& stateKey, String& defaultStateValue); 
+    void initParameter ( uint32_t index, Parameter& parameter );
+    void initState ( uint32_t index, String& stateKey, String& defaultStateValue );
 
     // -------------------------------------------------------------------
     // Internal data
 
-    float getParameterValue(uint32_t index) const override;
-    void  setParameterValue(uint32_t index, float value) override;
-    String getState(const char* key) const; 
-    void setState(const char* key, const char* value) override;
-    
+    float getParameterValue ( uint32_t index ) const override;
+    void  setParameterValue ( uint32_t index, float value ) override;
+    String getState ( const char* key ) const;
+    void setState ( const char* key, const char* value ) override;
+
 
     // -------------------------------------------------------------------
     // Process
 
     //void activate() override;
-    void run(const float**, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount) override;
+    void run ( const float**, float** outputs, uint32_t frames, const MidiEvent* midiEvents, uint32_t midiEventCount ) override;
 
     // -------------------------------------------------------------------
 
@@ -112,25 +112,17 @@ private:
     float p_LoopRev[16];
     float p_SliceStart[16];
     float p_SliceEnd[16];
-    // float p_NumberOfSlices;
-
-
 
     // empty sample object
 
     std::vector<float> sampleVector; // this holds the sample data
-    
+
     /* create Mixer objects
     One for each audio channel
     after each iteration mix is put in audiouffer
      */
     Mixer mixL;
     Mixer mixR;
-
-    /*Voice stack
-    here we keep track of voices playing
-     */
-    Stack stack { };
 
     /*by example of the cars plugin create array of voices
     tried to create them 'on the fly' but that won't work.
@@ -139,7 +131,7 @@ private:
 
     int pitchbend { 8192 };
     int pitchbend_range { 24 };
-    float pitchbend_step = (float) 16384 / (float) pitchbend_range;
+    float pitchbend_step = ( float ) 16384 / ( float ) pitchbend_range;
     float gain { 1.0f };
     int voice_index { 0 };
     Slice a_slices[16];
@@ -148,13 +140,13 @@ private:
     double samplerate = getSampleRate();
     int currentSlice {0};
     std::string filepath = "";
-
+    bool bypass {true};
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.
      */
 
 
-    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasPlugin)
+    DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR ( NinjasPlugin )
 };
 
 // -----------------------------------------------------------------------

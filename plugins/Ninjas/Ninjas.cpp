@@ -38,7 +38,7 @@ START_NAMESPACE_DISTRHO
 
 // constructor
 NinjasPlugin::NinjasPlugin()
-    : Plugin ( paramCount, 0, 1 ) //1 parameter, 0 programs (presets) , 0 states
+    : Plugin ( paramCount, 0, 1 ) //1 parameter, 0 programs (presets) , 1 states
 {
 
 }
@@ -185,12 +185,22 @@ String NinjasPlugin::getState ( const char* key ) const
 void NinjasPlugin::setState ( const char* key, const char* value )
 {
     std::string fp = value;
-    // std::cout << "setState value = " << fp << std::endl;
-
-    // load file in sample memory
-    SampleObject.loadSample ( fp, sampleVector );
-    // slice it up
-    SampleObject.createSlices ( a_slices,slices );
+// load file in sample memory
+    if ( !SampleObject.loadSample ( fp, sampleVector ) )
+    {
+        // sample loaded ok, slice it up and set bool
+        SampleObject.createSlices ( a_slices,slices );
+        bypass = false;
+	//setParameterValue(paramFloppy,1.0);
+    }
+    else
+    {
+        bypass = true;
+	std::cout << "setState - sample not loaded" << std::endl;
+        // setState ( "filepath","empty" );
+	setParameterValue(paramFloppy,0.0);
+    }
+    
 }
 
 /* --------------------------------------------------------------------------------------------------------
@@ -320,224 +330,224 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
     float* const outR = outputs[1];
     uint32_t framesDone = 0;
     uint32_t curEventIndex = 0; // index for midi event to process
-
     while ( framesDone < frames )   // we have frames to process !!
     {
-        /* process any ready midi events */
-        //   we have midi data to proces, at precisly the current audio frame in the loop
-        while ( curEventIndex < midiEventCount && framesDone == midiEvents[curEventIndex].frame )   // the .frame is the offset of the midi event in current block
+        if ( !bypass )
         {
-            if ( midiEvents[curEventIndex].size > MidiEvent::kDataSize ) // not excatly shure what's happening here. this is in both Nekobi and Kars sourcecode
-                continue;
-
-            int status = midiEvents[curEventIndex].data[0]; // midi status
-            // int channel = status & 0x0F ; // get midi channel
-            int message = status & 0xF0 ; // get midi message
-            int data1 = midiEvents[curEventIndex].data[1];// note number
-            int data2 = midiEvents[curEventIndex].data[2]; //
-/*
-            std::cout << std::hex << "Status : " << status << std::endl;
-            std::cout << std::hex << "Message : " << message << std::endl;
-            std::cout << std::hex << "Data1 : " << data1 << std::endl;
-            std::cout << std::hex << "Data2 : " << data2 << std::endl;
-*/
-
-            // discard notes outside the 16 notes range
-            // aka only listen to notes in the c4
-            // nn 60 - 74
-
-            if ( ! ( message == 0x80 || message == 0x90 ) && ( data1 >= 60 && data1 <= 74 ) )
+            /* process any ready midi events */
+            //   we have midi data to proces, at precisly the current audio frame in the loop
+            while ( curEventIndex < midiEventCount && framesDone == midiEvents[curEventIndex].frame )   // the .frame is the offset of the midi event in current block
             {
-                curEventIndex++;
-                continue;
-            }
+                if ( midiEvents[curEventIndex].size > MidiEvent::kDataSize ) // not excatly shure what's happening here. this is in both Nekobi and Kars sourcecode
+                    continue;
 
-            switch ( message )
-            {
-            case 0x80 :   // note off
-            {
-                int index = data1-60;
-                bool voice_playing = voices[index].active;
-                if ( voice_playing == false )
+                int status = midiEvents[curEventIndex].data[0]; // midi status
+                // int channel = status & 0x0F ; // get midi channel
+                int message = status & 0xF0 ; // get midi message
+                int data1 = midiEvents[curEventIndex].data[1];// note number
+                int data2 = midiEvents[curEventIndex].data[2]; //
+                /*
+                            std::cout << std::hex << "Status : " << status << std::endl;
+                            std::cout << std::hex << "Message : " << message << std::endl;
+                            std::cout << std::hex << "Data1 : " << data1 << std::endl;
+                            std::cout << std::hex << "Data2 : " << data2 << std::endl;
+                */
 
-                    break; // note wasn't playing anyway .. ignore
-                if ( voice_playing )
-                    voices[index].adsr.ADSRstage=ADSR::RELEASE;
-                break;
-            }
+                // discard notes outside the 16 notes range
+                // aka only listen to notes in the c4
+                // nn 60 - 74
 
-            case 0x90 :
-            {
-                int index = data1 - 60;
-                // new note .. let's activate
-                voices[index].active = true;
-                voices[index].velocity = data2;
-                voices[index].gain = ( float ) data2 / 127.0f;
-		std::cout << "Gain =" << voices[index].gain << std::endl;
-                voices[index].adsr.initADSR();
-                voices[index].adsr.setADSR ( p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index] );
-                // check playmode
-                // if LOOP_REV or ONE_SHOT_REV set playback indici to end of slice
-                if ( a_slices[index].getSlicePlayMode() == Slice::LOOP_REV || a_slices[index].getSlicePlayMode() == Slice::ONE_SHOT_REV )
+                if ( ! ( message == 0x80 || message == 0x90 ) && ( data1 >= 60 && data1 <= 74 ) )
                 {
-                    voices[index].playbackIndex = a_slices[index].getSliceEnd();
-                    voices[index].multiplierIndex = ( a_slices[index].getSliceEnd() - a_slices[index].getSliceStart() ) /SampleObject.getSampleChannels();
-                }
-                else     // playmode is forward .. playback indici to start
-                {
-                    voices[index].playbackIndex = 0;
-                    voices[index].multiplierIndex = 0;
+                    curEventIndex++;
+                    continue;
                 }
 
-                float transpose = ( pitchbend/pitchbend_step ) -12;
-                voices[index].multiplier=pow ( 2.0, transpose / 12.0 );
-                // all set . add to stack
-                //stack.add_Voice(&voices[index]);
-                //
-                break;
+                switch ( message )
+                {
+                case 0x80 :   // note off
+                {
+                    int index = data1-60;
+                    bool voice_playing = voices[index].active;
+                    if ( voice_playing == false )
 
-            } // case 0x90
+                        break; // note wasn't playing anyway .. ignore
+                    if ( voice_playing )
+                        voices[index].adsr.ADSRstage=ADSR::RELEASE;
+                    break;
+                }
 
-            case 0xe0:   // pitchbend
+                case 0x90 :
+                {
+                    int index = data1 - 60;
+                    // new note .. let's activate
+                    voices[index].active = true;
+                    voices[index].velocity = data2;
+                    voices[index].gain = ( float ) data2 / 127.0f;
+                    std::cout << "Gain =" << voices[index].gain << std::endl;
+                    voices[index].adsr.initADSR();
+                    voices[index].adsr.setADSR ( p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index] );
+                    // check playmode
+                    // if LOOP_REV or ONE_SHOT_REV set playback indici to end of slice
+                    if ( a_slices[index].getSlicePlayMode() == Slice::LOOP_REV || a_slices[index].getSlicePlayMode() == Slice::ONE_SHOT_REV )
+                    {
+                        voices[index].playbackIndex = a_slices[index].getSliceEnd();
+                        voices[index].multiplierIndex = ( a_slices[index].getSliceEnd() - a_slices[index].getSliceStart() ) /SampleObject.getSampleChannels();
+                    }
+                    else     // playmode is forward .. playback indici to start
+                    {
+                        voices[index].playbackIndex = 0;
+                        voices[index].multiplierIndex = 0;
+                    }
+
+                    float transpose = ( pitchbend/pitchbend_step ) -12;
+                    voices[index].multiplier=pow ( 2.0, transpose / 12.0 );
+                    // all set . add to stack
+                    //stack.add_Voice(&voices[index]);
+                    //
+                    break;
+
+                } // case 0x90
+
+                case 0xe0:   // pitchbend
+                {
+                    std::cout << "pitchbend received" << std::endl;
+                    pitchbend = ( data2 * 128 ) + data1;
+                    break;
+
+                }
+
+
+
+                } // switch
+
+
+                curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
+            }
+            // loop through active voices
+            int voice_count {0};
+            for ( int i {0} ; i < slices ; i++ )
             {
-                std::cout << "pitchbend received" << std::endl;
-                pitchbend = ( data2 * 128 ) + data1;
-                break;
 
+
+                if ( voices[i].active )
+                {
+                    voice_count++;
+                    /*get the raw samples from the voice
+                    * float* pointer will allow any amount of samples to be pulled in
+                    	 */
+                    int sliceStart = a_slices[i].getSliceStart();
+                    int sliceEnd = a_slices[i].getSliceEnd();
+                    int pos = voices[i].playbackIndex;
+                    int channels = SampleObject.getSampleChannels();
+                    float* sample = &sampleVector.at ( sliceStart+pos );
+                    float sampleL { *sample };
+                    float sampleR { * ( sample + ( channels -1 ) ) };
+                    // process adsr to get the gain back
+                    float adsr_gain = voices[i].adsr.ADSRrun ( &voices[i].active );
+                    //std::cout << "adsr_gain : " << adsr_gain << std::endl;
+                    gain = voices[i].gain * adsr_gain;
+                    //std::cout << "gain : " << gain << std::endl;
+
+                    sampleL = sampleL * gain;
+                    sampleR = sampleR * gain;
+
+                    // put samples in mixer
+
+                    mixL.add_Sample ( sampleL );
+                    mixR.add_Sample ( sampleR );
+
+                    // increase sample reading position
+                    float transpose = ( pitchbend/pitchbend_step ) -12;
+                    voices[i].multiplier=pow ( 2.0, transpose / 12.0 );
+                    float multiplier = voices[i].multiplier;
+
+                    Slice::slicePlayMode playmode = a_slices[i].getSlicePlayMode();
+
+                    // set multiplier to negative if direction is reverse
+
+                    if ( playmode == Slice::LOOP_REV || playmode == Slice::ONE_SHOT_REV )
+                        multiplier=-multiplier;
+
+                    // add the multiplier, when it's negative this should substract
+
+                    voices[i].multiplierIndex += multiplier;
+                    int tmp = ( int ) voices[i].multiplierIndex;
+                    tmp=tmp * channels;
+
+                    // check bounderies according to playmode: loop or oneshot.
+
+                    switch ( playmode )
+                    {
+                    case Slice::LOOP_FWD:
+                    {
+                        if ( tmp >= ( sliceEnd-channels ) )
+                        {
+                            voices[i].playbackIndex = 0;
+                            voices[i].multiplierIndex = 0;
+                        }
+                        else
+                        {
+                            voices[i].playbackIndex = tmp;
+                        }
+                        break;
+                    }
+
+                    case Slice::LOOP_REV:
+                    {
+                        if ( sliceStart + tmp <= sliceStart )
+                        {
+                            voices[i].playbackIndex = sliceEnd ;
+                            voices[i].multiplierIndex = ( sliceEnd -sliceStart ) /channels;
+                        }
+                        else
+                            voices[i].playbackIndex = tmp;
+                        break;
+                    }
+                    case Slice::ONE_SHOT_FWD:
+                    {
+                        if ( sliceStart + tmp >= ( sliceEnd-channels ) )
+                        {
+                            voices[i].active=false;
+                        }
+                        else voices[i].playbackIndex = tmp;
+                        //  std::cout << voice_stack[i]->playbackIndex << std::endl;
+                        break;
+                    }
+                    case Slice::ONE_SHOT_REV:
+                    {
+                        //std::cout << sliceStart << " , " << tmp << " , " << sliceEnd << std::endl;
+                        if ( sliceStart + tmp <= sliceStart )
+                        {
+                            voices[i].active=false;
+                        }
+                        else
+                            voices[i].playbackIndex = tmp;
+                        break;
+                    }
+
+                    } //switch
+                }// if voices[i].active
+                // std::cout << "voice_count : " << voice_count << std::endl;;
+            } // end for loop through active voices
+            if ( voice_count == 0 )
+            {
+                mixL.add_Sample ( 0 );
+                mixR.add_Sample ( 0 );
             }
 
 
-
-            } // switch
-
-
-            curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
+            float left = mixL.get_Mix();
+            float right = mixR.get_Mix();
+            outL[framesDone] = left;
+            outR[framesDone] = right;
         }
-        // loop through active voices
-        int voice_count {0};
-        for ( int i {0} ; i < slices ; i++ )
-        {
-	  
-
-            if ( voices[i].active ){
-	      voice_count++;
-                /*get the raw samples from the voice
-		 * float* pointer will allow any amount of samples to be pulled in
-		 */
-                int sliceStart = a_slices[i].getSliceStart();
-                int sliceEnd = a_slices[i].getSliceEnd();
-                int pos = voices[i].playbackIndex;
-		int channels = SampleObject.getSampleChannels();
-                float* sample = &sampleVector.at ( sliceStart+pos );
-                float sampleL { *sample };
-                float sampleR { * ( sample + ( channels -1 ) ) };
-                // process adsr to get the gain back
-                float adsr_gain = voices[i].adsr.ADSRrun ( &voices[i].active );
-		//std::cout << "adsr_gain : " << adsr_gain << std::endl;
-                gain = voices[i].gain * adsr_gain;
-		//std::cout << "gain : " << gain << std::endl;
-                
-                sampleL = sampleL * gain;
-                sampleR = sampleR * gain;
-
-                // put samples in mixer
-
-                mixL.add_Sample ( sampleL );
-                mixR.add_Sample ( sampleR );
-
-		// increase sample reading position
-		float transpose = ( pitchbend/pitchbend_step ) -12;
-                voices[i].multiplier=pow ( 2.0, transpose / 12.0 );
-                float multiplier = voices[i].multiplier;
-              
-		Slice::slicePlayMode playmode = a_slices[i].getSlicePlayMode();
-
-                // set multiplier to negative if direction is reverse
-
-                if ( playmode == Slice::LOOP_REV || playmode == Slice::ONE_SHOT_REV )
-                    multiplier=-multiplier;
-
-                // add the multiplier, when it's negative this should substract
-
-                voices[i].multiplierIndex += multiplier;
-                int tmp = ( int ) voices[i].multiplierIndex;
-                tmp=tmp * channels;
-
-                // check bounderies according to playmode: loop or oneshot.
-
-                switch ( playmode )
-                {
-                case Slice::LOOP_FWD:
-                {
-                    if ( tmp >= ( sliceEnd-channels ) )
-                    {
-                        voices[i].playbackIndex = 0;
-                        voices[i].multiplierIndex = 0;
-                    }
-                    else
-                    {
-                        voices[i].playbackIndex = tmp;
-                    }
-                    break;
-                }
-
-                case Slice::LOOP_REV:
-                {
-                    if ( sliceStart + tmp <= sliceStart )
-                    {
-                        voices[i].playbackIndex = sliceEnd ;
-                        voices[i].multiplierIndex = ( sliceEnd -sliceStart ) /channels;
-                    }
-                    else
-                        voices[i].playbackIndex = tmp;
-                    break;
-                }
-                case Slice::ONE_SHOT_FWD:
-                {
-                    if ( sliceStart + tmp >= ( sliceEnd-channels ) )
-                    {
-                        voices[i].active=false;
-                    }
-                    else voices[i].playbackIndex = tmp;
-                    //  std::cout << voice_stack[i]->playbackIndex << std::endl;
-                    break;
-                }
-                case Slice::ONE_SHOT_REV:
-                {
-                    //std::cout << sliceStart << " , " << tmp << " , " << sliceEnd << std::endl;
-                    if ( sliceStart + tmp <= sliceStart )
-                    {
-                        voices[i].active=false;
-                    }
-                    else
-                        voices[i].playbackIndex = tmp;
-                    break;
-                }
-
-                } //switch
-            }// if voices[i].active
-            // std::cout << "voice_count : " << voice_count << std::endl;;
-        } // end for loop through active voices
-        if (voice_count == 0)
-	    {
-             mixL.add_Sample(0);
-	     mixR.add_Sample(0);
-	    }
-       
-        
-        float left = mixL.get_Mix();
-        float right = mixR.get_Mix();
-        outL[framesDone] = left;
-        outR[framesDone] = right;
-
-        /*
         else
         {
-             // no voices playing
-             outL[framesDone] = 0; // output 0 == silence
-             outR[framesDone] = 0;
+            // no voices playing
+            outL[framesDone] = 0; // output 0 == silence
+            outR[framesDone] = 0;
         }
-        */
         ++framesDone;
 
     } // run()
