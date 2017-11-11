@@ -1,5 +1,5 @@
 # Ninjas - Sample Slicing Plugin
-####*Ninjas Is Not Just Another Slicer*
+#### *Ninjas Is Not Just Another Slicer*
 
 Creating a sample slicer plugin using DPF framework.
 This is very early work.
@@ -22,7 +22,7 @@ There is no `make install`, binaries will appear in `~ninjas/bin/`, just copy th
 
 ***
 
-###Usage
+### Usage
 + load Ninjas in a suitable host.
 + click Diskette drive
 + load audio sample
