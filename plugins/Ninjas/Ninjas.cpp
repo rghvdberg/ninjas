@@ -191,16 +191,16 @@ void NinjasPlugin::setState ( const char* key, const char* value )
         // sample loaded ok, slice it up and set bool
         SampleObject.createSlices ( a_slices,slices );
         bypass = false;
-	//setParameterValue(paramFloppy,1.0);
+        //setParameterValue(paramFloppy,1.0);
     }
     else
     {
         bypass = true;
-	std::cout << "setState - sample not loaded" << std::endl;
+        std::cout << "setState - sample not loaded" << std::endl;
         // setState ( "filepath","empty" );
-	setParameterValue(paramFloppy,0.0);
+        setParameterValue ( paramFloppy,0.0 );
     }
-    
+
 }
 
 /* --------------------------------------------------------------------------------------------------------
@@ -277,9 +277,6 @@ float NinjasPlugin::getParameterValue ( uint32_t index ) const
 void NinjasPlugin::setParameterValue ( uint32_t index, float value )
 {
 
-    // std::cout << "setParameterValue index, value : " << index << " , " << value << std::endl;
-
-
     switch ( index )
     {
     case paramNumberOfSlices:
@@ -317,7 +314,10 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
 
     } // switch
     if ( index > 9 )
-        currentSlice = index - 9;
+    {
+        if ( value == 1 )
+            currentSlice = index - 10;
+    }
 } // setParameterValue
 
 /* --------------------------------------------------------------------------------------------------------
@@ -354,7 +354,6 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 */
 
                 // discard notes outside the 16 notes range
-                // aka only listen to notes in the c4
                 // nn 60 - 74
 
                 if ( ! ( message == 0x80 || message == 0x90 ) && ( data1 >= 60 && data1 <= 74 ) )
@@ -384,7 +383,6 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     voices[index].active = true;
                     voices[index].velocity = data2;
                     voices[index].gain = ( float ) data2 / 127.0f;
-                    std::cout << "Gain =" << voices[index].gain << std::endl;
                     voices[index].adsr.initADSR();
                     voices[index].adsr.setADSR ( p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index] );
                     // check playmode
@@ -445,9 +443,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     float sampleR { * ( sample + ( channels -1 ) ) };
                     // process adsr to get the gain back
                     float adsr_gain = voices[i].adsr.ADSRrun ( &voices[i].active );
-                    //std::cout << "adsr_gain : " << adsr_gain << std::endl;
                     gain = voices[i].gain * adsr_gain;
-                    //std::cout << "gain : " << gain << std::endl;
 
                     sampleL = sampleL * gain;
                     sampleR = sampleR * gain;
@@ -511,12 +507,10 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                             voices[i].active=false;
                         }
                         else voices[i].playbackIndex = tmp;
-                        //  std::cout << voice_stack[i]->playbackIndex << std::endl;
                         break;
                     }
                     case Slice::ONE_SHOT_REV:
                     {
-                        //std::cout << sliceStart << " , " << tmp << " , " << sliceEnd << std::endl;
                         if ( sliceStart + tmp <= sliceStart )
                         {
                             voices[i].active=false;
@@ -528,7 +522,6 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
 
                     } //switch
                 }// if voices[i].active
-                // std::cout << "voice_count : " << voice_count << std::endl;;
             } // end for loop through active voices
             if ( voice_count == 0 )
             {

@@ -299,7 +299,6 @@ void NinjasUI::uiFileBrowserSelected(const char* filename)
 void NinjasUI::imageSwitchClicked(ImageSwitch* imageSwitch, bool down)
 {
     const uint buttonId(imageSwitch->getId());
-    std::cout << "buttonId = " << buttonId << std::endl;
     if (buttonId ==  paramFloppy)
     {
         DGL::Window::FileBrowserOptions opts;
