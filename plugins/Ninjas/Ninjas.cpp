@@ -186,7 +186,7 @@ void NinjasPlugin::setState ( const char* key, const char* value )
 {
     std::string fp = value;
 // load file in sample memory
-    if ( !SampleObject.loadSample ( fp, sampleVector ) )
+    if ( !SampleObject.loadSample ( fp, sampleVector, samplerate ) )
     {
         // sample loaded ok, slice it up and set bool
         SampleObject.createSlices ( a_slices,slices );
