@@ -37,6 +37,7 @@ public:
 
     NinjasPlugin();
     Sample SampleObject;
+    const double SampleRate = getSampleRate();
 
 protected:
     // -------------------------------------------------------------------

@@ -2,6 +2,8 @@
 #define SAMPLE_H
 
 #include "sndfile.hh"
+#include "samplerate.h"
+#include "Ninjas.hpp"
 #include <vector>
 #include <string>
 #include "Slice.h"
@@ -22,6 +24,7 @@ public:
     Sample();
 
     Sample(std::string filepath, std::vector <float> & samplevector);
+    
 
     /*
     std::vector<float> getSampleVector()
@@ -42,6 +45,8 @@ public:
     void createSlices( Slice* slices, int number);
 
     int loadSample(std::string fp, std::vector <float> & samplevector);
+    
+    int resample (std::vector <float> sample_in, std::vector <float> * sample_out);
 };
 
 #endif // SAMPLE_H

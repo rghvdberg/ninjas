@@ -1,9 +1,11 @@
 #include "Sample.h"
 #include "sndfile.hh"
+#include "samplerate.h"
 #include <vector>
 #include <iostream>
 #include <string>
 #include "Slice.h"
+// #include "Ninjas.hpp"
 
 // Constructor
 
@@ -64,3 +66,24 @@ void Sample::createSlices(Slice* slices, int n_slices)
       << slices[i].getSliceEnd() << std::endl;
     }
 }
+
+int Sample::resample(std::vector<float> sample_in, std::vector<float> * sample_out)
+{
+  // copy samplevector in data_in
+  // data_out points to samplevector
+  
+  SRC_DATA src_data;
+    src_data.data_in = & sample_in.at( 0 );
+    src_data.src_ratio = SampleRate / ( double ) samplerate;
+    src_data.output_frames = size * src_data.src_ratio;
+
+    sample_out->resize(src_data.output_frames * channels);
+    
+    src_data.data_out = & sample_out->at( 0 );
+    src_data.input_frames = size;
+   
+    int err = src_simple(& src_data, SRC_SINC_BEST_QUALITY,channels);
+    std::cout << err << std::endl;
+    return err;
+}
+
