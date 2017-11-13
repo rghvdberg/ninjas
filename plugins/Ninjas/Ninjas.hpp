@@ -37,7 +37,7 @@ public:
 
     NinjasPlugin();
     Sample SampleObject;
-    const double SampleRate = getSampleRate();
+    const double samplerate = getSampleRate();
 
 protected:
     // -------------------------------------------------------------------
@@ -138,7 +138,6 @@ private:
     Slice a_slices[16];
     int slices {1};
     int sliceSize;
-    double samplerate = getSampleRate();
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};

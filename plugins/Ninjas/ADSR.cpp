@@ -6,19 +6,17 @@
  */
 
 #include "ADSR.h"
-#include "globals.h"
-
-
 #include <iostream>
+#include "Ninjas.hpp"
 
 ADSR::ADSR()
 {
-    attack = 0.0; // instant on
+    attack = 0.05; // instant on
     attack_gain = 0.0;
     decay = 0.0;
     decay_gain = 0.0;
     sustain = 1.0;
-    release = 0.0;
+    release = 0.05;
     release_gain = 0.0;
     ADSRstage = ATTACK;
     adsr_gain = 0.0;
@@ -45,9 +43,9 @@ ADSR::~ADSR() {
 
 void ADSR::calcADRGain()
 {
-    attack_gain = (1.0 / attack) /(float) SAMPLERATE;
-    decay_gain = -(1.0 / decay) / (float)SAMPLERATE;
-    release_gain = -(1.0 / release) / (float)SAMPLERATE;
+    attack_gain = (1.0 / attack) /(float) samplerate;
+    decay_gain = -(1.0 / decay) / (float) samplerate;
+    release_gain = -(1.0 / release) / (float) samplerate;
 }
 
 float ADSR::getADSR_gain() {
