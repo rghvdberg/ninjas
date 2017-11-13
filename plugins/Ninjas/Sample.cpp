@@ -92,7 +92,7 @@ int Sample::resample(std::vector<float> sample_in, std::vector<float> * sample_o
     src_data.input_frames = size;
    
     int err = src_simple(& src_data, SRC_SINC_BEST_QUALITY,channels);
-    std::cout 
+    size = src_data.output_frames_gen;
     std::cout << err << std::endl;
     return err;
 }
