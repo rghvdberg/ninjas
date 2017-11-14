@@ -67,8 +67,8 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
     case paramAttack:
     {
         parameter.hints      = kParameterIsAutomable ;
-        parameter.ranges.def = 0.0f;
-        parameter.ranges.min = 0.0f;
+        parameter.ranges.def = 0.05f;
+        parameter.ranges.min = 0.05f;
         parameter.ranges.max = 1.0f;
         parameter.name   = "Attack";
         parameter.symbol = "attack";
@@ -77,8 +77,8 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
     case paramDecay:
     {
         parameter.hints      = kParameterIsAutomable ;
-        parameter.ranges.def = 0.0f;
-        parameter.ranges.min = 0.0f;
+        parameter.ranges.def = 0.05f;
+        parameter.ranges.min = 0.05f;
         parameter.ranges.max = 1.0f;
         parameter.name   = "Decay";
         parameter.symbol =  "decay";
@@ -97,8 +97,8 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
     case paramRelease:
     {
         parameter.hints      = kParameterIsAutomable ;
-        parameter.ranges.def = 0.0f;
-        parameter.ranges.min = 0.0f;
+        parameter.ranges.def = 0.05f;
+        parameter.ranges.min = 0.05f;
         parameter.ranges.max = 1.0f;
         parameter.name   = "Release";
         parameter.symbol = "release";
@@ -383,7 +383,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     voices[index].velocity = data2;
                     voices[index].gain = ( float ) data2 / 127.0f;
                     voices[index].adsr.initADSR();
-                    voices[index].adsr.setADSR ( p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index] );
+                    voices[index].adsr.setADSR ( p_Attack[index], p_Decay[index] ,p_Sustain[index],p_Release[index], samplerate );
                     // check playmode
                     // if LOOP_REV or ONE_SHOT_REV set playback indici to end of slice
                     if ( a_slices[index].getSlicePlayMode() == Slice::LOOP_REV || a_slices[index].getSlicePlayMode() == Slice::ONE_SHOT_REV )

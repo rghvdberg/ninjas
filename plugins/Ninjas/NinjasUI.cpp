@@ -50,9 +50,9 @@ NinjasUI::NinjasUI()
                                 Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
     fKnobAttack->setId(paramAttack);
     fKnobAttack->setAbsolutePos(560, 256);
-    fKnobAttack->setRange(0.0f, 1.0f);
-    fKnobAttack->setDefault(0.0f);
-    fKnobAttack->setValue(0.0f);
+    fKnobAttack->setRange(0.05f, 1.0f);
+    fKnobAttack->setDefault(0.05f);
+    fKnobAttack->setValue(0.05f);
     fKnobAttack->setRotationAngle(300);
     fKnobAttack->setCallback(this);
 
@@ -60,9 +60,9 @@ NinjasUI::NinjasUI()
                                Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
     fKnobDecay->setId(paramDecay);
     fKnobDecay->setAbsolutePos(637, 256);
-    fKnobDecay->setRange(0.0f, 1.0f);
+    fKnobDecay->setRange(0.05f, 1.0f);
     fKnobDecay->setDefault(0.0f);
-    fKnobDecay->setValue(0.0f);
+    fKnobDecay->setValue(0.05f);
     fKnobDecay->setRotationAngle(300);
     fKnobDecay->setCallback(this);
 
@@ -80,9 +80,9 @@ NinjasUI::NinjasUI()
                                  Image(Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA));
     fKnobRelease->setId(paramRelease);
     fKnobRelease->setAbsolutePos(792, 256);
-    fKnobRelease->setRange(0.0f, 1.0f);
-    fKnobRelease->setDefault(0.0f);
-    fKnobRelease->setValue(0.0f);
+    fKnobRelease->setRange(0.05f, 1.0f);
+    fKnobRelease->setDefault(0.05f);
+    fKnobRelease->setValue(0.05f);
     fKnobRelease->setRotationAngle(300);
     fKnobRelease->setCallback(this);
     //
@@ -183,7 +183,7 @@ NinjasUI::NinjasUI()
  */
 void NinjasUI::parameterChanged(uint32_t index, float value)
 {
-    std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
+    // std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
     switch (index)
     {
     case paramNumberOfSlices:

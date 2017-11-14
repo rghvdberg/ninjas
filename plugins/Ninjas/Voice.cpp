@@ -1,6 +1,7 @@
 #include "Voice.h"
 #include "Slice.h"
 #include "ADSR.h"
+#include <iostream>
 
 Voice::Voice( double sr)
 {
@@ -12,17 +13,7 @@ Voice::Voice( double sr)
     multiplierIndex = 0.0;
     multiplier=1.0;
     playbackIndex=0;
-    ADSR adsr { sr };
+    v_sr = sr;
+    
+    ADSR adsr { v_sr };
 }
-//Voice::Voice(int id, bool act, int ch ,int nn , int vel , int pb, float gn, Slice* slc, float pos )
-//{
-//	active = act;
-//	channel = ch;
-//	notenumber = nn;
-//	velocity =vel;
-//	pitchbend = pb;
-//	gain = gn;
-//	slice = slc;
-//    multiplierIndex = pos;
-//    ADSR adsr { };
-//}

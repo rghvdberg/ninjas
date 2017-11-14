@@ -101,11 +101,11 @@ protected:
 
 private:
     // Paramaters * 16 for 16 slices ... maybe like this
-    float p_Attack[16];
-    float p_Decay[16];
+    float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
+    float p_Decay[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
     float p_Sustain[16] { 1,1,1,1, 1,1,1,1, 1,1,1,1 ,1,1,1,1 };
-    float p_Release[16];
-    float p_OneShotFwd[16];
+    float p_Release[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
+    float p_OneShotFwd[16] { 1,1,1,1, 1,1,1,1, 1,1,1,1 ,1,1,1,1 };
     float p_OneShotRev[16];
     float p_LoopFwd[16];
     float p_LoopRev[16];
@@ -134,17 +134,19 @@ private:
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};
-    double samplerate { 44100.0 };
+    double samplerate = getSampleRate();
    
      /*by example of the cars plugin create array of voices
      tried to create them 'on the fly' but that won't work.
      */
-/*    
-      Voice voices[16]{Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
+         
+      Voice voices[16]{
 	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
 	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
-	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate));
-  */  
+	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
+	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate)
+      };
+    
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.
      */

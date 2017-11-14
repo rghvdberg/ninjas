@@ -21,6 +21,7 @@ ADSR::ADSR(double sr)
     ADSRstage = ATTACK;
     adsr_gain = 0.0;
     adsr_samplerate = sr;
+   // std::cout << "ADSR(double sr) adsr_samplerate = " << adsr_samplerate << std::endl ; 
 }
 
 
@@ -44,9 +45,15 @@ ADSR::~ADSR() {
 
 void ADSR::calcADRGain()
 {
+  std::cout << "ADSR(double sr) adsr_samplerate = " << adsr_samplerate << std::endl ; 
     attack_gain = (1.0 / attack) /(float) adsr_samplerate;
     decay_gain = -(1.0 / decay) / (float) adsr_samplerate;
     release_gain = -(1.0 / release) / (float) adsr_samplerate;
+    std::cout << "ADSR(double sr) attack_gain = " << attack_gain << std::endl ; 
+    std::cout << "ADSR(double sr) decay_gain = " << decay_gain << std::endl ; 
+    std::cout << "ADSR(double sr) release_gain = " << release_gain << std::endl ; 
+    
+  
 }
 
 float ADSR::getADSR_gain() {
@@ -115,8 +122,11 @@ float ADSR::ADSRrun(bool * active) {
     return adsr_gain;
 }
 
-void ADSR::setADSR(float a, float d, float s, float r)
+void ADSR::setADSR(float a, float d, float s, float r, double sr)
 {
+   adsr_samplerate = sr;
+   std::cout << "setADSR () adsr_samplerate = " << adsr_samplerate << std::endl ; 
+   
     attack = a;
     decay = d;
     sustain = s;
