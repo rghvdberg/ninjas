@@ -9,16 +9,8 @@
 class Voice
 {
 public:
-    Voice ();
-    //Voice(int id, bool active, int ch,int nn, int vel, int pb, float gn, Slice* slc, int pos);
-
-    /*getter function
-     * will fix when really need this :-)
-        std::tuple<int, int, int, int, int, float, Slice*, int , ADSR> getVoice()
-        {
-            return std::make_tuple(index, channel, notenumber, velocity, pitchbend, gain, slice, position, adsr);
-        }*/
-
+    Voice ( double sr );
+   
     int index;
     bool active;
     int channel;  //midi channel, channel is also linked to slice
@@ -28,7 +20,8 @@ public:
     float multiplierIndex; // frame of slice (sample) playing
     float multiplier;
     int playbackIndex;
-    ADSR adsr; // ADSR of voice
+    double v_sr;
+    ADSR adsr { v_sr }  ; // ADSR of voice
 
 };
 

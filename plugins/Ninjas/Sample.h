@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include "Slice.h"
-
+#include "DistrhoPluginInfo.h"
 
 
 class Sample

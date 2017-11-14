@@ -25,7 +25,6 @@
 #include "Voice.h"
 #include "ADSR.h"
 #include "Mixer.h"
-#include "Stack.h"
 
 START_NAMESPACE_DISTRHO
 
@@ -37,7 +36,6 @@ public:
 
     NinjasPlugin();
     Sample SampleObject;
-    const double samplerate = getSampleRate();
 
 protected:
     // -------------------------------------------------------------------
@@ -124,12 +122,7 @@ private:
      */
     Mixer mixL;
     Mixer mixR;
-
-    /*by example of the cars plugin create array of voices
-    tried to create them 'on the fly' but that won't work.
-     */
-    Voice voices[16] { };
-
+    
     int pitchbend { 8192 };
     int pitchbend_range { 24 };
     float pitchbend_step = ( float ) 16384 / ( float ) pitchbend_range;
@@ -141,6 +134,14 @@ private:
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};
+    double samplerate { 44100.0 };
+   
+     /*by example of the cars plugin create array of voices
+     tried to create them 'on the fly' but that won't work.
+     */
+    
+     std::vector <Voice>  voices(16, Voice(samplerate) );
+    
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.
      */

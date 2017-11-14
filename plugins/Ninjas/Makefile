@@ -18,7 +18,6 @@ OBJS_DSP = \
 	Mixer.cpp.o \
 	Sample.cpp.o \
 	Slice.cpp.o \
-	Stack.cpp.o \
 	Voice.cpp.o
 	
 

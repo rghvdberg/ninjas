@@ -2,7 +2,7 @@
 #include "Slice.h"
 #include "ADSR.h"
 
-Voice::Voice()
+Voice::Voice( double sr)
 {
     channel = 0;
     active = false;
@@ -12,7 +12,7 @@ Voice::Voice()
     multiplierIndex = 0.0;
     multiplier=1.0;
     playbackIndex=0;
-    ADSR adsr { };
+    ADSR adsr { sr };
 }
 //Voice::Voice(int id, bool act, int ch ,int nn , int vel , int pb, float gn, Slice* slc, float pos )
 //{

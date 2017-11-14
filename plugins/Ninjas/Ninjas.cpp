@@ -27,9 +27,8 @@
 #include "Voice.h"
 #include "ADSR.h"
 #include "Mixer.h"
-#include "Stack.h"
 
-#include "DistrhoPluginInfo.h"
+//#include "DistrhoPluginInfo.h"
 
 START_NAMESPACE_DISTRHO
 
@@ -40,7 +39,7 @@ START_NAMESPACE_DISTRHO
 NinjasPlugin::NinjasPlugin()
     : Plugin ( paramCount, 0, 1 ) //1 parameter, 0 programs (presets) , 1 states
 {
-
+  samplerate = getSampleRate();
 }
 
 /* --------------------------------------------------------------------------------------------------------

@@ -12,9 +12,10 @@
 #ifndef ADSR_H_
 #define ADSR_H_
 
+
 class ADSR {
 public:
-    ADSR();
+    ADSR( double adsr_samplerate);
     ADSR(float a, float d, float s, float r);
     virtual ~ADSR();
 
@@ -40,7 +41,9 @@ private:
     float release; // time value : after note off , voice is active until release hits 0.0f
     float release_gain; // negative value, each frame subtracted from gain until 0.0f
     float adsr_gain; // multiply this by gain and we get the ... well gain
+    double adsr_samplerate; // samplerate, need to calculate tattack, decay and release time.
     void calcADRGain();
+    
 
 
 };
