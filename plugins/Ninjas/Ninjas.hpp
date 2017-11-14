@@ -139,9 +139,12 @@ private:
      /*by example of the cars plugin create array of voices
      tried to create them 'on the fly' but that won't work.
      */
-    
-     std::vector <Voice>  voices(16, Voice(samplerate) );
-    
+/*    
+      Voice voices[16]{Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
+	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
+	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
+	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate));
+  */  
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.
      */
