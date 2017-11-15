@@ -39,6 +39,11 @@ extern const char* switch_onData;
 const unsigned int switch_onDataSize = 2610;
 const unsigned int switch_onWidth    = 30;
 const unsigned int switch_onHeight   = 29;
+
+const unsigned int lcd_left = 366;
+const unsigned int lcd_right = 922;
+const unsigned int lcd_top = 56;
+const unsigned int lcd_bottom = 163;
 }
 
 #endif // BINARY_NINJASARTWORK_HPP

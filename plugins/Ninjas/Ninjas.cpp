@@ -37,9 +37,9 @@ START_NAMESPACE_DISTRHO
 
 // constructor
 NinjasPlugin::NinjasPlugin()
-    : Plugin ( paramCount, 0, 1 ) //1 parameter, 0 programs (presets) , 1 states
+    : Plugin ( paramCount, 0, 2 ) //1 parameter, 0 programs (presets) , 1 states
 {
-  samplerate = getSampleRate();
+    samplerate = getSampleRate();
 }
 
 /* --------------------------------------------------------------------------------------------------------
@@ -171,9 +171,19 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
 void NinjasPlugin::initState ( uint32_t index, String& stateKey, String& defaultStateValue )
 {
     if ( index == 0 )
+    {
         stateKey ="filepath";
+        defaultStateValue = "empty";
+    }
 
-    defaultStateValue = "empty";
+    if ( index == 1 )
+    {
+        stateKey = "lcd";
+	char tmp[512];
+	
+	defaultStateValue = tmp;
+    }
+
 }
 
 String NinjasPlugin::getState ( const char* key ) const
@@ -183,8 +193,10 @@ String NinjasPlugin::getState ( const char* key ) const
 
 void NinjasPlugin::setState ( const char* key, const char* value )
 {
-    std::string fp = value;
-// load file in sample memory
+if (strcmp ( key, "filepath"))
+{  
+  std::string fp = value;
+    // load file in sample memory
     if ( !SampleObject.loadSample ( fp, sampleVector, samplerate ) )
     {
         // sample loaded ok, slice it up and set bool
@@ -201,15 +213,16 @@ void NinjasPlugin::setState ( const char* key, const char* value )
     }
 
 }
+}
 
 /* --------------------------------------------------------------------------------------------------------
-  * Internal data
+* Internal data
 */
 
 /**
-    Get the current value of a parameter.
-    The host may call this function from any context, including realtime processing.
-  */
+Get the current value of a parameter.
+The host may call this function from any context, including realtime processing.
+*/
 float NinjasPlugin::getParameterValue ( uint32_t index ) const
 
 {
@@ -268,11 +281,11 @@ float NinjasPlugin::getParameterValue ( uint32_t index ) const
 }
 
 /**
-    Change a parameter value.
-    The host may call this function from any context, including realtime processing.
-    When a parameter is marked as automable, you must ensure no non-realtime operations are performed.
-    @note This function will only be called for parameter inputs.
-  */
+Change a parameter value.
+The host may call this function from any context, including realtime processing.
+When a parameter is marked as automable, you must ensure no non-realtime operations are performed.
+@note This function will only be called for parameter inputs.
+*/
 void NinjasPlugin::setParameterValue ( uint32_t index, float value )
 {
 
@@ -320,7 +333,7 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
 } // setParameterValue
 
 /* --------------------------------------------------------------------------------------------------------
-  * Audio/MIDI Processing */
+* Audio/MIDI Processing */
 
 /*       inputs unused , outputs        , size of block we process, pointer to midi data       , number of midie events in current block */
 void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,          const MidiEvent* midiEvents, uint32_t midiEventCount )
@@ -346,10 +359,13 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 int data1 = midiEvents[curEventIndex].data[1];// note number
                 int data2 = midiEvents[curEventIndex].data[2]; //
                 /*
-                            std::cout << std::hex << "Status : " << status << std::endl;
-                            std::cout << std::hex << "Message : " << message << std::endl;
-                            std::cout << std::hex << "Data1 : " << data1 << std::endl;
-                            std::cout << std::hex << "Data2 : " << data2 << std::endl;
+                std::cout << std::hex << "Status : " << status << std::endl;
+                std::cout << std::hex << "
+                Message : " << message << std::endl;
+                std::cout << std::hex << "
+                Data1 : " << data1 << std::endl;
+                std::cout << std::hex << "
+                Data2 : " << data2 << std::endl;
                 */
 
                 // discard notes outside the 16 notes range
@@ -432,7 +448,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     voice_count++;
                     /*get the raw samples from the voice
                     * float* pointer will allow any amount of samples to be pulled in
-                    	 */
+                    */
                     int sliceStart = a_slices[i].getSliceStart();
                     int sliceEnd = a_slices[i].getSliceEnd();
                     int pos = voices[i].playbackIndex;
