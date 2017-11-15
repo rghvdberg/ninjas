@@ -96,22 +96,22 @@ int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample
 
     int err = src_simple ( & src_data, SRC_SINC_BEST_QUALITY,channels );
     size = src_data.output_frames_gen;
-    std::cout << err << std::endl;
+    std::cout <<  size << std::endl;
     return err;
 }
 
-void Sample::calcWaveform ( std::vector< float >& samplevector, String& state )
+char* Sample::calcWaveform ( std::vector< float >& samplevector)
 {
     const int LCD_HEIGHT = 107;
-    int lenght_of_lcd = state.length();
-    float samples_per_pixel = ( float ) size / ( float ) lenght_of_lcd;
+    const int LCD_LENGHT = 556;
+    float samples_per_pixel = ( float ) size / ( float ) LCD_LENGHT;
     float sum {0};
-    float avarage {0.5};
+    float average {0.5};
     int  iIndex {0};
     float fIndex {0};
     int plotValue {53};
 
-    for ( int i = 0; i < lenght_of_lcd ; i++ )
+    for ( int i = 0; i < LCD_LENGHT ; i++ )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
@@ -119,16 +119,17 @@ void Sample::calcWaveform ( std::vector< float >& samplevector, String& state )
         for ( int j = 0 ; j < ( int ) samples_per_pixel; j++ )
         {
             iIndex = iIndex +j;
-            //TODO mono/stereo
-            sum = sum + samplevector.at ( j * channels );
+	    //TODO mono/stereo
+            sum = sum + samplevector.at ( iIndex * channels );
+	    //std::cout << iIndex << " = " << sum << std::endl;
+            
         }
-        avarage = sum / samples_per_pixel;
-	std::cout << avarage
+        average = sum / samples_per_pixel;
         // convert 0.0 - 1.0 to 0 - 107
-        plotValue = avarage * LCD_HEIGHT;
-	std::cout << plotValue << ",";
-        state[i] = plotValue;
+        plotValue = average * LCD_HEIGHT;
+	//std::cout << plotValue << ",";
+        waveform[i] = plotValue;
     }
-    std::cout << std::endl;
-
+    // std::cout << std::endl;
+    return waveform;
 }

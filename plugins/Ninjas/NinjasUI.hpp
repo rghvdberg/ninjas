@@ -44,7 +44,7 @@ protected:
 
     void parameterChanged(uint32_t index, float value) override;
     void uiFileBrowserSelected(const char* filename) override;
-    void stateChanged(const char* key, const char*) override;
+    void stateChanged(const char* key, const char* value) override;
 
     // -------------------------------------------------------------------
     // Widget Callbacks

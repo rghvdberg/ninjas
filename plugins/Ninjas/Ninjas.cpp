@@ -28,7 +28,7 @@
 #include "ADSR.h"
 #include "Mixer.h"
 
-//#include "DistrhoPluginInfo.h"
+#include "DistrhoPluginInfo.h"
 
 START_NAMESPACE_DISTRHO
 
@@ -179,9 +179,8 @@ void NinjasPlugin::initState ( uint32_t index, String& stateKey, String& default
     if ( index == 1 )
     {
         stateKey = "lcd";
-	char tmp[512];
-	
-	defaultStateValue = tmp;
+	//char tmp[512];
+	defaultStateValue = String(556);
     }
 
 }
@@ -193,7 +192,7 @@ String NinjasPlugin::getState ( const char* key ) const
 
 void NinjasPlugin::setState ( const char* key, const char* value )
 {
-if (strcmp ( key, "filepath"))
+if (strcmp ( key, "filepath") == 0)
 {  
   std::string fp = value;
     // load file in sample memory
@@ -201,7 +200,9 @@ if (strcmp ( key, "filepath"))
     {
         // sample loaded ok, slice it up and set bool
         SampleObject.createSlices ( a_slices,slices );
-        bypass = false;
+	char* wf = SampleObject.calcWaveform(sampleVector);
+	setState ("waveform", wf );
+	bypass = false;
         //setParameterValue(paramFloppy,1.0);
     }
     else
@@ -213,6 +214,13 @@ if (strcmp ( key, "filepath"))
     }
 
 }
+
+if (strcmp ( key, "waveform" ) == 0)
+{
+ std::cout << "setState key = waveform" << std::endl;
+}
+
+
 }
 
 /* --------------------------------------------------------------------------------------------------------

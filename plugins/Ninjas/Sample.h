@@ -19,6 +19,7 @@ private:
     // int length;
     int channels;
     int size; // in frames !!!
+    char waveform [556];
 
 public:
     Sample();
@@ -34,14 +35,15 @@ public:
     {
         return channels;
     }
-
+    
+  
     void createSlices( Slice* slices, int number);
 
     int loadSample(std::string fp, std::vector <float> & samplevector, double host_samplerate);
     
     int resample (std::vector <float> sample_in, std::vector <float> * sample_out, double host_samplerate);
     
-    void calcWaveform ( std::vector <float> & samplevector, String & state );
+    char* calcWaveform ( std::vector <float> & samplevector);
 };
 
 #endif // SAMPLE_H

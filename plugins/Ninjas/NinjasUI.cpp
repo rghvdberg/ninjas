@@ -276,11 +276,15 @@ void NinjasUI::parameterChanged(uint32_t index, float value)
   
 }
 
-void NinjasUI::stateChanged(const char* key, const char*)
+void NinjasUI::stateChanged(const char* key, const char* value)
 {
     if (std::strcmp(key, "filepath") == 0 )
     {
         std::printf("state changed ... do something?\n");
+    }
+    if (std::strcmp(key, "waveform") == 0)
+    {
+      // draw waveform
     }
 }
 
