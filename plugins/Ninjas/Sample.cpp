@@ -115,7 +115,7 @@ void Sample::calcWaveform ( std::vector< float >& samplevector, String& state )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
-        sum = 0;
+        sum = 0; 
         for ( int j = 0 ; j < ( int ) samples_per_pixel; j++ )
         {
             iIndex = iIndex +j;
@@ -123,9 +123,12 @@ void Sample::calcWaveform ( std::vector< float >& samplevector, String& state )
             sum = sum + samplevector.at ( j * channels );
         }
         avarage = sum / samples_per_pixel;
+	std::cout << avarage
         // convert 0.0 - 1.0 to 0 - 107
-        plotValue = avarage * 107;
+        plotValue = avarage * LCD_HEIGHT;
+	std::cout << plotValue << ",";
         state[i] = plotValue;
     }
+    std::cout << std::endl;
 
 }
