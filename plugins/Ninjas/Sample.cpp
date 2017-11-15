@@ -14,18 +14,16 @@ Sample::Sample()
 
 }
 
-
-
-Sample::Sample(std::string fp, std::vector <float> & samplevector)
+Sample::Sample ( std::string fp, std::vector <float> & samplevector )
 {
     // not sure Im gonna use this constructor
 }
 
-int Sample::loadSample(std::string fp, std::vector <float> & samplevector, double host_samplerate)
+int Sample::loadSample ( std::string fp, std::vector <float> & samplevector, double host_samplerate )
 {
     // create a "Sndfile" handle, it's part of the sndfile library we use to load samples
-    SndfileHandle fileHandle( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100);
-   
+    SndfileHandle fileHandle ( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , 44100 );
+
     // get the number of frames in the sample
     size  = fileHandle.frames();
     if ( size == 0 )
@@ -37,63 +35,97 @@ int Sample::loadSample(std::string fp, std::vector <float> & samplevector, doubl
     // get some more info of the sample
     channels   = fileHandle.channels();
     samplerate = fileHandle.samplerate();
-    
-    // resize vector 
-    samplevector.resize(size * channels);
-    
+
+    // resize vector
+    samplevector.resize ( size * channels );
+
     // load sample memory in samplevector
-    fileHandle.read( &samplevector.at(0) , size * channels );
-   
+    fileHandle.read ( &samplevector.at ( 0 ) , size * channels );
+
     std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " <<
               samplerate << " with " << size << " samples, so its duration is " <<
               size / samplerate << " seconds long." << std::endl;
     // check if samplerate != host_samplerate
-	      std::cout << samplerate << " , " << host_samplerate << " , " << (samplerate != host_samplerate) << std::endl;
-    if (samplerate != host_samplerate)
+    std::cout << samplerate << " , " << host_samplerate << " , " << ( samplerate != host_samplerate ) << std::endl;
+    if ( samplerate != host_samplerate )
     {
-        int err = resample( samplevector, & samplevector, host_samplerate);
-	
+        int err = resample ( samplevector, & samplevector, host_samplerate );
+
         return err;
     }
-    
+
     return 0;
 }
 
-void Sample::createSlices(Slice* slices, int n_slices)
+void Sample::createSlices ( Slice* slices, int n_slices )
 {
-    float sliceSize = (float)(size*channels) / (float) n_slices;
-    std::cout << "sliceSize :" << sliceSize 
+    float sliceSize = ( float ) ( size*channels ) / ( float ) n_slices;
+
+    /*
+    std::cout << "sliceSize :" << sliceSize
     << " x " << n_slices << " n_slices = "
     << n_slices * sliceSize << std::endl;
-    
-    for (int i = 0 ; i < n_slices; i++)
+    */
+
+    for ( int i = 0 ; i < n_slices; i++ )
     {
-      slices[i].setSliceStart( (int) i * sliceSize);
-      slices[i].setSliceEnd(   ((int) (i+1) * sliceSize) - 1);
-      std::cout << "Slice :" << i << " : "
-      << slices[i].getSliceStart() << "->"
-      << slices[i].getSliceEnd() << std::endl;
+        slices[i].setSliceStart ( ( int ) i * sliceSize );
+        slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
+        /*
+        std::cout << "Slice :" << i << " : "
+        << slices[i].getSliceStart() << "->"
+        << slices[i].getSliceEnd() << std::endl;
+        */
     }
 }
 
-int Sample::resample(std::vector<float> sample_in, std::vector<float> * sample_out, double host_samplerate)
+int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample_out, double host_samplerate )
 {
-  // copy samplevector in data_in
-  // data_out points to samplevector
-  
-  SRC_DATA src_data;
-    src_data.data_in = & sample_in.at( 0 );
+    // copy samplevector in data_in
+    // data_out points to samplevector
+
+    SRC_DATA src_data;
+    src_data.data_in = & sample_in.at ( 0 );
     src_data.src_ratio = host_samplerate / samplerate;
     src_data.output_frames = size * src_data.src_ratio;
 
-    sample_out->resize(src_data.output_frames * channels);
-    
-    src_data.data_out = & sample_out->at( 0 );
+    sample_out->resize ( src_data.output_frames * channels );
+
+    src_data.data_out = & sample_out->at ( 0 );
     src_data.input_frames = size;
-   
-    int err = src_simple(& src_data, SRC_SINC_BEST_QUALITY,channels);
+
+    int err = src_simple ( & src_data, SRC_SINC_BEST_QUALITY,channels );
     size = src_data.output_frames_gen;
     std::cout << err << std::endl;
     return err;
 }
 
+void Sample::calcWaveform ( std::vector< float >& samplevector, String& state )
+{
+    const int LCD_HEIGHT = 107;
+    int lenght_of_lcd = state.length();
+    float samples_per_pixel = ( float ) size / ( float ) lenght_of_lcd;
+    float sum {0};
+    float avarage {0.5};
+    int  iIndex {0};
+    float fIndex {0};
+    int plotValue {53};
+
+    for ( int i = 0; i < lenght_of_lcd ; i++ )
+    {
+        fIndex = i * samples_per_pixel;
+        iIndex = fIndex;
+        sum = 0;
+        for ( int j = 0 ; j < ( int ) samples_per_pixel; j++ )
+        {
+            iIndex = iIndex +j;
+            //TODO mono/stereo
+            sum = sum + samplevector.at ( j * channels );
+        }
+        avarage = sum / samples_per_pixel;
+        // convert 0.0 - 1.0 to 0 - 107
+        plotValue = avarage * 107;
+        state[i] = plotValue;
+    }
+
+}

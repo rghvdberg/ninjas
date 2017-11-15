@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 #include "Slice.h"
-#include "DistrhoPluginInfo.h"
+#include "DistrhoPlugin.hpp"
+
 
 
 class Sample
@@ -15,7 +16,7 @@ private:
     std::string filepath;
     // std::vector <float> sampleVector;
     double samplerate;
-    int length;
+    // int length;
     int channels;
     int size; // in frames !!!
 
@@ -24,13 +25,6 @@ public:
 
     Sample(std::string filepath, std::vector <float> & samplevector);
     
-
-    /*
-    std::vector<float> getSampleVector()
-    {
-        return sampleVector;
-    }
-    */
     int getSampleSize() const
     {
         return size;
@@ -46,6 +40,8 @@ public:
     int loadSample(std::string fp, std::vector <float> & samplevector, double host_samplerate);
     
     int resample (std::vector <float> sample_in, std::vector <float> * sample_out, double host_samplerate);
+    
+    void calcWaveform ( std::vector <float> & samplevector, String & state );
 };
 
 #endif // SAMPLE_H
