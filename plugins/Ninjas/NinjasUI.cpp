@@ -451,11 +451,11 @@ void NinjasUI::onDisplay()
 
 void NinjasUI::drawWaveform ( String fp )
 {
-    const int LCD_HEIGHT = 107;
+    const int LCD_HEIGHT = 107 / 2;
     const int LCD_LENGHT = 556;
     int waveform[LCD_LENGHT];
     float sum {0};
-    float average {0.5};
+    //float average {0.5};
     int  iIndex {0};
     float fIndex {0};
     int plotValue {53};
@@ -479,22 +479,25 @@ void NinjasUI::drawWaveform ( String fp )
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
         sum = 0;
-        for ( int j = 0 ; j < ( int ) samples_per_pixel; j++ )
+        for ( int j = 0, k = 0 ; j < ( int ) samples_per_pixel; j++ )
         {
-            iIndex = iIndex +j;
+            k = iIndex +j;
             //TODO mono/stereo
-            sum = sum + tmp.at ( iIndex * channels );
-            std::cout << iIndex << " = " << sum << std::endl;
+            // sum = sum + tmp.at ( k * channels );
+	    sum = tmp.at ( k * channels );
+	     //std::cout << iIndex << " = " << sum << std::endl;
 
         }
-        average = sum / samples_per_pixel;
+        //average = (float) sum / samples_per_pixel;
         // convert 0.0 - 1.0 to 0 - 107
-        plotValue = average * LCD_HEIGHT;
-        //std::cout << plotValue << ",";
+        plotValue = sum * LCD_HEIGHT + LCD_HEIGHT;
+        std::cout << sum << ", " << plotValue << std::endl;
         waveform[i] = plotValue;
+	Line<int> lijn (i+Art::lcd_left,53,i+Art::lcd_left,plotValue);
+	lijn.draw();
 	
     }
-    // std::cout << std::endl;
+    std::cout << std::endl;
     return;
   
 }
