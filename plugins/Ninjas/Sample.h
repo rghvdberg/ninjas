@@ -43,7 +43,6 @@ public:
     
     int resample (std::vector <float> sample_in, std::vector <float> * sample_out, double host_samplerate);
     
-    char* calcWaveform ( std::vector <float> & samplevector);
-};
+    };
 
 #endif // SAMPLE_H

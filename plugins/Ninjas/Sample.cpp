@@ -100,36 +100,3 @@ int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample
     return err;
 }
 
-char* Sample::calcWaveform ( std::vector< float >& samplevector)
-{
-    const int LCD_HEIGHT = 107;
-    const int LCD_LENGHT = 556;
-    float samples_per_pixel = ( float ) size / ( float ) LCD_LENGHT;
-    float sum {0};
-    float average {0.5};
-    int  iIndex {0};
-    float fIndex {0};
-    int plotValue {53};
-
-    for ( int i = 0; i < LCD_LENGHT ; i++ )
-    {
-        fIndex = i * samples_per_pixel;
-        iIndex = fIndex;
-        sum = 0; 
-        for ( int j = 0 ; j < ( int ) samples_per_pixel; j++ )
-        {
-            iIndex = iIndex +j;
-	    //TODO mono/stereo
-            sum = sum + samplevector.at ( iIndex * channels );
-	    //std::cout << iIndex << " = " << sum << std::endl;
-            
-        }
-        average = sum / samples_per_pixel;
-        // convert 0.0 - 1.0 to 0 - 107
-        plotValue = average * LCD_HEIGHT;
-	//std::cout << plotValue << ",";
-        waveform[i] = plotValue;
-    }
-    // std::cout << std::endl;
-    return waveform;
-}

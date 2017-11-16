@@ -20,6 +20,8 @@
 #include "DistrhoUI.hpp"
 #include "ImageWidgets.hpp"
 #include "NinjasArtwork.hpp"
+#include "sndfile.hh"
+#include "DistrhoPlugin.hpp"
 
 
 
@@ -65,7 +67,9 @@ private:
    */
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
     // char* filepath;
-
+    
+    void drawWaveform( String fp );
+    
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
 };
 

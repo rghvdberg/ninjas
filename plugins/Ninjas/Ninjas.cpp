@@ -37,7 +37,7 @@ START_NAMESPACE_DISTRHO
 
 // constructor
 NinjasPlugin::NinjasPlugin()
-    : Plugin ( paramCount, 0, 2 ) //1 parameter, 0 programs (presets) , 1 states
+    : Plugin ( paramCount, 0, 1 ) //1 parameter, 0 programs (presets) , 1 states
 {
     samplerate = getSampleRate();
 }
@@ -175,14 +175,7 @@ void NinjasPlugin::initState ( uint32_t index, String& stateKey, String& default
         stateKey ="filepath";
         defaultStateValue = "empty";
     }
-
-    if ( index == 1 )
-    {
-        stateKey = "lcd";
-	//char tmp[512];
-	defaultStateValue = String(556);
-    }
-
+   
 }
 
 String NinjasPlugin::getState ( const char* key ) const
@@ -200,8 +193,6 @@ if (strcmp ( key, "filepath") == 0)
     {
         // sample loaded ok, slice it up and set bool
         SampleObject.createSlices ( a_slices,slices );
-	char* wf = SampleObject.calcWaveform(sampleVector);
-	setState ("waveform", wf );
 	bypass = false;
         //setParameterValue(paramFloppy,1.0);
     }
@@ -215,10 +206,6 @@ if (strcmp ( key, "filepath") == 0)
 
 }
 
-if (strcmp ( key, "waveform" ) == 0)
-{
- std::cout << "setState key = waveform" << std::endl;
-}
 
 
 }
