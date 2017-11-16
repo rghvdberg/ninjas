@@ -280,7 +280,7 @@ void NinjasUI::stateChanged ( const char* key, const char* value )
 {
     if ( std::strcmp ( key, "filepath" ) == 0 )
     {
-        drawWaveform ( String (value) );
+        calcWaveform ( String (value) );
 
     }
 }
@@ -292,7 +292,7 @@ void NinjasUI::uiFileBrowserSelected ( const char* filename )
     if ( filename != nullptr )
     {
         setState ( "filepath", filename );
-	drawWaveform ( String (filename) );
+	calcWaveform ( String (filename) );
 
     }
 }
@@ -447,13 +447,17 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 void NinjasUI::onDisplay()
 {
     fImgBackground.draw();
+    for (int i =0 ; i < 556 ; i++)
+    {
+      Line<int> lijn (i+Art::lcd_left,53,i+Art::lcd_left,waveform[i]);
+	lijn.draw();
+    }
 }
 
-void NinjasUI::drawWaveform ( String fp )
+void NinjasUI::calcWaveform ( String fp )
 {
     const int LCD_HEIGHT = 107 / 2;
     const int LCD_LENGHT = 556;
-    int waveform[LCD_LENGHT];
     float sum {0};
     //float average {0.5};
     int  iIndex {0};
@@ -491,13 +495,10 @@ void NinjasUI::drawWaveform ( String fp )
         //average = (float) sum / samples_per_pixel;
         // convert 0.0 - 1.0 to 0 - 107
         plotValue = sum * LCD_HEIGHT + LCD_HEIGHT;
-        std::cout << sum << ", " << plotValue << std::endl;
+    //    std::cout << sum << ", " << plotValue << std::endl;
         waveform[i] = plotValue;
-	Line<int> lijn (i+Art::lcd_left,53,i+Art::lcd_left,plotValue);
-	lijn.draw();
-	
     }
-    std::cout << std::endl;
+    //std::cout << std::endl;
     return;
   
 }

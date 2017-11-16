@@ -68,8 +68,8 @@ private:
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
     // char* filepath;
     
-    void drawWaveform( String fp );
-    
+    void calcWaveform( String fp );
+    int waveform[556];
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
 };
 
