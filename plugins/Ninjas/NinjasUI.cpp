@@ -462,11 +462,15 @@ void NinjasUI::onDisplay()
     b = 0x0d/255.f;
     glColor4f ( r, g, b, 1.0f );
 
-    for ( int i =0 ; i < 556 ; i++ )
+    for ( int i =0,j=0 ; i < 556 ; i++ )
     {
         glBegin ( GL_LINES );
         glVertex2i ( i+Art::lcd_left,Art::lcd_center );
-        glVertex2i ( i+Art::lcd_left,waveform[i] );
+        glVertex2i ( i+Art::lcd_left,waveform[j] );
+	j++;
+	glVertex2i ( i+Art::lcd_left,Art::lcd_center );
+        glVertex2i ( i+Art::lcd_left,waveform[j] );
+	j++;
         glEnd();
     }
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
