@@ -22,6 +22,9 @@
 #include "NinjasArtwork.hpp"
 #include "sndfile.hh"
 #include "DistrhoPlugin.hpp"
+#include "iterator"
+#include "algorithm"
+#include "array"
 
 
 
@@ -69,7 +72,7 @@ private:
     // char* filepath;
     
     void calcWaveform( String fp );
-    int waveform[556];
+    std::array<int,556> waveform;
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
 };
 

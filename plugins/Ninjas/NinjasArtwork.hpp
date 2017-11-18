@@ -44,6 +44,7 @@ const unsigned int lcd_left = 366;
 const unsigned int lcd_right = 922;
 const unsigned int lcd_top = 56;
 const unsigned int lcd_bottom = 163;
+const unsigned int lcd_center = lcd_bottom - lcd_top;
 }
 
 #endif // BINARY_NINJASARTWORK_HPP

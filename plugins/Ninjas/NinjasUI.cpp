@@ -32,6 +32,8 @@ NinjasUI::NinjasUI()
     : UI ( Art::backgroundWidth, Art::backgroundHeight ),
       fImgBackground ( Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR )
 {
+    // init lcd
+    waveform.fill(NinjasArtwork::lcd_center);
     // knobs
 
     fKnobSlices = new ImageKnob ( this,
@@ -280,7 +282,7 @@ void NinjasUI::stateChanged ( const char* key, const char* value )
 {
     if ( std::strcmp ( key, "filepath" ) == 0 )
     {
-        calcWaveform ( String (value) );
+        calcWaveform ( String ( value ) );
 
     }
 }
@@ -292,7 +294,7 @@ void NinjasUI::uiFileBrowserSelected ( const char* filename )
     if ( filename != nullptr )
     {
         setState ( "filepath", filename );
-	calcWaveform ( String (filename) );
+        calcWaveform ( String ( filename ) );
 
     }
 }
@@ -414,7 +416,7 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
 
         for ( int i = paramSwitch01, j=0; i <= paramSwitch16; ++i,++j )
         {
-            std::cout << ( i==buttonId ) << std::endl;
+            // std::cout << ( i==buttonId ) << std::endl;
             editParameter ( i, true );
             setParameterValue ( i, i == buttonId ? 1.0f : 0.0f );
             fGrid[j]->setDown ( i == buttonId );
@@ -425,20 +427,20 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
 
 void NinjasUI::imageKnobDragStarted ( ImageKnob* knob )
 {
-    std::cout << "knobID = " << knob->getId() << std::endl;
+    // std::cout << "knobID = " << knob->getId() << std::endl;
     editParameter ( knob->getId(), true );
 }
 
 void NinjasUI::imageKnobDragFinished ( ImageKnob* knob )
 {
-    std::cout << "knobID = " << knob->getId() << std::endl;
+    // std::cout << "knobID = " << knob->getId() << std::endl;
 
     editParameter ( knob->getId(), false );
 }
 
 void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 {
-    std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
+    // std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
 
     setParameterValue ( knob->getId(), value );
 }
@@ -447,11 +449,35 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 void NinjasUI::onDisplay()
 {
     fImgBackground.draw();
-    for (int i =0 ; i < 556 ; i++)
+
+    glEnable ( GL_BLEND );
+    glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glEnable ( GL_LINE_SMOOTH );
+    glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
+
+    glLineWidth ( 2 );
+    float r, g, b;
+    r = 0x1b/255.f;
+    g = 0x43/255.f;
+    b = 0x0d/255.f;
+    glColor4f ( r, g, b, 1.0f );
+
+    for ( int i =0 ; i < 556 ; i++ )
     {
-      Line<int> lijn (i+Art::lcd_left,53,i+Art::lcd_left,waveform[i]);
-	lijn.draw();
+        glBegin ( GL_LINES );
+        glVertex2i ( i+Art::lcd_left,Art::lcd_center );
+        glVertex2i ( i+Art::lcd_left,waveform[i] );
+	// std::cout << waveform[i] << ",";
+        glEnd();
+
+        /*Line<int> lijn ( i+Art::lcd_left,Art::lcd_center,
+               i+Art::lcd_left,waveform[i] );
+          lijn.draw();
+        */
     }
+    glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
+    // std::cout << std::endl;
+
 }
 
 void NinjasUI::calcWaveform ( String fp )
@@ -488,19 +514,21 @@ void NinjasUI::calcWaveform ( String fp )
             k = iIndex +j;
             //TODO mono/stereo
             // sum = sum + tmp.at ( k * channels );
-	    sum = tmp.at ( k * channels );
-	     //std::cout << iIndex << " = " << sum << std::endl;
+            sum = tmp.at ( k * channels );
+            //std::cout << iIndex << " = " << sum << std::endl;
 
         }
         //average = (float) sum / samples_per_pixel;
         // convert 0.0 - 1.0 to 0 - 107
-        plotValue = sum * LCD_HEIGHT + LCD_HEIGHT;
-    //    std::cout << sum << ", " << plotValue << std::endl;
+        plotValue = sum * LCD_HEIGHT + Art::lcd_center;
+        //    std::cout << sum << ", " << plotValue << std::endl;
         waveform[i] = plotValue;
+	repaint();
     }
+    
     //std::cout << std::endl;
     return;
-  
+
 }
 
 
