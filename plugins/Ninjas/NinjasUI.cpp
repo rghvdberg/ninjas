@@ -33,7 +33,7 @@ NinjasUI::NinjasUI()
       fImgBackground ( Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR )
 {
     // init lcd
-    waveform.fill(NinjasArtwork::lcd_center);
+    waveform.fill ( NinjasArtwork::lcd_center );
     // knobs
 
     fKnobSlices = new ImageKnob ( this,
@@ -467,16 +467,9 @@ void NinjasUI::onDisplay()
         glBegin ( GL_LINES );
         glVertex2i ( i+Art::lcd_left,Art::lcd_center );
         glVertex2i ( i+Art::lcd_left,waveform[i] );
-	// std::cout << waveform[i] << ",";
         glEnd();
-
-        /*Line<int> lijn ( i+Art::lcd_left,Art::lcd_center,
-               i+Art::lcd_left,waveform[i] );
-          lijn.draw();
-        */
     }
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
-    // std::cout << std::endl;
 
 }
 
@@ -484,11 +477,11 @@ void NinjasUI::calcWaveform ( String fp )
 {
     const int LCD_HEIGHT = 107 / 2;
     const int LCD_LENGHT = 556;
-    float sum {0};
+    //float sum {0};
     //float average {0.5};
     int  iIndex {0};
     float fIndex {0};
-    int plotValue {53};
+    //  int plotValue {53};
     double samplerate = getSampleRate();
 
     SndfileHandle fileHandle ( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , samplerate );
@@ -504,29 +497,22 @@ void NinjasUI::calcWaveform ( String fp )
     fileHandle.read ( &tmp.at ( 0 ) , size * channels );
 
 
-    for ( int i = 0; i < LCD_LENGHT ; i++ )
+    for ( int i = 0, j =0 ; i < LCD_LENGHT ; i++ )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
-        sum = 0;
-        for ( int j = 0, k = 0 ; j < ( int ) samples_per_pixel; j++ )
-        {
-            k = iIndex +j;
-            //TODO mono/stereo
-            // sum = sum + tmp.at ( k * channels );
-            sum = tmp.at ( k * channels );
-            //std::cout << iIndex << " = " << sum << std::endl;
-
-        }
-        //average = (float) sum / samples_per_pixel;
+        auto minmax = std::minmax_element ( tmp.begin() +iIndex,tmp.begin() +iIndex+samples_per_pixel );
+        float min = *minmax.first;
+        //std::cout << " value = " << *minmax.first << std::endl;
+        float max = *minmax.second;
+        //std::cout << " value = " << *minmax.second << std::endl;
         // convert 0.0 - 1.0 to 0 - 107
-        plotValue = sum * LCD_HEIGHT + Art::lcd_center;
-        //    std::cout << sum << ", " << plotValue << std::endl;
-        waveform[i] = plotValue;
-	repaint();
+        waveform[j] = min * ( float ) LCD_HEIGHT + Art::lcd_center;
+        j++;
+        waveform[j] = max * ( float ) LCD_HEIGHT + Art::lcd_center;
+	j++;
     }
-    
-    //std::cout << std::endl;
+    repaint();
     return;
 
 }

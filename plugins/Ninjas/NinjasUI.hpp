@@ -72,7 +72,7 @@ private:
     // char* filepath;
     
     void calcWaveform( String fp );
-    std::array<int,556> waveform;
+    std::array<int,1112> waveform;
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NinjasUI)
 };
 
