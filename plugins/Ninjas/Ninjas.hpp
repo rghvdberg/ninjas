@@ -111,6 +111,7 @@ private:
     float p_LoopRev[16];
     float p_SliceStart[16];
     float p_SliceEnd[16];
+    float p_Grid[16] {1 ,0 ,0 ,0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // empty sample object
 
@@ -122,7 +123,7 @@ private:
      */
     Mixer mixL;
     Mixer mixR;
-    
+
     int pitchbend { 8192 };
     int pitchbend_range { 24 };
     float pitchbend_step = ( float ) 16384 / ( float ) pitchbend_range;
@@ -135,18 +136,19 @@ private:
     std::string filepath = "";
     bool bypass {true};
     double samplerate = getSampleRate();
-   
-     /*by example of the cars plugin create array of voices
-     tried to create them 'on the fly' but that won't work.
-     */
-         
-      Voice voices[16]{
-	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
-	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
-	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate),
-	Voice(samplerate),Voice(samplerate),Voice(samplerate),Voice(samplerate)
-      };
-    
+
+    /*by example of the cars plugin create array of voices
+    tried to create them 'on the fly' but that won't work.
+    */
+
+    Voice voices[16]
+    {
+        Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),
+        Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),
+        Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),
+        Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate ),Voice ( samplerate )
+    };
+
     /**
        Set our plugin class as non-copyable and add a leak detector just in case.
      */

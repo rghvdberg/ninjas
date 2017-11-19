@@ -154,9 +154,18 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
         parameter.symbol  = "floppy";
         break;
     }
+
+    case paramSwitch01:
+        parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
+        parameter.ranges.def = 1.0f;
+        parameter.ranges.min = 0.0f;
+        parameter.ranges.max = 1.0f;
+        parameter.name   = "Switch "+String ( index - 9 );
+        parameter.symbol  = "switch"+String ( index - 9 );
+
     }
 
-    if ( index >= paramSwitch01 && index <= paramSwitch16 )
+    if ( index >= paramSwitch02 && index <= paramSwitch16 )
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
@@ -175,7 +184,7 @@ void NinjasPlugin::initState ( uint32_t index, String& stateKey, String& default
         stateKey ="filepath";
         defaultStateValue = "empty";
     }
-   
+
 }
 
 String NinjasPlugin::getState ( const char* key ) const
@@ -185,26 +194,26 @@ String NinjasPlugin::getState ( const char* key ) const
 
 void NinjasPlugin::setState ( const char* key, const char* value )
 {
-if (strcmp ( key, "filepath") == 0)
-{  
-  std::string fp = value;
-    // load file in sample memory
-    if ( !SampleObject.loadSample ( fp, sampleVector, samplerate ) )
+    if ( strcmp ( key, "filepath" ) == 0 )
     {
-        // sample loaded ok, slice it up and set bool
-        SampleObject.createSlices ( a_slices,slices );
-	bypass = false;
-        //setParameterValue(paramFloppy,1.0);
-    }
-    else
-    {
-        bypass = true;
-        std::cout << "setState - sample not loaded" << std::endl;
-        // setState ( "filepath","empty" );
-        setParameterValue ( paramFloppy,0.0 );
-    }
+        std::string fp = value;
+        // load file in sample memory
+        if ( !SampleObject.loadSample ( fp, sampleVector, samplerate ) )
+        {
+            // sample loaded ok, slice it up and set bool
+            SampleObject.createSlices ( a_slices,slices );
+            bypass = false;
+            //setParameterValue(paramFloppy,1.0);
+        }
+        else
+        {
+            bypass = true;
+            std::cout << "setState - sample not loaded" << std::endl;
+            // setState ( "filepath","empty" );
+            setParameterValue ( paramFloppy,0.0 );
+        }
 
-}
+    }
 
 
 
@@ -267,9 +276,9 @@ float NinjasPlugin::getParameterValue ( uint32_t index ) const
             return_Value = 0;
         break;
     }
-    if ( index > 9 )
+    if ( index >= paramSwitch01 )
     {
-        return_Value = ( float ) currentSlice;
+        return_Value = p_Grid[index - paramSwitch01];
     }
     return return_Value;
 
@@ -320,8 +329,10 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
         break;
 
     } // switch
-    if ( index > 9 )
+    if ( index >= paramSwitch01 )
     {
+      std::cout << "JOEHOE!" << std::endl;
+        p_Grid[index - paramSwitch01]=value;
         if ( value == 1 )
             currentSlice = index - 10;
     }

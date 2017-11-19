@@ -143,7 +143,9 @@ NinjasUI::NinjasUI()
         // fGrid[j]->setAbsolutePos(981+j*41,89);
         fGrid[j]->setCallback ( this );
     }
-
+    
+    fGrid[0]->setDown(true);
+ 
     // set coordinates for grid
 
     // x = 980, y = 90
@@ -155,28 +157,8 @@ NinjasUI::NinjasUI()
         {
             int index = y * 4 + x;
             fGrid[index]->setAbsolutePos ( 981+x*41,89+y*46 );
-        }
-    }
-
-
-    /*
-    fGrid01->setAbsolutePos(980,90);
-    fGrid02->setAbsolutePos(1021,90);
-    fGrid03->setAbsolutePos(1062,90);
-    fGrid04->setAbsolutePos(1103,90);
-    fGrid05->setAbsolutePos(980,136);
-    fGrid06->setAbsolutePos(1021,136);
-    fGrid07->setAbsolutePos(1062,136);
-    fGrid08->setAbsolutePos(1103,136);
-    fGrid09->setAbsolutePos(980,182);
-    fGrid10->setAbsolutePos(1021,182);
-    fGrid11->setAbsolutePos(1062,182);
-    fGrid12->setAbsolutePos(1103,182);
-    fGrid13->setAbsolutePos(980,228);
-    fGrid14->setAbsolutePos(1021,228);
-    fGrid15->setAbsolutePos(1062,228);
-    fGrid16->setAbsolutePos(1103,228);
-    */
+        } // for x
+    } // for y
 }
 
 /**
@@ -185,7 +167,7 @@ NinjasUI::NinjasUI()
  */
 void NinjasUI::parameterChanged ( uint32_t index, float value )
 {
-    // std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
+    std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
     switch ( index )
     {
     case paramNumberOfSlices:
@@ -194,86 +176,53 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
         // Play Modes
     case paramOneShotFwd:
         fSwitchFwd->setDown ( value > 0.5f );
+        p_OneShotFwd[currentSlice] = value > 0.5f;
         break;
     case paramOneShotRev:
         fSwitchRev->setDown ( value > 0.5f );
+        p_OneShotRev[currentSlice] = value > 0.5f;
         break;
     case paramLoopFwd:
         fSwitchLoopFwd->setDown ( value > 0.5f );
+        p_LoopFwd[currentSlice] = value > 0.5f;
         break;
     case paramLoopRev:
         fSwitchLoopRev->setDown ( value > 0.5f );
+        p_LoopRev[currentSlice] = value > 0.5f;
         break;
         // ADSR
     case paramAttack:
         fKnobAttack->setValue ( value );
+        p_Attack[currentSlice] = value;
         break;
     case paramDecay:
         fKnobDecay->setValue ( value );
+        p_Decay[currentSlice] = value;
         break;
     case paramSustain:
         fKnobSustain->setValue ( value );
+        p_Sustain[currentSlice] = value;
         break;
     case paramRelease:
         fKnobRelease->setValue ( value );
+        p_Release[currentSlice] = value;
         break;
 
         // floppy
     case paramFloppy:
         fSwitchFloppy->setDown ( value > 0.5f );
         break;
-
-        /* selector grid
-
-        case paramSwitch01:
-            fGrid[0]->setDown(value > 0.5f);
-            break;
-        case paramSwitch02:
-            fGrid[1]->setDown(value > 0.5f);
-            break;
-        case paramSwitch03:
-            fGrid[2]->setDown(value > 0.5f);
-            break;
-        case paramSwitch04:
-            fGrid[3]->setDown(value > 0.5f);
-            break;
-        case paramSwitch05:
-            fGrid[4]->setDown(value > 0.5f);
-            break;
-        case paramSwitch06:
-            fGrid[5]->setDown(value > 0.5f);
-            break;
-        case paramSwitch07:
-            fGrid[6]->setDown(value > 0.5f);
-            break;
-        case paramSwitch08:
-            fGrid[7]->setDown(value > 0.5f);
-            break;
-        case paramSwitch09:
-            fGrid[8]->setDown(value > 0.5f);
-            break;
-        case paramSwitch10:
-            fGrid[9]->setDown(value > 0.5f);
-            break;
-        case paramSwitch11:
-            fGrid[10]->setDown(value > 0.5f);
-            break;
-        case paramSwitch12:
-            fGrid[11]->setDown(value > 0.5f);
-            break;
-        case paramSwitch13:
-            fGrid[12]->setDown(value > 0.5f);
-            break;
-        case paramSwitch14:
-            fGrid[13]->setDown(value > 0.5f);
-            break;
-        case paramSwitch15:
-            fGrid[14]->setDown(value > 0.5f);
-            break;
-        case paramSwitch16:
-            fGrid[15]->setDown(value > 0.5f);
-            break;
-        */
+        // selector grid
+    }
+    if ( index >= paramSwitch01 && index <= paramSwitch16 )
+    {
+        int slice = index - paramSwitch01;
+        fGrid[slice]->setDown ( value > 0.5f );
+        if ( value == 1 )
+        {
+            currentSlice = slice;
+            recallSliceSettings ( slice );
+        }
     }
 
 }
@@ -283,7 +232,6 @@ void NinjasUI::stateChanged ( const char* key, const char* value )
     if ( std::strcmp ( key, "filepath" ) == 0 )
     {
         calcWaveform ( String ( value ) );
-
     }
 }
 
@@ -315,6 +263,11 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
     {
     case paramOneShotFwd:
     {
+        p_OneShotFwd[currentSlice] = 1;
+        p_OneShotRev[currentSlice] = 0;
+        p_LoopFwd[currentSlice]    = 0;
+        p_LoopRev[currentSlice]    = 0;
+
         editParameter ( paramOneShotFwd, true );
         editParameter ( paramOneShotRev, true );
         editParameter ( paramLoopFwd, true );
@@ -338,6 +291,11 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
     }
     case paramOneShotRev:
     {
+        p_OneShotFwd[currentSlice] = 0;
+        p_OneShotRev[currentSlice] = 1;
+        p_LoopFwd[currentSlice]    = 0;
+        p_LoopRev[currentSlice]    = 0;
+
         editParameter ( paramOneShotFwd, true );
         editParameter ( paramOneShotRev, true );
         editParameter ( paramLoopFwd, true );
@@ -361,6 +319,11 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
     }
     case paramLoopFwd:
     {
+        p_OneShotFwd[currentSlice] = 0;
+        p_OneShotRev[currentSlice] = 0;
+        p_LoopFwd[currentSlice]    = 1;
+        p_LoopRev[currentSlice]    = 0;
+
         editParameter ( paramOneShotFwd, true );
         editParameter ( paramOneShotRev, true );
         editParameter ( paramLoopFwd, true );
@@ -384,6 +347,12 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
     }
     case paramLoopRev:
     {
+        p_OneShotFwd[currentSlice] = 0;
+        p_OneShotRev[currentSlice] = 0;
+        p_LoopFwd[currentSlice]    = 0;
+        p_LoopRev[currentSlice]    = 1;
+
+
         editParameter ( paramOneShotFwd, true );
         editParameter ( paramOneShotRev, true );
         editParameter ( paramLoopFwd, true );
@@ -420,6 +389,12 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
             editParameter ( i, true );
             setParameterValue ( i, i == buttonId ? 1.0f : 0.0f );
             fGrid[j]->setDown ( i == buttonId );
+            if ( i == buttonId )
+            {
+                std::cout << "buttonId = "<< buttonId << " i = " << i << std::endl;
+                currentSlice = j;
+                recallSliceSettings ( j );
+            }
             editParameter ( i, false );
         }
     }
@@ -441,10 +416,25 @@ void NinjasUI::imageKnobDragFinished ( ImageKnob* knob )
 void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 {
     // std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
+    int KnobID = knob->getId();
+    setParameterValue ( KnobID,value );
 
-    setParameterValue ( knob->getId(), value );
+    switch ( KnobID )
+    {
+    case paramAttack:
+        p_Attack[currentSlice]=value;
+        break;
+    case paramDecay:
+        p_Decay[currentSlice]=value;
+        break;
+    case  paramSustain:
+        p_Sustain[currentSlice]=value;
+        break;
+    case paramRelease:
+        p_Release[currentSlice]=value;
+        break;
+    }
 }
-
 
 void NinjasUI::onDisplay()
 {
@@ -467,10 +457,10 @@ void NinjasUI::onDisplay()
         glBegin ( GL_LINES );
         glVertex2i ( i+Art::lcd_left,Art::lcd_center );
         glVertex2i ( i+Art::lcd_left,waveform[j] );
-	j++;
-	glVertex2i ( i+Art::lcd_left,Art::lcd_center );
+        j++;
+        glVertex2i ( i+Art::lcd_left,Art::lcd_center );
         glVertex2i ( i+Art::lcd_left,waveform[j] );
-	j++;
+        j++;
         glEnd();
     }
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -514,17 +504,35 @@ void NinjasUI::calcWaveform ( String fp )
         waveform[j] = min * ( float ) LCD_HEIGHT + Art::lcd_center;
         j++;
         waveform[j] = max * ( float ) LCD_HEIGHT + Art::lcd_center;
-	j++;
+        j++;
     }
     repaint();
     return;
 
 }
 
+void NinjasUI::recallSliceSettings ( int slice )
+{
+    std::cout << "recallSliceSettings ( " << slice << " )" << std::endl;
+    setParameterValue ( paramAttack, p_Attack[slice] );
+    fKnobAttack->setValue ( p_Attack[slice] );
+    setParameterValue ( paramDecay,  p_Decay[slice] );
+    fKnobDecay->setValue ( p_Decay[slice] );
+    setParameterValue ( paramSustain, p_Sustain[slice] );
+    fKnobSustain->setValue ( p_Sustain[slice] );
+    setParameterValue ( paramRelease, p_Release[slice] );
+    fKnobRelease->setValue ( p_Release[slice] );
+    setParameterValue ( paramOneShotFwd, p_OneShotFwd[slice] );
+    fSwitchFwd->setDown ( p_OneShotFwd[slice] == 1.0f );
+    setParameterValue ( paramOneShotRev,  p_OneShotRev[slice] );
+    fSwitchRev->setDown ( p_OneShotRev[slice] == 1.0f );
+    setParameterValue ( paramLoopFwd, p_LoopFwd[slice] );
+    fSwitchLoopFwd->setDown ( p_LoopFwd[slice] == 1.0f );
+    setParameterValue ( paramLoopRev, p_LoopRev[slice] );
+    fSwitchLoopRev->setDown ( p_LoopRev[slice] == 1.0f );
+    repaint();
 
-
-
-
+}
 
 
 /* ------------------------------------------------------------------------------------------------------------
