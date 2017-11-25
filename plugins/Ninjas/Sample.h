@@ -18,15 +18,14 @@ private:
     double samplerate;
     // int length;
     int channels;
-    int size; // in frames !!!
-    char waveform [556];
-
+    sf_count_t size; // in frames !!!
+    
 public:
     Sample();
 
     Sample(std::string filepath, std::vector <float> & samplevector);
     
-    int getSampleSize() const
+    uint32_t getSampleSize() const
     {
         return size;
     }

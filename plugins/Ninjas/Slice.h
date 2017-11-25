@@ -66,8 +66,8 @@ public:
 
 
 private:
-    int sliceStart;
-    int sliceEnd;
+    unsigned long int sliceStart;
+    unsigned long int sliceEnd;
     slicePlayMode slicePlay;
     bool sliceActive;
 };
