@@ -377,7 +377,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 // discard notes outside the 16 notes range
                 // nn 60 - 74
 
-                if ( !( (message == 0x80 || message == 0x90 ) && ( data1 >= 60 && data1 <= 74 ) ) )
+                if ( !( (message == 0x80 || message == 0x90 || message == 0xe0 ) && ( data1 >= 60 && data1 <= 74 ) ) )
                 {
                   std::cout << "Message = " << message << ", Data1 = " << data1 << std::endl;
 		  curEventIndex++;
