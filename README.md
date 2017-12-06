@@ -8,7 +8,7 @@ Look at the [issues](https://github.com/rghvdberg/ninjas/issues) and feel free t
 
 ***
 
-###Build instructions
+### Build instructions
 
 **Dependencies**
 
