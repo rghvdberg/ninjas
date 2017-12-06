@@ -40,4 +40,4 @@ There is no `make install`, binaries will appear in `~ninjas/bin/`, just copy th
 + Each slice has it's own **ADSR** and **playmode** settings. Use the righthand **Slice Selector** to select the slice you want to edit
 
 Ninjas looks like this:
-![](https://github.com/rghvdberg/ninjas/blob/master/plugins/Ninjas/Art%20working%20directory/ninjas_ui_current.png)
+![](https://github.com/rghvdberg/ninjas/blob/master/plugins/Ninjas/Art%20working%20directory/ninjas_current_ui.png)
