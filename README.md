@@ -5,6 +5,7 @@ Creating a sample slicer plugin using DPF framework.
 Most (all?) crashes resolved at the moment. There are still a lot of things not implemented yet though.
 Look at the [issues](https://github.com/rghvdberg/ninjas/issues) and feel free to report bugs, features and so on.
 
+There's a dedicated [Matrix room (#ninjas:matrix.org)](https://riot.im/app/#/room/#ninjas:matrix.org) for Ninjas which is a good place to keep check on commits, report bugs and ask questions.
 
 ***
 
@@ -26,7 +27,7 @@ make
 ```
 **notice the `clone --recursive`part to pull in the DPF framework.**
 
-There is no `make install`, binaries will appear in `~ninjas/bin/`, just copy the binaries to a appropiate location.
+There is no ~`make install`~, binaries will appear in `~ninjas/bin/`, just copy the binaries to a appropiate location.
 
 ***
 
