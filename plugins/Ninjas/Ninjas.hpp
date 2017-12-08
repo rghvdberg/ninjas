@@ -19,6 +19,7 @@
 #include <sndfile.hh>
 #include <vector>
 #include <iostream>
+#include <aubio/aubio.h>
 #include "Sample.h"
 #include <string>
 #include "Slice.h"
@@ -100,6 +101,11 @@ protected:
     // -------------------------------------------------------------------
 
 private:
+  
+    void createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels  );
+    void createSlicesOnsets (Slice* slices, int n_slices, int64_t size, int channels);
+
+  
     // Paramaters * 16 for 16 slices ... maybe like this
     float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
     float p_Decay[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };

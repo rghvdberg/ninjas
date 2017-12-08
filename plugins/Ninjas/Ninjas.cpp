@@ -21,6 +21,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <aubio/aubio.h>
 #include "Sample.h"
 
 #include "Slice.h"
@@ -201,7 +202,9 @@ void NinjasPlugin::setState ( const char* key, const char* value )
         if ( !SampleObject.loadSample ( fp, sampleVector, samplerate ) )
         {
             // sample loaded ok, slice it up and set bool
-            SampleObject.createSlices ( a_slices,slices );
+	    int64_t size = SampleObject.getSampleSize();
+	    int channels = SampleObject.getSampleChannels();
+            createSlicesRaw( a_slices,slices, size, channels );
             bypass = false;
             //setParameterValue(paramFloppy,1.0);
         }
@@ -297,7 +300,7 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
     {
     case paramNumberOfSlices:
         slices = ( int ) value;
-        SampleObject.createSlices ( a_slices,slices );
+        createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
         break;
     case paramAttack:
         p_Attack[currentSlice] = value;
@@ -565,8 +568,31 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
         }
         ++framesDone;
 
-    } // run()
+    } 
+}// run()
+
+// slice funtions
+
+void NinjasPlugin::createSlices ( Slice* slices, int n_slices, int64_t size, int channels  )
+{
+    long double sliceSize = ( long double ) ( size*channels ) / ( long double ) n_slices;
+    
+    std::cout << "sliceSize :" << sliceSize
+    << " x " << n_slices << " n_slices = "
+    << n_slices * sliceSize << std::endl;
+    
+
+    for ( int i = 0 ; i < n_slices; i++ )
+    {
+        slices[i].setSliceStart ( ( int ) i * sliceSize );
+        slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
+
+	std::cout << "Slice :" << i << " : "
+        << slices[i].getSliceStart() << "->"
+        << slices[i].getSliceEnd() << std::endl;
+    }
 }
+
 
 /* ------------------------------------------------------------------------------------------------------------
 * Plugin entry point, called by DPF to create a new plugin instance. */

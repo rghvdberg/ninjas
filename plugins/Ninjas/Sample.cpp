@@ -57,26 +57,6 @@ int Sample::loadSample ( std::string fp, std::vector <float> & samplevector, dou
     return 0;
 }
 
-void Sample::createSlices ( Slice* slices, int n_slices )
-{
-    long double sliceSize = ( long double ) ( size*channels ) / ( long double ) n_slices;
-    
-    std::cout << "sliceSize :" << sliceSize
-    << " x " << n_slices << " n_slices = "
-    << n_slices * sliceSize << std::endl;
-    
-
-    for ( int i = 0 ; i < n_slices; i++ )
-    {
-        slices[i].setSliceStart ( ( int ) i * sliceSize );
-        slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
-
-	std::cout << "Slice :" << i << " : "
-        << slices[i].getSliceStart() << "->"
-        << slices[i].getSliceEnd() << std::endl;
-    }
-}
-
 int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample_out, double host_samplerate )
 {
     // copy samplevector in data_in

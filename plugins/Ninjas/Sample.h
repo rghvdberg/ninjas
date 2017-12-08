@@ -25,7 +25,7 @@ public:
 
     Sample(std::string filepath, std::vector <float> & samplevector);
     
-    uint32_t getSampleSize() const
+    int64_t getSampleSize() const
     {
         return size;
     }

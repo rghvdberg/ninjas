@@ -63,7 +63,7 @@ public:
     {
         return sliceActive;
     }
-
+    //
 
 private:
     unsigned long int sliceStart;
