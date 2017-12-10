@@ -156,24 +156,49 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
         break;
     }
 
+    case paramSliceRaw:
+    {
+        parameter.hints = kParameterIsAutomable|kParameterIsBoolean ;;
+        parameter.ranges.def = 0.0f;
+        parameter.ranges.min = 0.0f;
+        parameter.ranges.max = 1.0f;
+        parameter.name   = "Slice Raw";
+        parameter.symbol  = "sliceraw";
+        break;
+    }
+
+    case paramSliceOnsets:
+    {
+        parameter.hints = kParameterIsAutomable|kParameterIsBoolean ;;
+        parameter.ranges.def = 0.0f;
+        parameter.ranges.min = 0.0f;
+        parameter.ranges.max = 1.0f;
+        parameter.name   = "Slice Onsets";
+        parameter.symbol  = "sliceonsets";
+        break;
+    }
+    }
+
+    /*
     case paramSwitch01:
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 1.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
-        parameter.name   = "Switch "+String ( index - 9 );
-        parameter.symbol  = "switch"+String ( index - 9 );
+        parameter.name   = "Switch "+String ( index - paramSwitch01 );
+        parameter.symbol  = "switch"+String ( index - paramSwitch01 );
 
     }
+    */
 
-    if ( index >= paramSwitch02 && index <= paramSwitch16 )
+    if ( index >= paramSwitch01 && index <= paramSwitch16 )
     {
         parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
-        parameter.name   = "Switch "+String ( index - 9 );
-        parameter.symbol  = "switch"+String ( index - 9 );
+        parameter.name   = "Switch "+String ( index - paramSwitch01 );
+        parameter.symbol  = "switch"+String ( index - paramSwitch01 );
     }
 
 }
@@ -202,9 +227,9 @@ void NinjasPlugin::setState ( const char* key, const char* value )
         if ( !SampleObject.loadSample ( fp, sampleVector, samplerate ) )
         {
             // sample loaded ok, slice it up and set bool
-	    int64_t size = SampleObject.getSampleSize();
-	    int channels = SampleObject.getSampleChannels();
-            createSlicesRaw( a_slices,slices, size, channels );
+            int64_t size = SampleObject.getSampleSize();
+            int channels = SampleObject.getSampleChannels();
+            createSlicesRaw ( a_slices,slices, size, channels );
             bypass = false;
             //setParameterValue(paramFloppy,1.0);
         }
@@ -278,6 +303,19 @@ float NinjasPlugin::getParameterValue ( uint32_t index ) const
         else
             return_Value = 0;
         break;
+    case paramSliceRaw:
+        if ( SliceMode = SLICERAW )
+            return_Value = 1;
+        else
+            return_Value = 0;
+        break;
+    case paramSliceOnsets:
+        if ( SliceMode = SLICEONSET )
+            return_Value = 1;
+        else
+            return_Value =0;
+        break;
+
     }
     if ( index >= paramSwitch01 )
     {
@@ -300,7 +338,10 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
     {
     case paramNumberOfSlices:
         slices = ( int ) value;
-        createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
+	if (SliceMode = SLICERAW)
+	  createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
+	else
+	  createSlicesOnsets();
         break;
     case paramAttack:
         p_Attack[currentSlice] = value;
@@ -330,11 +371,19 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
         if ( value == 1 )
             a_slices[currentSlice].setSlicePlayMode ( Slice::LOOP_REV );
         break;
-
+    case paramSliceRaw:
+        if ( value ==1 )
+            SliceMode = SLICERAW;
+        break;
+    case paramSliceOnsets:
+        if ( value == 1 )
+            SliceMode = SLICEONSET;
+        break;
     } // switch
+    
     if ( index >= paramSwitch01 )
     {
-      std::cout << "JOEHOE!" << std::endl;
+        std::cout << "JOEHOE!" << std::endl;
         p_Grid[index - paramSwitch01]=value;
         if ( value == 1 )
             currentSlice = index - 10;
@@ -380,10 +429,10 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 // discard notes outside the 16 notes range
                 // nn 60 - 74
 
-                if ( !( (message == 0x80 || message == 0x90 || message == 0xe0 ) && ( data1 >= 60 && data1 <= 74 ) ) )
+                if ( ! ( ( message == 0x80 || message == 0x90 || message == 0xe0 ) && ( data1 >= 60 && data1 <= 74 ) ) )
                 {
-                  std::cout << "Message = " << message << ", Data1 = " << data1 << std::endl;
-		  curEventIndex++;
+                    std::cout << "Message = " << message << ", Data1 = " << data1 << std::endl;
+                    curEventIndex++;
                     continue;
                 }
 
@@ -568,29 +617,82 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
         }
         ++framesDone;
 
-    } 
+    }
 }// run()
 
 // slice funtions
 
-void NinjasPlugin::createSlices ( Slice* slices, int n_slices, int64_t size, int channels  )
+void NinjasPlugin::createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels )
 {
     long double sliceSize = ( long double ) ( size*channels ) / ( long double ) n_slices;
-    
+
     std::cout << "sliceSize :" << sliceSize
-    << " x " << n_slices << " n_slices = "
-    << n_slices * sliceSize << std::endl;
-    
+              << " x " << n_slices << " n_slices = "
+              << n_slices * sliceSize << std::endl;
+
 
     for ( int i = 0 ; i < n_slices; i++ )
     {
         slices[i].setSliceStart ( ( int ) i * sliceSize );
         slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
 
-	std::cout << "Slice :" << i << " : "
-        << slices[i].getSliceStart() << "->"
-        << slices[i].getSliceEnd() << std::endl;
+        std::cout << "Slice :" << i << " : "
+                  << slices[i].getSliceStart() << "->"
+                  << slices[i].getSliceEnd() << std::endl;
     }
+}
+
+void NinjasPlugin::getOnsets ( Slice* slices, int n_slices, int64_t size, int channels, std::vector<float> sampleVector, std::vector<uint_t> onsets )
+{
+    // temp sample vector
+    std::vector<float> tmp_sample_vector;
+    tmp_sample_vector.resize ( size );
+
+    int hop_size = 512;
+    int win_s = 512;
+    fvec_t ftable;               // 1. create fvec without allocating it
+    intptr_t readptr = 0;
+    ftable.length = hop_size;    // 2. set ftable length
+    fvec_t * out = new_fvec ( 2 ); // output position
+    //double samplerate = getSampleRate();
+    if ( channels == 2 ) // create mono sample
+    {
+        for ( int i=0, j=0 ; i <= size; i++ )
+        {
+            // sum to mono
+            float sum_mono = ( sampleVector[j] + sampleVector[j+1] ) * 0.5f;
+            tmp_sample_vector[i]=sum_mono;
+            j+=2;
+        }
+    }
+    else
+    {
+        tmp_sample_vector = sampleVector;
+    }
+
+    // create onset object
+    aubio_onset_t  * onset = new_aubio_onset ( "default", win_s, hop_size, samplerate );
+    while ( readptr < tmp_sample_vector.size() )
+    {
+        // 3. set ftable.data to point to the current slice
+        ftable.data = &tmp_sample_vector[readptr];
+        // do something with &ftable...
+        // e.g. aubio_onset_do(onset, &ftable, onset_out);
+        // cout << readptr << endl;
+        aubio_onset_do ( onset , &ftable, out );
+        if ( out->data[0] != 0 )
+        {
+            std::cout << "onset at " << aubio_onset_get_last ( onset ) << std::endl;
+            onsets.push_back ( aubio_onset_get_last ( onset ) );
+        }
+        // 4. increment read pointer
+        readptr += hop_size;
+    }
+    std::cout << std::endl;
+    del_aubio_onset ( onset );
+    del_fvec ( &ftable );
+    del_fvec ( out );
+    aubio_cleanup();
 }
 
 

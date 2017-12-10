@@ -103,7 +103,7 @@ protected:
 private:
   
     void createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels  );
-    void createSlicesOnsets (Slice* slices, int n_slices, int64_t size, int channels);
+    void getOnsets (Slice* slices, int n_slices, int64_t size, int channels, std::vector<float> sampleVector, std::vector<uint_t> onsets);
 
   
     // Paramaters * 16 for 16 slices ... maybe like this
@@ -141,6 +141,9 @@ private:
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};
+    enum slicemode { SLICERAW, SLICEONSET};
+    slicemode SliceMode = SLICERAW;
+    std::vector<uint_t>onsets;
     double samplerate = getSampleRate();
 
     /*by example of the cars plugin create array of voices
