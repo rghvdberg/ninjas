@@ -104,7 +104,7 @@ private:
   
     void createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels  );
     void getOnsets (Slice* slices, int n_slices, int64_t size, int channels, std::vector<float> sampleVector, std::vector<uint_t> onsets);
-
+    void createSlicesOnsets();
   
     // Paramaters * 16 for 16 slices ... maybe like this
     float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };

@@ -304,13 +304,13 @@ float NinjasPlugin::getParameterValue ( uint32_t index ) const
             return_Value = 0;
         break;
     case paramSliceRaw:
-        if ( SliceMode = SLICERAW )
+        if ( SliceMode == SLICERAW )
             return_Value = 1;
         else
             return_Value = 0;
         break;
     case paramSliceOnsets:
-        if ( SliceMode = SLICEONSET )
+        if ( SliceMode == SLICEONSET )
             return_Value = 1;
         else
             return_Value =0;
@@ -693,6 +693,11 @@ void NinjasPlugin::getOnsets ( Slice* slices, int n_slices, int64_t size, int ch
     del_fvec ( &ftable );
     del_fvec ( out );
     aubio_cleanup();
+}
+
+void NinjasPlugin::createSlicesOnsets()
+{
+  std::cout << "createSlicesOnsets" << std::endl;
 }
 
 
