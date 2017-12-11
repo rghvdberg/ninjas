@@ -19,7 +19,7 @@
 
 #define DISTRHO_PLUGIN_BRAND "Clearly Broken Software"
 #define DISTRHO_PLUGIN_NAME  "Ninjas"
-#define DISTRHO_PLUGIN_URI   "https://github.com/rghvdberg/plugin-examples"
+#define DISTRHO_PLUGIN_URI   "https://github.com/rghvdberg/ninjas"
 
 #define DISTRHO_PLUGIN_IS_SYNTH 1
 #define DISTRHO_PLUGIN_HAS_UI       1

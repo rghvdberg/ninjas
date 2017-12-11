@@ -52,7 +52,7 @@ protected:
     void imageKnobDragStarted ( ImageKnob* knob ) override;
     void imageKnobDragFinished ( ImageKnob* knob ) override;
     void imageKnobValueChanged ( ImageKnob* knob, float value ) override;
-    void imageSliderDragStarted (ImageSlider* slider) override;
+    void imageSliderDragStarted(ImageSlider* slider) override;
     void imageSliderDragFinished(ImageSlider* slider) override;
     void imageSliderValueChanged(ImageSlider* slider, float value) override;
     
