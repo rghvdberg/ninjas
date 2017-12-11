@@ -89,7 +89,7 @@ jack: $(jack)
 
 $(jack): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(shell pkg-config --cflags --libs jack)  $(shell pkg-config --cflags --libs sndfile) $(shell pkg-config --cflags --libs samplerate) -DDISTRHO_PLUGIN_TARGET_JACK -o $@
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(shell pkg-config --cflags --libs jack)  $(shell pkg-config --cflags --libs sndfile) $(shell pkg-config --cflags --libs samplerate) $(shell pkg-config --cflags --libs aubio) -DDISTRHO_PLUGIN_TARGET_JACK -o $@
 
 # --------------------------------------------------------------
 # LADSPA

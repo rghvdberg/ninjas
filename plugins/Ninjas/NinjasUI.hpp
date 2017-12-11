@@ -25,6 +25,7 @@
 #include "iterator"
 #include "algorithm"
 #include "array"
+#include "aubio/aubio.h"
 
 START_NAMESPACE_DISTRHO
 

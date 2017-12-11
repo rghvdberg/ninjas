@@ -89,13 +89,13 @@ NinjasUI::NinjasUI()
     fKnobRelease->setCallback ( this );
 
     // slider
-    Image sliderImage(Art::sliderData, Art::sliderWidth, Art:: sliderHeight);
-    Point<int> sliderPosStart(295,169);
-    Point<int> sliderPosEnd(295,150);
-    
-    fSliceModeSlider = new ImageSlider( this, sliderImage);
+    Image sliderImage ( Art::sliderData, Art::sliderWidth, Art:: sliderHeight );
+    Point<int> sliderPosStart ( 295,169 );
+    Point<int> sliderPosEnd ( 295,150 );
+
+    fSliceModeSlider = new ImageSlider ( this, sliderImage );
     fSliceModeSlider->setId ( paramSliceMode );
-    fSliceModeSlider->setInverted(true);
+    //fSliceModeSlider->setInverted ( true );
     fSliceModeSlider->setStartPos ( sliderPosStart );
     fSliceModeSlider->setEndPos ( sliderPosEnd );
     fSliceModeSlider->setRange ( 0.0f, 1.0f );
@@ -451,6 +451,21 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
         break;
     }
 }
+
+
+void  NinjasUI::imageSliderDragStarted ( ImageSlider* slider )
+{
+    editParameter ( slider->getId(), true );
+}
+void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
+{
+    editParameter ( slider->getId(), false );
+}
+void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
+{
+    setParameterValue ( slider->getId(), value );
+}
+
 
 void NinjasUI::onDisplay()
 {
