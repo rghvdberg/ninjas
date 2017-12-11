@@ -33,7 +33,7 @@ START_NAMESPACE_DISTRHO
 class NinjasUI : public UI, 
 		 public ImageSwitch::Callback,
 		 public ImageKnob::Callback,
-		 public ImageSlider::Calback
+		 public ImageSlider::Callback
 {
 public:
     NinjasUI();
@@ -64,7 +64,7 @@ private:
     ScopedPointer<ImageSwitch> fGrid[16];
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
     ScopedPointer<ImageSlider> fSliceModeSlider;
-    
+        
     void calcWaveform ( String fp );
     void recallSliceSettings ( int slice );
     std::array<int,1112> waveform;

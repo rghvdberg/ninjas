@@ -90,7 +90,7 @@ NinjasUI::NinjasUI()
 
     // slider
     fSliceModeSlider = new ImageSlider( this,
-				       Image ( Art::sliderData, Art::sliderWidth, Art::sliderHeight,GL_BGRA ) );
+					Image ( Art::sliderData, Art::sliderWidth, Art::sliderHeight,GL_BGRA ) );
     fSliceModeSlider->setId ( paramSliceMode );
     fSliceModeSlider->setStartPos ( 295, 169 );
     fSliceModeSlider->setEndPos ( 295, 150 );
