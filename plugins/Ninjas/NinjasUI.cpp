@@ -99,7 +99,7 @@ NinjasUI::NinjasUI()
     fSliceModeSlider->setStartPos ( sliderPosStart );
     fSliceModeSlider->setEndPos ( sliderPosEnd );
     fSliceModeSlider->setRange ( 0.0f, 1.0f );
-    fSliceModeSlider->setStep ( 1.0f );
+    //fSliceModeSlider->setStep ( 1.0f );
     fSliceModeSlider->setValue ( 0.0f );
     fSliceModeSlider->setCallback ( this );
 
@@ -455,14 +455,17 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 
 void  NinjasUI::imageSliderDragStarted ( ImageSlider* slider )
 {
+    std::cout << "imageSliderDragStarted" << slider->getId() << std::endl;
     editParameter ( slider->getId(), true );
 }
 void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
 {
+    std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
     editParameter ( slider->getId(), false );
 }
 void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 {
+    std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
     setParameterValue ( slider->getId(), value );
 }
 
