@@ -30,10 +30,10 @@ START_NAMESPACE_DISTRHO
 
 // -----------------------------------------------------------------------
 
-class NinjasUI : public UI,
-    public ImageSwitch::Callback,
-    public ImageKnob::Callback
-
+class NinjasUI : public UI, 
+		 public ImageSwitch::Callback,
+		 public ImageKnob::Callback,
+		 public ImageSlider::Calback
 {
 public:
     NinjasUI();
@@ -49,11 +49,13 @@ protected:
     // -------------------------------------------------------------------
     // Widget Callbacks
     void imageSwitchClicked ( ImageSwitch* ImageSwitch, bool down ) override;
-
     void imageKnobDragStarted ( ImageKnob* knob ) override;
     void imageKnobDragFinished ( ImageKnob* knob ) override;
     void imageKnobValueChanged ( ImageKnob* knob, float value ) override;
-
+    void imageSliderDragStarted (ImageSlider* slider) override;
+    void imageSliderDragFinished(ImageSlider* slider) override;
+    void imageSliderValueChanged(ImageSlider* slider, float value) override;
+    
     void onDisplay() override;
 
 private:
@@ -61,6 +63,8 @@ private:
     ScopedPointer<ImageSwitch> fSwitchFwd, fSwitchFloppy, fSwitchRev, fSwitchLoopFwd, fSwitchLoopRev;
     ScopedPointer<ImageSwitch> fGrid[16];
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
+    ScopedPointer<ImageSlider> fSliceModeSlider;
+    
     void calcWaveform ( String fp );
     void recallSliceSettings ( int slice );
     std::array<int,1112> waveform;
@@ -74,7 +78,7 @@ private:
     float p_LoopRev[16];
     float p_SliceStart[16];
     float p_SliceEnd[16];
-    int currentSlice{0};
+    int currentSlice {0};
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR ( NinjasUI )
 };

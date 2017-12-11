@@ -41,9 +41,8 @@ enum Parameters
     paramLoopFwd,
     paramLoopRev,
     paramFloppy,
-    paramSliceRaw,
-    paramSliceOnsets,
-    
+    paramSliceMode,
+   
     paramSwitch01,
     paramSwitch02,
     paramSwitch03,

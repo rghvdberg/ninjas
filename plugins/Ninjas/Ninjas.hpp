@@ -118,7 +118,7 @@ private:
     float p_SliceStart[16];
     float p_SliceEnd[16];
     float p_Grid[16] {1 ,0 ,0 ,0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+    float slicemode {0};
     // empty sample object
 
     std::vector<float> sampleVector; // this holds the sample data
@@ -141,8 +141,7 @@ private:
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};
-    enum slicemode { SLICERAW, SLICEONSET};
-    slicemode SliceMode = SLICERAW;
+    
     std::vector<uint_t>onsets;
     double samplerate = getSampleRate();
 

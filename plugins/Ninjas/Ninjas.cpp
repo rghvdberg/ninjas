@@ -156,27 +156,17 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
         break;
     }
 
-    case paramSliceRaw:
+    case paramSliceMode:
     {
-        parameter.hints = kParameterIsAutomable|kParameterIsBoolean ;;
+        parameter.hints = kParameterIsAutomable|kParameterIsInteger ;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
-        parameter.name   = "Slice Raw";
-        parameter.symbol  = "sliceraw";
+        parameter.name   = "Slice Mode";
+        parameter.symbol  = "slicemode";
         break;
     }
 
-    case paramSliceOnsets:
-    {
-        parameter.hints = kParameterIsAutomable|kParameterIsBoolean ;;
-        parameter.ranges.def = 0.0f;
-        parameter.ranges.min = 0.0f;
-        parameter.ranges.max = 1.0f;
-        parameter.name   = "Slice Onsets";
-        parameter.symbol  = "sliceonsets";
-        break;
-    }
     }
 
     /*
@@ -303,19 +293,9 @@ float NinjasPlugin::getParameterValue ( uint32_t index ) const
         else
             return_Value = 0;
         break;
-    case paramSliceRaw:
-        if ( SliceMode == SLICERAW )
-            return_Value = 1;
-        else
-            return_Value = 0;
+    case paramSliceMode:
+        return_Value = slicemode;
         break;
-    case paramSliceOnsets:
-        if ( SliceMode == SLICEONSET )
-            return_Value = 1;
-        else
-            return_Value =0;
-        break;
-
     }
     if ( index >= paramSwitch01 )
     {
@@ -338,10 +318,10 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
     {
     case paramNumberOfSlices:
         slices = ( int ) value;
-	if (SliceMode = SLICERAW)
-	  createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
-	else
-	  createSlicesOnsets();
+        if (slicemode == 0 )
+            createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
+        else
+            createSlicesOnsets();
         break;
     case paramAttack:
         p_Attack[currentSlice] = value;
@@ -371,16 +351,11 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
         if ( value == 1 )
             a_slices[currentSlice].setSlicePlayMode ( Slice::LOOP_REV );
         break;
-    case paramSliceRaw:
-        if ( value ==1 )
-            SliceMode = SLICERAW;
-        break;
-    case paramSliceOnsets:
-        if ( value == 1 )
-            SliceMode = SLICEONSET;
+    case paramSliceMode:
+        slicemode = value;
         break;
     } // switch
-    
+
     if ( index >= paramSwitch01 )
     {
         std::cout << "JOEHOE!" << std::endl;
@@ -697,7 +672,7 @@ void NinjasPlugin::getOnsets ( Slice* slices, int n_slices, int64_t size, int ch
 
 void NinjasPlugin::createSlicesOnsets()
 {
-  std::cout << "createSlicesOnsets" << std::endl;
+    std::cout << "createSlicesOnsets" << std::endl;
 }
 
 

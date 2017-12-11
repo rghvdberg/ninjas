@@ -39,7 +39,7 @@ NinjasUI::NinjasUI()
     fKnobSlices = new ImageKnob ( this,
                                   Image ( Art::rotary_slicesData, Art::rotary_slicesWidth, Art::rotary_slicesHeight, GL_BGR ) );
     fKnobSlices->setId ( paramNumberOfSlices );
-    fKnobSlices->setAbsolutePos ( 279, 80 );
+    fKnobSlices->setAbsolutePos ( 279, 79 );
     fKnobSlices->setRange ( 1.0f, 16.0f );
     fKnobSlices->setDefault ( 1.0f );
     fKnobSlices->setValue ( 1.0f );
@@ -51,7 +51,7 @@ NinjasUI::NinjasUI()
     fKnobAttack = new ImageKnob ( this,
                                   Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
     fKnobAttack->setId ( paramAttack );
-    fKnobAttack->setAbsolutePos ( 560, 256 );
+    fKnobAttack->setAbsolutePos ( 560, 255 );
     fKnobAttack->setRange ( 0.05f, 1.0f );
     fKnobAttack->setDefault ( 0.05f );
     fKnobAttack->setValue ( 0.05f );
@@ -61,7 +61,7 @@ NinjasUI::NinjasUI()
     fKnobDecay = new ImageKnob ( this,
                                  Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
     fKnobDecay->setId ( paramDecay );
-    fKnobDecay->setAbsolutePos ( 637, 256 );
+    fKnobDecay->setAbsolutePos ( 637, 255 );
     fKnobDecay->setRange ( 0.05f, 1.0f );
     fKnobDecay->setDefault ( 0.0f );
     fKnobDecay->setValue ( 0.05f );
@@ -71,7 +71,7 @@ NinjasUI::NinjasUI()
     fKnobSustain = new ImageKnob ( this,
                                    Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
     fKnobSustain->setId ( paramSustain );
-    fKnobSustain->setAbsolutePos ( 715, 256 );
+    fKnobSustain->setAbsolutePos ( 715, 255 );
     fKnobSustain->setRange ( 0.0f, 1.0f );
     fKnobSustain->setDefault ( 1.0f );
     fKnobSustain->setValue ( 1.0f );
@@ -81,14 +81,23 @@ NinjasUI::NinjasUI()
     fKnobRelease = new ImageKnob ( this,
                                    Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
     fKnobRelease->setId ( paramRelease );
-    fKnobRelease->setAbsolutePos ( 792, 256 );
+    fKnobRelease->setAbsolutePos ( 792, 255 );
     fKnobRelease->setRange ( 0.05f, 1.0f );
     fKnobRelease->setDefault ( 0.05f );
     fKnobRelease->setValue ( 0.05f );
     fKnobRelease->setRotationAngle ( 300 );
     fKnobRelease->setCallback ( this );
-    //
 
+    // slider
+    fSliceModeSlider = new ImageSlider( this,
+				       Image ( Art::sliderData, Art::sliderWidth, Art::sliderHeight,GL_BGRA ) );
+    fSliceModeSlider->setId ( paramSliceMode );
+    fSliceModeSlider->setStartPos ( 295, 169 );
+    fSliceModeSlider->setEndPos ( 295, 150 );
+    fSliceModeSlider->setRange ( 0.0f, 1.0f );
+    fSliceModeSlider->setStep ( 1.0f );
+    fSliceModeSlider->setValue ( 0.0f );
+    fSliceModeSlider->setCallback ( this );
 
     // switches
 
@@ -130,8 +139,7 @@ NinjasUI::NinjasUI()
     fSwitchFloppy->setAbsolutePos ( 92,220 );
     fSwitchFloppy->setCallback ( this );
 
-    // grid .. debug
-
+    // grid
 
     for ( int i = paramSwitch01, j =0 ; i <= paramSwitch16; ++i , ++j )
     {
@@ -143,9 +151,9 @@ NinjasUI::NinjasUI()
         // fGrid[j]->setAbsolutePos(981+j*41,89);
         fGrid[j]->setCallback ( this );
     }
-    
-    fGrid[0]->setDown(true);
- 
+
+    fGrid[0]->setDown ( true );
+
     // set coordinates for grid
 
     // x = 980, y = 90
@@ -212,8 +220,12 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
     case paramFloppy:
         fSwitchFloppy->setDown ( value > 0.5f );
         break;
-        // selector grid
+    case paramSliceMode:
+        fSliceModeSlider->setValue ( value );
+        break;
     }
+
+    // selector grid
     if ( index >= paramSwitch01 && index <= paramSwitch16 )
     {
         int slice = index - paramSwitch01;
