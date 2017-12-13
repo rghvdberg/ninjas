@@ -17,6 +17,7 @@ There's a dedicated [Matrix room (#ninjas:matrix.org)](https://riot.im/app/#/roo
 +  libx11-dev
 +  libsndfile1-dev
 +  libsamplerate0-dev
++  libaubio-dev
 
 If you want a standalone jack binary install either `libjack-dev` or `libjack-jackd2-dev`
 
