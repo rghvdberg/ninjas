@@ -17,8 +17,8 @@ private:
     // std::vector <float> sampleVector;
     double samplerate;
     // int length;
-    int channels;
-    sf_count_t size; // in frames !!!
+    int channels{1};
+    sf_count_t size {0}; // in frames !!!
     
 public:
     Sample();

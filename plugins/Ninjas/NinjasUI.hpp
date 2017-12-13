@@ -65,6 +65,7 @@ private:
     ScopedPointer<ImageSwitch> fGrid[16];
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;
     ScopedPointer<ImageSlider> fSliceModeSlider;
+    
         
     void calcWaveform ( String fp );
     void recallSliceSettings ( int slice );

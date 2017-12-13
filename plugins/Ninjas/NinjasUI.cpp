@@ -90,8 +90,8 @@ NinjasUI::NinjasUI()
 
     // slider
     Image sliderImage ( Art::sliderData, Art::sliderWidth, Art:: sliderHeight );
-    Point<int> sliderPosStart ( 295,169 );
-    Point<int> sliderPosEnd ( 295,150 );
+    Point<int> sliderPosStart ( 295,150 );
+    Point<int> sliderPosEnd ( 295,169 );
 
     fSliceModeSlider = new ImageSlider ( this, sliderImage );
     fSliceModeSlider->setId ( paramSliceMode );
@@ -99,7 +99,7 @@ NinjasUI::NinjasUI()
     fSliceModeSlider->setStartPos ( sliderPosStart );
     fSliceModeSlider->setEndPos ( sliderPosEnd );
     fSliceModeSlider->setRange ( 0.0f, 1.0f );
-    //fSliceModeSlider->setStep ( 1.0f );
+    fSliceModeSlider->setStep ( 1.0f );
     fSliceModeSlider->setValue ( 0.0f );
     fSliceModeSlider->setCallback ( this );
 

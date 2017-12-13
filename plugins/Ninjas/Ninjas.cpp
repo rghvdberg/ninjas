@@ -22,8 +22,9 @@
 #include <string>
 #include <limits>
 #include <aubio/aubio.h>
-#include "Sample.h"
+#include <algorithm>
 
+#include "Sample.h"
 #include "Slice.h"
 #include "Voice.h"
 #include "ADSR.h"
@@ -147,7 +148,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
     }
     case paramFloppy:
     {
-        parameter.hints = kParameterIsAutomable|kParameterIsBoolean ;;
+        parameter.hints = kParameterIsAutomable|kParameterIsBoolean;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -158,7 +159,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
 
     case paramSliceMode:
     {
-        parameter.hints = kParameterIsAutomable|kParameterIsInteger ;
+        parameter.hints = kParameterIsAutomable|kParameterIsInteger;
         parameter.ranges.def = 0.0f;
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
@@ -219,7 +220,13 @@ void NinjasPlugin::setState ( const char* key, const char* value )
             // sample loaded ok, slice it up and set bool
             int64_t size = SampleObject.getSampleSize();
             int channels = SampleObject.getSampleChannels();
+	    getOnsets(size,channels,sampleVector,onsets);
+	    
+	   if (slicemode == 0) 
             createSlicesRaw ( a_slices,slices, size, channels );
+	   else
+	   createSlicesOnsets(onsets,a_slices,slices, size, channels);
+	    
             bypass = false;
             //setParameterValue(paramFloppy,1.0);
         }
@@ -321,7 +328,7 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
         if (slicemode == 0 )
             createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
         else
-            createSlicesOnsets();
+            createSlicesOnsets( onsets, a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels());
         break;
     case paramAttack:
         p_Attack[currentSlice] = value;
@@ -353,12 +360,16 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
         break;
     case paramSliceMode:
         slicemode = value;
-        break;
+	  if (slicemode == 0 )
+            createSlicesRaw ( a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels() );
+        else
+            createSlicesOnsets( onsets, a_slices,slices,SampleObject.getSampleSize(), SampleObject.getSampleChannels());
+	break;
     } // switch
 
     if ( index >= paramSwitch01 )
     {
-        std::cout << "JOEHOE!" << std::endl;
+        //std::cout << "JOEHOE!" << std::endl;
         p_Grid[index - paramSwitch01]=value;
         if ( value == 1 )
             currentSlice = index - 10;
@@ -617,7 +628,7 @@ void NinjasPlugin::createSlicesRaw ( Slice* slices, int n_slices, int64_t size, 
     }
 }
 
-void NinjasPlugin::getOnsets ( Slice* slices, int n_slices, int64_t size, int channels, std::vector<float> sampleVector, std::vector<uint_t> onsets )
+void NinjasPlugin::getOnsets (int64_t size, int channels, std::vector<float> & sampleVector, std::vector<uint_t> & onsets )
 {
     // temp sample vector
     std::vector<float> tmp_sample_vector;
@@ -665,15 +676,50 @@ void NinjasPlugin::getOnsets ( Slice* slices, int n_slices, int64_t size, int ch
     }
     std::cout << std::endl;
     del_aubio_onset ( onset );
-    del_fvec ( &ftable );
-    del_fvec ( out );
+    // del_fvec ( &ftable );
+    // del_fvec ( out );
     aubio_cleanup();
 }
-
-void NinjasPlugin::createSlicesOnsets()
+void NinjasPlugin::createSlicesOnsets(std::vector<uint_t> & onsets, Slice* slices, int n_slices, int64_t size, int channels)
 {
     std::cout << "createSlicesOnsets" << std::endl;
+    std::cout << size << std::endl;
+    if (size == 0)
+    {
+      std::cout << "no sample loaded" << std::endl;
+      return;
+    }
+     long double sliceSize = ( long double ) size / ( long double ) n_slices;
+    
+    // raw slicing
+     for ( int i = 0 ; i < n_slices; i++ )
+    {
+      int64_t start = ( ( int ) i * sliceSize );
+      int64_t end = ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
+      // map to nearest onset
+     int64_t onset_start = find_nearest(onsets,start);
+     int64_t onset_end = find_nearest(onsets,end)-1;
+     
+     std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
+     
+     std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
+     slices[i].setSliceStart (onset_start * channels);
+     slices[i].setSliceEnd   (onset_end * channels);
+    }
+  
 }
+
+int64_t NinjasPlugin::find_nearest(std::vector<uint_t> & haystack, uint_t needle)
+{
+    auto distance_to_needle_comparator = [&]( int64_t && a,  int64_t && b) {
+        return abs(a - needle) < abs(b - needle);
+    };
+    
+    //std::cout << *std::min_element(std::begin(haystack), std::end(haystack), distance_to_needle_comparator) << std::endl;
+    return *std::min_element(std::begin(haystack), std::end(haystack), distance_to_needle_comparator);
+}
+
+
 
 
 /* ------------------------------------------------------------------------------------------------------------

@@ -20,6 +20,7 @@
 #include <vector>
 #include <iostream>
 #include <aubio/aubio.h>
+#include <algorithm>
 #include "Sample.h"
 #include <string>
 #include "Slice.h"
@@ -103,8 +104,9 @@ protected:
 private:
   
     void createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels  );
-    void getOnsets (Slice* slices, int n_slices, int64_t size, int channels, std::vector<float> sampleVector, std::vector<uint_t> onsets);
-    void createSlicesOnsets();
+    void getOnsets (int64_t size, int channels, std::vector<float> & sampleVector, std::vector<uint_t> & onsets);
+    void createSlicesOnsets(std::vector<uint_t> & onsets,Slice* slices, int n_slices, int64_t size, int channels );
+    int64_t find_nearest(std::vector<uint_t> & haystack, uint_t needle);
   
     // Paramaters * 16 for 16 slices ... maybe like this
     float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
@@ -141,7 +143,7 @@ private:
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};
-    
+        
     std::vector<uint_t>onsets;
     double samplerate = getSampleRate();
 
