@@ -634,7 +634,7 @@ void NinjasPlugin::getOnsets (int64_t size, int channels, std::vector<float> & s
     std::vector<float> tmp_sample_vector;
     tmp_sample_vector.resize ( size );
 
-    int hop_size = 512;
+    int hop_size = 256;
     int win_s = 512;
     fvec_t ftable;               // 1. create fvec without allocating it
     intptr_t readptr = 0;
@@ -657,7 +657,7 @@ void NinjasPlugin::getOnsets (int64_t size, int channels, std::vector<float> & s
     }
 
     // create onset object
-    aubio_onset_t  * onset = new_aubio_onset ( "default", win_s, hop_size, samplerate );
+    aubio_onset_t  * onset = new_aubio_onset ( "complex", win_s, hop_size, samplerate );
     while ( readptr < tmp_sample_vector.size() )
     {
         // 3. set ftable.data to point to the current slice
