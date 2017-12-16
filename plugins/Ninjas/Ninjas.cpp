@@ -369,7 +369,6 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
 
     if ( index >= paramSwitch01 )
     {
-        //std::cout << "JOEHOE!" << std::endl;
         p_Grid[index - paramSwitch01]=value;
         if ( value == 1 )
             currentSlice = index - 10;
@@ -402,22 +401,12 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 int message = status & 0xF0 ; // get midi message
                 int data1 = midiEvents[curEventIndex].data[1];// note number
                 int data2 = midiEvents[curEventIndex].data[2]; //
-                /*
-                std::cout << std::hex << "Status : " << status << std::endl;
-                std::cout << std::hex << "
-                Message : " << message << std::endl;
-                std::cout << std::hex << "
-                Data1 : " << data1 << std::endl;
-                std::cout << std::hex << "
-                Data2 : " << data2 << std::endl;
-                */
-
+             
                 // discard notes outside the 16 notes range
                 // nn 60 - 74
 
                 if ( ! ( ( message == 0x80 || message == 0x90 || message == 0xe0 ) && ( data1 >= 60 && data1 <= 74 ) ) )
                 {
-                    std::cout << "Message = " << message << ", Data1 = " << data1 << std::endl;
                     curEventIndex++;
                     continue;
                 }
@@ -469,8 +458,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
 
                 case 0xe0:   // pitchbend
                 {
-                    std::cout << "pitchbend received" << std::endl;
-                    pitchbend = ( data2 * 128 ) + data1;
+                     pitchbend = ( data2 * 128 ) + data1;
                     break;
 
                 }
@@ -498,6 +486,8 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     int sliceEnd = a_slices[i].getSliceEnd();
                     int pos = voices[i].playbackIndex;
                     int channels = SampleObject.getSampleChannels();
+		    //std::cout << "sliceStart" << sliceStart << "+ pos " << pos << " = " << sliceStart+pos <<std::endl;
+		    //std::cout << "sliceEnd" << sliceEnd << std::endl;
                     float* sample = &sampleVector.at ( sliceStart+pos );
                     float sampleL { *sample };
                     float sampleR { * ( sample + ( channels -1 ) ) };
@@ -530,6 +520,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     voices[i].multiplierIndex += multiplier;
                     int tmp = ( int ) voices[i].multiplierIndex;
                     tmp=tmp * channels;
+		    // std::cout << "tmp = " << tmp << std::endl;
 
                     // check bounderies according to playmode: loop or oneshot.
 
@@ -537,7 +528,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     {
                     case Slice::LOOP_FWD:
                     {
-                        if ( tmp >= ( sliceEnd-channels ) )
+                        if ( sliceStart + tmp >= ( sliceEnd-channels ) )
                         {
                             voices[i].playbackIndex = 0;
                             voices[i].multiplierIndex = 0;
@@ -660,19 +651,14 @@ void NinjasPlugin::getOnsets (int64_t size, int channels, std::vector<float> & s
     aubio_onset_t  * onset = new_aubio_onset ( "complex", win_s, hop_size, samplerate );
     while ( readptr < tmp_sample_vector.size() )
     {
-        // 3. set ftable.data to point to the current slice
         ftable.data = &tmp_sample_vector[readptr];
-        // do something with &ftable...
-        // e.g. aubio_onset_do(onset, &ftable, onset_out);
-        // cout << readptr << endl;
-        aubio_onset_do ( onset , &ftable, out );
+          aubio_onset_do ( onset , &ftable, out );
         if ( out->data[0] != 0 )
         {
             std::cout << "onset at " << aubio_onset_get_last ( onset ) << std::endl;
             onsets.push_back ( aubio_onset_get_last ( onset ) );
         }
-        // 4. increment read pointer
-        readptr += hop_size;
+          readptr += hop_size;
     }
     std::cout << std::endl;
     del_aubio_onset ( onset );
