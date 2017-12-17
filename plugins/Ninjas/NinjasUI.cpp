@@ -179,7 +179,7 @@ NinjasUI::NinjasUI()
  */
 void NinjasUI::parameterChanged ( uint32_t index, float value )
 {
-    std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
+    //std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
     switch ( index )
     {
     case paramNumberOfSlices:
@@ -259,7 +259,6 @@ void NinjasUI::uiFileBrowserSelected ( const char* filename )
     {
         setState ( "filepath", filename );
         calcWaveform ( String ( filename ) );
-
     }
 }
 /* ----------------------------------------------------------------------------------------------------------
@@ -407,7 +406,7 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
             fGrid[j]->setDown ( i == buttonId );
             if ( i == buttonId )
             {
-                std::cout << "buttonId = "<< buttonId << " i = " << i << std::endl;
+                // std::cout << "buttonId = "<< buttonId << " i = " << i << std::endl;
                 currentSlice = j;
                 recallSliceSettings ( j );
             }
@@ -497,6 +496,21 @@ void NinjasUI::onDisplay()
         j++;
         glEnd();
     }
+    //TODO find nice colour
+    glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
+    std::cout << "onDisplay - onsets : ";
+    for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
+    {
+      int lcd_onset_x = ((double) *it/ (double) samplesize) * 566.f;
+      glBegin ( GL_LINES );
+        glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_top );
+        glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_bottom);
+	glEnd();
+      std::cout << ' ' << *it << "," << samplesize;
+    }
+     std::cout << '\n';
+
+
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
 
 }
@@ -513,16 +527,16 @@ void NinjasUI::calcWaveform ( String fp )
     double samplerate = getSampleRate();
 
     SndfileHandle fileHandle ( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , samplerate );
-    int size   = fileHandle.frames();
-    if ( size == 0 )
+    samplesize = fileHandle.frames();
+    if ( samplesize == 0 )
     {
         return;
     }
-    float samples_per_pixel = ( float ) size / ( float ) LCD_LENGHT;
+    float samples_per_pixel = ( float ) samplesize / ( float ) LCD_LENGHT;
     int channels   = fileHandle.channels();
     std::vector<float> tmp ;
-    tmp.resize ( size * channels );
-    fileHandle.read ( &tmp.at ( 0 ) , size * channels );
+    tmp.resize ( samplesize * channels );
+    fileHandle.read ( &tmp.at ( 0 ) , samplesize * channels );
 
 
     for ( int i = 0, j =0 ; i < LCD_LENGHT ; i++ )
@@ -540,6 +554,8 @@ void NinjasUI::calcWaveform ( String fp )
         waveform[j] = max * ( float ) LCD_HEIGHT + Art::lcd_center;
         j++;
     }
+
+    NinjasUI::getOnsets ( samplesize ,channels, tmp, onsets );
     repaint();
     return;
 
@@ -547,7 +563,7 @@ void NinjasUI::calcWaveform ( String fp )
 
 void NinjasUI::recallSliceSettings ( int slice )
 {
-    std::cout << "recallSliceSettings ( " << slice << " )" << std::endl;
+    // std::cout << "recallSliceSettings ( " << slice << " )" << std::endl;
     setParameterValue ( paramAttack, p_Attack[slice] );
     fKnobAttack->setValue ( p_Attack[slice] );
     setParameterValue ( paramDecay,  p_Decay[slice] );
@@ -566,6 +582,58 @@ void NinjasUI::recallSliceSettings ( int slice )
     fSwitchLoopRev->setDown ( p_LoopRev[slice] == 1.0f );
     repaint();
 
+}
+
+void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & sampleVector, std::vector<uint_t> & onsets )
+{
+    // temp sample vector
+    std::vector<float> tmp_sample_vector;
+    tmp_sample_vector.resize ( size );
+    onsets.resize(0); // wipe onsets
+    uint_t samplerate = getSampleRate();
+    int hop_size = 256;
+    int win_s = 512;
+    
+    fvec_t ftable;               // 1. create fvec without allocating it
+    intptr_t readptr = 0;
+    ftable.length = hop_size;    // 2. set ftable length
+    fvec_t * out = new_fvec ( 2 ); // output position
+    //double samplerate = getSampleRate();
+    if ( channels == 2 ) // create mono sample
+    {
+        for ( int i=0, j=0 ; i <= size; i++ )
+        {
+            // sum to mono
+            float sum_mono = ( sampleVector[j] + sampleVector[j+1] ) * 0.5f;
+            tmp_sample_vector[i]=sum_mono;
+            j+=2;
+        }
+    }
+    else
+    {
+        tmp_sample_vector = sampleVector;
+    }
+    
+    // create onset object/
+    aubio_onset_t  * onset = new_aubio_onset ( "complex", win_s, hop_size, samplerate );
+    while ( readptr < tmp_sample_vector.size() )
+    {
+        ftable.data = &tmp_sample_vector[readptr];
+        aubio_onset_do ( onset , &ftable, out );
+        if ( out->data[0] != 0 )
+        {
+	  //TODO cleanup 
+          uint_t tmp_onset = aubio_onset_get_last( onset );
+	  std::cout << "onset at " << tmp_onset << " | " << tmp_onset / 556 << std::endl;
+          onsets.push_back ( aubio_onset_get_last ( onset ) );
+        }
+        readptr += hop_size;
+    }
+    std::cout << std::endl;
+    del_aubio_onset ( onset );
+    // del_fvec ( &ftable );
+    // del_fvec ( out );
+    aubio_cleanup();
 }
 
 

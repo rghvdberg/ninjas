@@ -69,6 +69,7 @@ private:
         
     void calcWaveform ( String fp );
     void recallSliceSettings ( int slice );
+    void getOnsets (int64_t size, int channels, std::vector<float> & sampleVector, std::vector<uint_t> & onsets);
     std::array<int,1112> waveform;
     float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
     float p_Decay[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
@@ -81,6 +82,8 @@ private:
     float p_SliceStart[16];
     float p_SliceEnd[16];
     int currentSlice {0};
+    std::vector<uint_t>onsets;
+    uint64_t samplesize {0};
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR ( NinjasUI )
 };

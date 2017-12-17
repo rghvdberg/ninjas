@@ -655,7 +655,7 @@ void NinjasPlugin::getOnsets (int64_t size, int channels, std::vector<float> & s
           aubio_onset_do ( onset , &ftable, out );
         if ( out->data[0] != 0 )
         {
-            std::cout << "onset at " << aubio_onset_get_last ( onset ) << std::endl;
+            // std::cout << "onset at " << aubio_onset_get_last ( onset ) << std::endl;
             onsets.push_back ( aubio_onset_get_last ( onset ) );
         }
           readptr += hop_size;
