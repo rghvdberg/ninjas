@@ -497,11 +497,22 @@ void NinjasUI::onDisplay()
         glEnd();
     }
     //TODO find nice colour
-    glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
+    r =0x17/255.f;
+    g = 0x38/255.f;
+    b = 0x0b/255.f;
+        glColor4f ( r, g, b, 1.0f );
+    
     std::cout << "onDisplay - onsets : ";
     for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
     {
       int lcd_onset_x = ((double) *it/ (double) samplesize) * 566.f;
+    
+      //glLineWidth ( 1 );
+      glLineStipple(1,0xAAAA);
+      glEnable(GL_LINE_STIPPLE);
+     
+      
+      
       glBegin ( GL_LINES );
         glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_top );
         glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_bottom);
