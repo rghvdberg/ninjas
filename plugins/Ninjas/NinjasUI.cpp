@@ -474,10 +474,10 @@ void NinjasUI::onDisplay()
     fImgBackground.draw();
 
     glEnable ( GL_BLEND );
-    glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glEnable ( GL_LINE_SMOOTH );
+    glDisable (GL_LINE_STIPPLE);
+    glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
-
     glLineWidth ( 2 );
     float r, g, b;
     r = 0x1b/255.f;
@@ -487,6 +487,7 @@ void NinjasUI::onDisplay()
 
     for ( int i =0,j=0 ; i < 556 ; i++ )
     {
+        
         glBegin ( GL_LINES );
         glVertex2i ( i+Art::lcd_left,Art::lcd_center );
         glVertex2i ( i+Art::lcd_left,waveform[j] );
@@ -497,22 +498,19 @@ void NinjasUI::onDisplay()
         glEnd();
     }
     //TODO find nice colour
-    r =0x17/255.f;
-    g = 0x38/255.f;
-    b = 0x0b/255.f;
+    r = 0x8e/255.f;
+    g = 0xe3/255.f;
+    b = 0x71/255.f;
         glColor4f ( r, g, b, 1.0f );
     
     std::cout << "onDisplay - onsets : ";
     for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
     {
-      int lcd_onset_x = ((double) *it/ (double) samplesize) * 566.f;
+      int lcd_onset_x = ((double) *it / (double) samplesize) * 566.f;
     
       //glLineWidth ( 1 );
       glLineStipple(1,0xAAAA);
       glEnable(GL_LINE_STIPPLE);
-     
-      
-      
       glBegin ( GL_LINES );
         glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_top );
         glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_bottom);
@@ -539,13 +537,13 @@ void NinjasUI::calcWaveform ( String fp )
 
     SndfileHandle fileHandle ( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , samplerate );
     samplesize = fileHandle.frames();
-    int samplechannels = fileHandle.channels();
-    if ( samplesize == 0 )
+    int channels   = fileHandle.channels();
+     if ( samplesize == 0 )
     {
         return;
     }
-    float samples_per_pixel = ( float ) (samplesize * samplechannels) / ( float ) LCD_LENGHT;
-    int channels   = fileHandle.channels();
+    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) LCD_LENGHT;
+    
     std::vector<float> tmp ;
     tmp.resize ( samplesize * channels );
     fileHandle.read ( &tmp.at ( 0 ) , samplesize * channels );
@@ -572,6 +570,29 @@ void NinjasUI::calcWaveform ( String fp )
     return;
 
 }
+
+/*
+int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample_out, double host_samplerate )
+{
+    // copy samplevector in data_in
+    // data_out points to samplevector
+
+    SRC_DATA src_data;
+    src_data.data_in = & sample_in.at ( 0 );
+    src_data.src_ratio = host_samplerate / samplerate;
+    src_data.output_frames = size * src_data.src_ratio;
+
+    sample_out->resize ( src_data.output_frames * channels );
+
+    src_data.data_out = & sample_out->at ( 0 );
+    src_data.input_frames = size;
+
+    int err = src_simple ( & src_data, SRC_SINC_BEST_QUALITY,channels );
+    size = src_data.output_frames_gen;
+    std::cout <<  size << std::endl;
+    return err;
+}
+*/
 
 void NinjasUI::recallSliceSettings ( int slice )
 {
@@ -600,7 +621,6 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
 {
     // temp sample vector
     std::vector<float> tmp_sample_vector;
-    tmp_sample_vector.resize ( size );
     onsets.resize(0); // wipe onsets
     uint_t samplerate = getSampleRate();
     int hop_size = 256;
@@ -611,23 +631,24 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
     ftable.length = hop_size;    // 2. set ftable length
     fvec_t * out = new_fvec ( 2 ); // output position
     //double samplerate = getSampleRate();
+    
     if ( channels == 2 ) // create mono sample
     {
         for ( int i=0, j=0 ; i <= size; i++ )
         {
             // sum to mono
             float sum_mono = ( sampleVector[j] + sampleVector[j+1] ) * 0.5f;
-            tmp_sample_vector[i]=sum_mono;
+            tmp_sample_vector.push_back(sum_mono);
             j+=2;
         }
     }
     else
     {
-        tmp_sample_vector = sampleVector;
+         tmp_sample_vector = sampleVector;
     }
     
     // create onset object/
-    aubio_onset_t  * onset = new_aubio_onset ( "complex", win_s, hop_size, samplerate );
+     aubio_onset_t  * onset = new_aubio_onset ( "complex", win_s, hop_size, samplerate );
     while ( readptr < tmp_sample_vector.size() )
     {
         ftable.data = &tmp_sample_vector[readptr];
@@ -636,7 +657,7 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
         {
 	  //TODO cleanup 
           uint_t tmp_onset = aubio_onset_get_last( onset );
-	  std::cout << "onset at " << tmp_onset << " | " << tmp_onset / 556 << std::endl;
+	  std::cout << "onset at " << tmp_onset << std::endl;
           onsets.push_back ( aubio_onset_get_last ( onset ) );
         }
         readptr += hop_size;

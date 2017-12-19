@@ -42,8 +42,7 @@ int Sample::loadSample ( std::string fp, std::vector <float> & samplevector, dou
     // load sample memory in samplevector
     fileHandle.read ( &samplevector.at ( 0 ) , size * channels );
 
-    std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " <<
-              samplerate << " with " << size << " samples, so its duration is " <<
+    std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " << samplerate << " with " << size << " samples, so its duration is " <<
               size / samplerate << " seconds long." << std::endl;
     // check if samplerate != host_samplerate
     std::cout << samplerate << " , " << host_samplerate << " , " << ( samplerate != host_samplerate ) << std::endl;

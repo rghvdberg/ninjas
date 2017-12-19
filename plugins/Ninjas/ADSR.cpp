@@ -45,13 +45,14 @@ ADSR::~ADSR() {
 
 void ADSR::calcADRGain()
 {
-  std::cout << "ADSR(double sr) adsr_samplerate = " << adsr_samplerate << std::endl ; 
+    //std::cout << "ADSR(double sr) adsr_samplerate = " << adsr_samplerate << std::endl ; 
     attack_gain = (1.0 / attack) /(float) adsr_samplerate;
     decay_gain = -(1.0 / decay) / (float) adsr_samplerate;
     release_gain = -(1.0 / release) / (float) adsr_samplerate;
-    std::cout << "ADSR(double sr) attack_gain = " << attack_gain << std::endl ; 
-    std::cout << "ADSR(double sr) decay_gain = " << decay_gain << std::endl ; 
-    std::cout << "ADSR(double sr) release_gain = " << release_gain << std::endl ; 
+    
+    //std::cout << "ADSR(double sr) attack_gain = " << attack_gain << std::endl ; 
+    //std::cout << "ADSR(double sr) decay_gain = " << decay_gain << std::endl ; 
+    //std::cout << "ADSR(double sr) release_gain = " << release_gain << std::endl ; 
     
   
 }
