@@ -45,7 +45,7 @@ int Sample::loadSample ( std::string fp, std::vector <float> & samplevector, dou
     std::cout << "Loaded a file with " << channels << " channels, and a samplerate of " << samplerate << " with " << size << " samples, so its duration is " <<
               size / samplerate << " seconds long." << std::endl;
     // check if samplerate != host_samplerate
-    std::cout << samplerate << " , " << host_samplerate << " , " << ( samplerate != host_samplerate ) << std::endl;
+    //std::cout << samplerate << " , " << host_samplerate << " , " << ( samplerate != host_samplerate ) << std::endl;
     if ( samplerate != host_samplerate )
     {
         int err = resample ( samplevector, & samplevector, host_samplerate );
@@ -73,7 +73,7 @@ int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample
 
     int err = src_simple ( & src_data, SRC_SINC_BEST_QUALITY,channels );
     size = src_data.output_frames_gen;
-    std::cout <<  size << std::endl;
+   // std::cout <<  size << std::endl;
     return err;
 }
 

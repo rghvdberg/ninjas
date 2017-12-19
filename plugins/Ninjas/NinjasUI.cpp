@@ -406,7 +406,7 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
             fGrid[j]->setDown ( i == buttonId );
             if ( i == buttonId )
             {
-                // std::cout << "buttonId = "<< buttonId << " i = " << i << std::endl;
+                std::cout << "buttonId = "<< buttonId << " i = " << i << std::endl;
                 currentSlice = j;
                 recallSliceSettings ( j );
             }
@@ -454,17 +454,17 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 
 void  NinjasUI::imageSliderDragStarted ( ImageSlider* slider )
 {
-    std::cout << "imageSliderDragStarted" << slider->getId() << std::endl;
+   // std::cout << "imageSliderDragStarted" << slider->getId() << std::endl;
     editParameter ( slider->getId(), true );
 }
 void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
 {
-    std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
+  //  std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
     editParameter ( slider->getId(), false );
 }
 void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 {
-    std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
+   // std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
     setParameterValue ( slider->getId(), value );
 }
 
@@ -503,7 +503,7 @@ void NinjasUI::onDisplay()
     b = 0x71/255.f;
         glColor4f ( r, g, b, 1.0f );
     
-    std::cout << "onDisplay - onsets : ";
+   // std::cout << "onDisplay - onsets : ";
     for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
     {
       int lcd_onset_x = ((double) *it / (double) samplesize) * (float) Art::lcd_length;
@@ -515,9 +515,9 @@ void NinjasUI::onDisplay()
         glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_top );
         glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_bottom);
 	glEnd();
-      std::cout << ' ' << *it << "," << samplesize;
+    //  std::cout << ' ' << *it << "," << samplesize;
     }
-     std::cout << '\n';
+  //   std::cout << '\n';
 
 
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -553,7 +553,7 @@ void NinjasUI::calcWaveform ( String fp )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
-	std::cout << i << " , " << iIndex << " | ";
+	//std::cout << i << " , " << iIndex << " | ";
         auto minmax = std::minmax_element ( tmp.begin() +iIndex,tmp.begin() +iIndex+samples_per_pixel );
         float min = *minmax.first;
         //std::cout << " value = " << *minmax.first << std::endl;
@@ -565,7 +565,7 @@ void NinjasUI::calcWaveform ( String fp )
         waveform[j] = max * ( float ) Art::lcd_height + Art::lcd_center;
         j++;
     }
-std::cout << std::endl;
+//std::cout << std::endl;
     NinjasUI::getOnsets ( samplesize ,channels, tmp, onsets );
     repaint();
     return;
@@ -658,12 +658,12 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
         {
 	  //TODO cleanup 
           uint_t tmp_onset = aubio_onset_get_last( onset );
-	  std::cout << "onset at " << tmp_onset << std::endl;
+//	  std::cout << "onset at " << tmp_onset << std::endl;
           onsets.push_back ( aubio_onset_get_last ( onset ) );
         }
         readptr += hop_size;
     }
-    std::cout << std::endl;
+//    std::cout << std::endl;
     del_aubio_onset ( onset );
     // del_fvec ( &ftable );
     // del_fvec ( out );
