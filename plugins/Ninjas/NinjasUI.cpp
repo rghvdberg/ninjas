@@ -506,9 +506,9 @@ void NinjasUI::onDisplay()
     std::cout << "onDisplay - onsets : ";
     for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
     {
-      int lcd_onset_x = ((double) *it / (double) samplesize) * 566.f;
+      int lcd_onset_x = ((double) *it / (double) samplesize) * (float) Art::lcd_length;
     
-      //glLineWidth ( 1 );
+      glLineWidth ( 0.5f );
       glLineStipple(1,0xAAAA);
       glEnable(GL_LINE_STIPPLE);
       glBegin ( GL_LINES );
@@ -526,8 +526,8 @@ void NinjasUI::onDisplay()
 
 void NinjasUI::calcWaveform ( String fp )
 {
-    const int LCD_HEIGHT = 107 / 2;
-    const int LCD_LENGHT = 556;
+    //const int LCD_HEIGHT = 107 / 2;
+    //const int LCD_LENGHT = 566;
     //float sum {0};
     //float average {0.5};
     int  iIndex {0};
@@ -542,29 +542,30 @@ void NinjasUI::calcWaveform ( String fp )
     {
         return;
     }
-    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) LCD_LENGHT;
+    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) Art::lcd_length;
     
     std::vector<float> tmp ;
     tmp.resize ( samplesize * channels );
     fileHandle.read ( &tmp.at ( 0 ) , samplesize * channels );
 
 
-    for ( int i = 0, j =0 ; i < LCD_LENGHT ; i++ )
+    for ( int i = 0, j =0 ; i < Art::lcd_length ; i++ )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
+	std::cout << i << " , " << iIndex << " | ";
         auto minmax = std::minmax_element ( tmp.begin() +iIndex,tmp.begin() +iIndex+samples_per_pixel );
         float min = *minmax.first;
         //std::cout << " value = " << *minmax.first << std::endl;
         float max = *minmax.second;
         //std::cout << " value = " << *minmax.second << std::endl;
         // convert 0.0 - 1.0 to 0 - 107
-        waveform[j] = min * ( float ) LCD_HEIGHT + Art::lcd_center;
+        waveform[j] = min * ( float ) Art::lcd_height  + Art::lcd_center;
         j++;
-        waveform[j] = max * ( float ) LCD_HEIGHT + Art::lcd_center;
+        waveform[j] = max * ( float ) Art::lcd_height + Art::lcd_center;
         j++;
     }
-
+std::cout << std::endl;
     NinjasUI::getOnsets ( samplesize ,channels, tmp, onsets );
     repaint();
     return;
