@@ -438,7 +438,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     // if LOOP_REV or ONE_SHOT_REV set playback indici to end of slice
                     if ( a_slices[index].getSlicePlayMode() == Slice::LOOP_REV || a_slices[index].getSlicePlayMode() == Slice::ONE_SHOT_REV )
                     {
-                        voices[index].playbackIndex = a_slices[index].getSliceEnd();
+                        voices[index].playbackIndex = a_slices[index].getSliceEnd()- a_slices[index].getSliceStart();
                         voices[index].multiplierIndex = ( a_slices[index].getSliceEnd() - a_slices[index].getSliceStart() ) /SampleObject.getSampleChannels();
                     }
                     else     // playmode is forward .. playback indici to start
@@ -486,8 +486,8 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     int sliceEnd = a_slices[i].getSliceEnd();
                     int pos = voices[i].playbackIndex;
                     int channels = SampleObject.getSampleChannels();
-		    std::cout << "sliceStart" << sliceStart << "+ pos " << pos << " = " << sliceStart+pos <<std::endl;
-		    std::cout << "sliceEnd" << sliceEnd << std::endl;
+		  //  std::cout << "sliceStart" << sliceStart << "+ pos " << pos << " = " << sliceStart+pos <<std::endl;
+		  //  std::cout << "sliceEnd" << sliceEnd << std::endl;
                     float* sample = &sampleVector.at ( sliceStart+pos );
                     float sampleL { *sample };
                     float sampleR { * ( sample + ( channels -1 ) ) };
@@ -544,7 +544,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                     {
                         if ( sliceStart + tmp <= sliceStart )
                         {
-                            voices[i].playbackIndex = sliceEnd ;
+                            voices[i].playbackIndex = sliceEnd - sliceStart;
                             voices[i].multiplierIndex = ( sliceEnd -sliceStart ) /channels;
                         }
                         else
