@@ -539,11 +539,12 @@ void NinjasUI::calcWaveform ( String fp )
 
     SndfileHandle fileHandle ( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , samplerate );
     samplesize = fileHandle.frames();
+    int samplechannels = fileHandle.channels();
     if ( samplesize == 0 )
     {
         return;
     }
-    float samples_per_pixel = ( float ) samplesize / ( float ) LCD_LENGHT;
+    float samples_per_pixel = ( float ) (samplesize * samplechannels) / ( float ) LCD_LENGHT;
     int channels   = fileHandle.channels();
     std::vector<float> tmp ;
     tmp.resize ( samplesize * channels );
