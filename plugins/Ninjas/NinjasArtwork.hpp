@@ -20,6 +20,11 @@ namespace NinjasArtwork
     const unsigned int floppy_onWidth    = 274;
     const unsigned int floppy_onHeight   = 96;
 
+    extern const char* frameData;
+    const unsigned int frameDataSize = 287500;
+    const unsigned int frameWidth    = 575;
+    const unsigned int frameHeight   = 125;
+
     extern const char* rotary_adsrData;
     const unsigned int rotary_adsrDataSize = 7744;
     const unsigned int rotary_adsrWidth    = 44;
@@ -45,9 +50,9 @@ namespace NinjasArtwork
     const unsigned int switch_onWidth    = 30;
     const unsigned int switch_onHeight   = 29;
     
-    const unsigned int lcd_left = 366;
-    const unsigned int lcd_right = 923;
-    const unsigned int lcd_top = 56;
+    const unsigned int lcd_left = 363;
+    const unsigned int lcd_right = 922;
+    const unsigned int lcd_top = 54;
     const unsigned int lcd_bottom = 163;
     const unsigned int lcd_center = lcd_bottom - lcd_top;
     const unsigned int lcd_length = lcd_right - lcd_left;

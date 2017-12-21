@@ -60,7 +60,7 @@ protected:
     void onDisplay() override;
 
 private:
-    Image fImgBackground;
+    Image fImgBackground, fImgFrame;
     ScopedPointer<ImageSwitch> fSwitchFwd, fSwitchFloppy, fSwitchRev, fSwitchLoopFwd, fSwitchLoopRev;
     ScopedPointer<ImageSwitch> fGrid[16];
     ScopedPointer<ImageKnob> fKnobSlices, fKnobAttack, fKnobDecay, fKnobSustain, fKnobRelease;

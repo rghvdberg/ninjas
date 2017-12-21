@@ -30,7 +30,8 @@ namespace Art = NinjasArtwork;
 // -----------------------------------------------------------------------------------------------------------
 NinjasUI::NinjasUI()
     : UI ( Art::backgroundWidth, Art::backgroundHeight ),
-      fImgBackground ( Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR )
+      fImgBackground ( Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR ),
+      fImgFrame( Art::frameData, Art::frameWidth, Art::frameHeight, GL_BGRA )
 {
     // init lcd
     waveform.fill ( NinjasArtwork::lcd_center );
@@ -171,6 +172,8 @@ NinjasUI::NinjasUI()
             fGrid[index]->setAbsolutePos ( 981+x*41,89+y*46 );
         } // for x
     } // for y
+    
+    
 }
 
 /**
@@ -485,7 +488,7 @@ void NinjasUI::onDisplay()
     b = 0x0d/255.f;
     glColor4f ( r, g, b, 1.0f );
 
-    for ( int i =0,j=0 ; i < 556 ; i++ )
+    for ( int i =0,j=0 ; i < Art::lcd_length ; i++ )
     {
         
         glBegin ( GL_LINES );
@@ -521,6 +524,7 @@ void NinjasUI::onDisplay()
 
 
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
+    fImgFrame.drawAt(355,45);
 
 }
 
