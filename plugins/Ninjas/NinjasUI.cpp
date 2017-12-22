@@ -32,7 +32,7 @@ namespace Art = NinjasArtwork;
 NinjasUI::NinjasUI()
     : UI ( Art::backgroundWidth, Art::backgroundHeight ),
       fImgBackground ( Art::backgroundData, Art::backgroundWidth, Art::backgroundHeight, GL_BGR ),
-      fImgFrame( Art::frameData, Art::frameWidth, Art::frameHeight, GL_BGRA )
+      fImgFrame ( Art::frameData, Art::frameWidth, Art::frameHeight, GL_BGRA )
 {
     // init lcd
     waveform.fill ( lcd_center );
@@ -192,9 +192,9 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
     case paramNumberOfSlices:
         fKnobSlices->setValue ( value );
         slices = value ;
-        createSlicesRaw(a_slices,slices,samplesize,channels);
+        createSlicesRaw ( a_slices,slices,samplesize,channels );
         break;
-    // Play Modes
+        // Play Modes
     case paramOneShotFwd:
         fSwitchFwd->setDown ( value > 0.5f );
         p_OneShotFwd[currentSlice] = value > 0.5f;
@@ -211,7 +211,7 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
         fSwitchLoopRev->setDown ( value > 0.5f );
         p_LoopRev[currentSlice] = value > 0.5f;
         break;
-    // ADSR
+        // ADSR
     case paramAttack:
         fKnobAttack->setValue ( value );
         p_Attack[currentSlice] = value;
@@ -229,7 +229,7 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
         p_Release[currentSlice] = value;
         break;
 
-    // floppy
+        // floppy
     case paramFloppy:
         fSwitchFloppy->setDown ( value > 0.5f );
         break;
@@ -267,7 +267,7 @@ void NinjasUI::uiFileBrowserSelected ( const char* filename )
     if ( filename != nullptr )
     {
         setState ( "filepath", filename );
-        calcWaveform ( String ( filename ) , sampleVector);
+        calcWaveform ( String ( filename ) , sampleVector );
     }
 }
 /* ----------------------------------------------------------------------------------------------------------
@@ -442,10 +442,10 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
     std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
     int KnobID = knob->getId();
     setParameterValue ( KnobID,value );
-    if (KnobID == paramNumberOfSlices)
+    if ( KnobID == paramNumberOfSlices )
     {
         slices = value;
-        createSlicesRaw(a_slices, slices, samplesize, channels);
+        createSlicesRaw ( a_slices, slices, samplesize, channels );
     }
 
     switch ( KnobID )
@@ -487,20 +487,41 @@ void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 void NinjasUI::onDisplay()
 {
     fImgBackground.draw();
+    glEnable ( GL_BLEND );
+    glEnable ( GL_LINE_SMOOTH );
+    glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
+    glLineWidth ( 2 );
     // draw slices
-    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) lcd_length;
-    for ( int i = 0 ; i < slices ; i ++)
+
+    float r, g, b;
+    bool colorflip {true};
+    float samples_per_pixel = ( float ) ( samplesize * channels ) / ( float ) lcd_length;
+    for ( int i = 0 ; i < slices ; i ++ )
     {
         int start = a_slices[i].getSliceStart() / samples_per_pixel;
         int end = a_slices[i].getSliceEnd() / samples_per_pixel;
         // std::cout << " Slice " << i << " : " << start  << " - " << end << std::endl;
-        boxes[i].setPos(start + lcd_left,lcd_top);
-        boxes[i].setSize(end - start, lcd_center);
-        // toggle color
-        Color black;
+        if ( colorflip )
+        {
+            r = 0x3c/255.f;
+            g = 0x94/255.f;
+            b = 0x1e/255.f;
 
+            glColor4f ( r, g, b, 1.0f );
+        }
+        else
+        {
+            r = 0x4f/255.f;
+            g = 0xc2/255.f;
+            b = 0x27/255.f;
+            glColor4f ( r, g, b, 1.0f );
+        }
+
+        boxes[i].setPos ( start + lcd_left,lcd_top );
+        boxes[i].setSize ( end - start, lcd_center );
         boxes[i].draw();
-
+        colorflip = !colorflip;
 //
 //         glBegin ( GL_LINES );
 //         glVertex2i ( start+lcd_left,lcd_top );
@@ -516,7 +537,7 @@ void NinjasUI::onDisplay()
     glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glHint ( GL_LINE_SMOOTH_HINT, GL_NICEST );
     glLineWidth ( 2 );
-    float r, g, b;
+
     r = 0x1b/255.f;
     g = 0x43/255.f;
     b = 0x0d/255.f;
@@ -533,8 +554,9 @@ void NinjasUI::onDisplay()
         glVertex2i ( i+lcd_left,waveform[j] );
         j++;
         glEnd();
+
     }
-     
+
     //TODO find nice colour
     r = 0x8e/255.f;
     g = 0xe3/255.f;
@@ -542,20 +564,20 @@ void NinjasUI::onDisplay()
     glColor4f ( r, g, b, 1.0f );
     for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
     {
-        int lcd_onset_x = ((double) *it / (double) samplesize) * (float) lcd_length;
+        int lcd_onset_x = ( ( double ) *it / ( double ) samplesize ) * ( float ) lcd_length;
 
         glLineWidth ( 0.5f );
-        glLineStipple(1,0xAAAA);
-        glEnable(GL_LINE_STIPPLE);
+        glLineStipple ( 1,0xAAAA );
+        glEnable ( GL_LINE_STIPPLE );
         glBegin ( GL_LINES );
         glVertex2i ( lcd_onset_x+lcd_left,lcd_top );
-        glVertex2i ( lcd_onset_x+lcd_left,lcd_bottom);
+        glVertex2i ( lcd_onset_x+lcd_left,lcd_bottom );
         glEnd();
     }
 
     glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
-    glDisable (GL_LINE_STIPPLE);
-    fImgFrame.drawAt(355,45);
+    glDisable ( GL_LINE_STIPPLE );
+    fImgFrame.drawAt ( 355,45 );
 
 }
 
@@ -577,7 +599,7 @@ void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
     {
         return;
     }
-    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) lcd_length;
+    float samples_per_pixel = ( float ) ( samplesize * channels ) / ( float ) lcd_length;
 
     sampleVector.resize ( samplesize * channels );
     fileHandle.read ( &sampleVector.at ( 0 ) , samplesize * channels );
@@ -658,7 +680,7 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
 {
     // temp sample vector
     std::vector<float> tmp_sample_vector;
-    onsets.resize(0); // wipe onsets
+    onsets.resize ( 0 ); // wipe onsets
     uint_t samplerate = getSampleRate();
     int hop_size = 256;
     int win_s = 512;
@@ -675,7 +697,7 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
         {
             // sum to mono
             float sum_mono = ( sampleVector[j] + sampleVector[j+1] ) * 0.5f;
-            tmp_sample_vector.push_back(sum_mono);
+            tmp_sample_vector.push_back ( sum_mono );
             j+=2;
         }
     }
@@ -693,7 +715,7 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
         if ( out->data[0] != 0 )
         {
             //TODO cleanup
-            uint_t tmp_onset = aubio_onset_get_last( onset );
+            uint_t tmp_onset = aubio_onset_get_last ( onset );
 //	  std::cout << "onset at " << tmp_onset << std::endl;
             onsets.push_back ( aubio_onset_get_last ( onset ) );
         }

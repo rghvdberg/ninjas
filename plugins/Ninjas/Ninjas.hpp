@@ -139,7 +139,7 @@ private:
     int voice_index { 0 };
     Slice a_slices[16];
     int slices {1};
-    int sliceSize;
+    // int sliceSize;
     int currentSlice {0};
     std::string filepath = "";
     bool bypass {true};
