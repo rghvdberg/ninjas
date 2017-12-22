@@ -49,14 +49,6 @@ namespace NinjasArtwork
     const unsigned int switch_onDataSize = 2610;
     const unsigned int switch_onWidth    = 30;
     const unsigned int switch_onHeight   = 29;
-    
-    const unsigned int lcd_left = 363;
-    const unsigned int lcd_right = 922;
-    const unsigned int lcd_top = 54;
-    const unsigned int lcd_bottom = 163;
-    const unsigned int lcd_center = lcd_bottom - lcd_top;
-    const unsigned int lcd_length = lcd_right - lcd_left;
-    const unsigned int lcd_height = (lcd_bottom - lcd_top)/2; 
 }
 
 #endif // BINARY_NINJASARTWORK_HPP

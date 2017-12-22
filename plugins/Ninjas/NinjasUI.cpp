@@ -34,7 +34,7 @@ NinjasUI::NinjasUI()
       fImgFrame( Art::frameData, Art::frameWidth, Art::frameHeight, GL_BGRA )
 {
     // init lcd
-    waveform.fill ( NinjasArtwork::lcd_center );
+    waveform.fill ( lcd_center );
     // knobs
 
     fKnobSlices = new ImageKnob ( this,
@@ -187,7 +187,8 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
     {
     case paramNumberOfSlices:
         fKnobSlices->setValue ( value );
-        break;
+	slices = value ;
+	break;
         // Play Modes
     case paramOneShotFwd:
         fSwitchFwd->setDown ( value > 0.5f );
@@ -467,8 +468,9 @@ void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
 }
 void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 {
-   // std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
+    std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
     setParameterValue ( slider->getId(), value );
+    
 }
 
 
@@ -488,18 +490,19 @@ void NinjasUI::onDisplay()
     b = 0x0d/255.f;
     glColor4f ( r, g, b, 1.0f );
 
-    for ( int i =0,j=0 ; i < Art::lcd_length ; i++ )
+    for ( int i =0,j=0 ; i < lcd_length ; i++ )
     {
         
         glBegin ( GL_LINES );
-        glVertex2i ( i+Art::lcd_left,Art::lcd_center );
-        glVertex2i ( i+Art::lcd_left,waveform[j] );
+        glVertex2i ( i+lcd_left,lcd_center );
+        glVertex2i ( i+lcd_left,waveform[j] );
         j++;
-        glVertex2i ( i+Art::lcd_left,Art::lcd_center );
-        glVertex2i ( i+Art::lcd_left,waveform[j] );
+        glVertex2i ( i+lcd_left,lcd_center );
+        glVertex2i ( i+lcd_left,waveform[j] );
         j++;
         glEnd();
     }
+   
     //TODO find nice colour
     r = 0x8e/255.f;
     g = 0xe3/255.f;
@@ -509,14 +512,14 @@ void NinjasUI::onDisplay()
    // std::cout << "onDisplay - onsets : ";
     for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
     {
-      int lcd_onset_x = ((double) *it / (double) samplesize) * (float) Art::lcd_length;
+      int lcd_onset_x = ((double) *it / (double) samplesize) * (float) lcd_length;
     
       glLineWidth ( 0.5f );
       glLineStipple(1,0xAAAA);
       glEnable(GL_LINE_STIPPLE);
       glBegin ( GL_LINES );
-        glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_top );
-        glVertex2i ( lcd_onset_x+Art::lcd_left,Art::lcd_bottom);
+        glVertex2i ( lcd_onset_x+lcd_left,lcd_top );
+        glVertex2i ( lcd_onset_x+lcd_left,lcd_bottom);
 	glEnd();
     //  std::cout << ' ' << *it << "," << samplesize;
     }
@@ -546,14 +549,14 @@ void NinjasUI::calcWaveform ( String fp )
     {
         return;
     }
-    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) Art::lcd_length;
+    float samples_per_pixel = ( float ) (samplesize * channels) / ( float ) lcd_length;
     
     std::vector<float> tmp ;
     tmp.resize ( samplesize * channels );
     fileHandle.read ( &tmp.at ( 0 ) , samplesize * channels );
 
 
-    for ( int i = 0, j =0 ; i < Art::lcd_length ; i++ )
+    for ( int i = 0, j =0 ; i < lcd_length ; i++ )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
@@ -564,9 +567,9 @@ void NinjasUI::calcWaveform ( String fp )
         float max = *minmax.second;
         //std::cout << " value = " << *minmax.second << std::endl;
         // convert 0.0 - 1.0 to 0 - 107
-        waveform[j] = min * ( float ) Art::lcd_height  + Art::lcd_center;
+        waveform[j] = min * ( float ) lcd_height  + lcd_center;
         j++;
-        waveform[j] = max * ( float ) Art::lcd_height + Art::lcd_center;
+        waveform[j] = max * ( float ) lcd_height + lcd_center;
         j++;
     }
 //std::cout << std::endl;
@@ -598,6 +601,8 @@ int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample
     return err;
 }
 */
+
+
 
 void NinjasUI::recallSliceSettings ( int slice )
 {
@@ -674,6 +679,27 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
     aubio_cleanup();
 }
 
+void NinjasUI::createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels )
+{
+    long double sliceSize = ( long double ) ( size*channels ) / ( long double ) n_slices;
+
+ /*   std::cout << "sliceSize :" << sliceSize
+              << " x " << n_slices << " n_slices = "
+              << n_slices * sliceSize << std::endl;
+	      */
+
+
+    for ( int i = 0 ; i < n_slices; i++ )
+    {
+        slices[i].setSliceStart ( ( int ) i * sliceSize );
+        slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
+
+    /*    std::cout << "Slice :" << i << " : "
+                  << slices[i].getSliceStart() << "->"
+                  << slices[i].getSliceEnd() << std::endl;
+		  */
+    }
+}
 
 /* ------------------------------------------------------------------------------------------------------------
  * UI entry point, called by DPF to create a new UI instance. */

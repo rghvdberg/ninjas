@@ -26,6 +26,7 @@
 #include "algorithm"
 #include "array"
 #include "aubio/aubio.h"
+#include "Slice.h"
 
 START_NAMESPACE_DISTRHO
 
@@ -70,6 +71,7 @@ private:
     void calcWaveform ( String fp );
     void recallSliceSettings ( int slice );
     void getOnsets (int64_t size, int channels, std::vector<float> & sampleVector, std::vector<uint_t> & onsets);
+    void createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels );
     std::array<int,1112> waveform;
     float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
     float p_Decay[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
@@ -79,11 +81,22 @@ private:
     float p_OneShotRev[16];
     float p_LoopFwd[16];
     float p_LoopRev[16];
-    float p_SliceStart[16];
-    float p_SliceEnd[16];
+    //float p_SliceStart[16];
+   // float p_SliceEnd[16];
     int currentSlice {0};
+    int slices {1};
+    Slice a_slices[16];
     std::vector<uint_t>onsets;
+    
     uint64_t samplesize {0};
+    const unsigned int lcd_left = 363;
+    const unsigned int lcd_right = 922;
+    const unsigned int lcd_top = 54;
+    const unsigned int lcd_bottom = 163;
+    const unsigned int lcd_center = lcd_bottom - lcd_top;
+    const unsigned int lcd_length = lcd_right - lcd_left;
+    const unsigned int lcd_height = (lcd_bottom - lcd_top)/2; 
+    
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR ( NinjasUI )
 };
