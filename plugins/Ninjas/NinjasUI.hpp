@@ -68,7 +68,7 @@ private:
     ScopedPointer<ImageSlider> fSliceModeSlider;
     
         
-    void calcWaveform ( String fp );
+    void calcWaveform ( String fp, std::vector<float> & sampleVector  );
     void recallSliceSettings ( int slice );
     void getOnsets (int64_t size, int channels, std::vector<float> & sampleVector, std::vector<uint_t> & onsets);
     void createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels );
@@ -89,13 +89,19 @@ private:
     std::vector<uint_t>onsets;
     
     uint64_t samplesize {0};
+    int channels {1};
+    std::vector<float>sampleVector;
+    
+    Rectangle<int> boxes[16];
+    
     const unsigned int lcd_left = 363;
     const unsigned int lcd_right = 922;
     const unsigned int lcd_top = 54;
     const unsigned int lcd_bottom = 163;
     const unsigned int lcd_center = lcd_bottom - lcd_top;
     const unsigned int lcd_length = lcd_right - lcd_left;
-    const unsigned int lcd_height = (lcd_bottom - lcd_top)/2; 
+    const unsigned int lcd_height = (lcd_bottom - lcd_top)/2;
+    
     
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR ( NinjasUI )
