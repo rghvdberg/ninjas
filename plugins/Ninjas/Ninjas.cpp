@@ -688,15 +688,15 @@ void NinjasPlugin::createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* sli
       int64_t onset_start = find_nearest ( onsets,start );
       int64_t onset_end = find_nearest ( onsets,end )-1;
 
-      std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
+//       std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
 
-      std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
+//       std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
       slices[i].setSliceStart ( onset_start * channels );
       slices[i].setSliceEnd ( onset_end * channels );
       if ( i == n_slices -1 )
         {
           slices[i].setSliceEnd ( end * channels );
-          std::cout << "last slice end = " << slices[i].getSliceEnd() << std::endl;
+//           std::cout << "last slice end = " << slices[i].getSliceEnd() << std::endl;
         }
 
     }

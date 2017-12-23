@@ -410,7 +410,6 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
           fGrid[j]->setDown ( i == buttonId );
           if ( i == buttonId )
             {
-              std::cout << "buttonId = "<< buttonId << " i = " << i << std::endl;
               currentSlice = j;
               recallSliceSettings ( j );
             }
@@ -434,7 +433,6 @@ void NinjasUI::imageKnobDragFinished ( ImageKnob* knob )
 
 void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 {
-  std::cout << "knobID = " << knob->getId() << " set to " << value << std::endl;
   int KnobID = knob->getId();
   setParameterValue ( KnobID,value );
   if ( KnobID == paramNumberOfSlices )
@@ -483,7 +481,7 @@ void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
 }
 void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 {
-  std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
+//   std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
   setParameterValue ( slider->getId(), value );
   slicemethod = value;
   if (!slicemethod)
@@ -559,12 +557,12 @@ void NinjasUI::onDisplay()
 
   for ( int i =0,j=0 ; i < lcd_length ; i++ )
     {
-      std::cout << waveform[j] << " ," ;
+//       std::cout << waveform[j] << " ," ;
       glBegin ( GL_LINES );
       glVertex2i ( i+lcd_left,lcd_center );
       glVertex2i ( i+lcd_left,waveform[j] );
       j++;
-      std::cout << waveform[j] << " ," ;
+//       std::cout << waveform[j] << " ," ;
       
       glVertex2i ( i+lcd_left,lcd_center );
       glVertex2i ( i+lcd_left,waveform[j] );
@@ -572,7 +570,7 @@ void NinjasUI::onDisplay()
       glEnd();
 
     }
-    std::cout << std::endl;
+//     std::cout << std::endl;
   r = 0x8e/255.f;
   g = 0xe3/255.f;
   b = 0x71/255.f;
@@ -663,15 +661,15 @@ void NinjasUI::createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* slices,
       int64_t onset_start = find_nearest ( onsets,start );
       int64_t onset_end = find_nearest ( onsets,end )-1;
 
-      std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
+//       std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
 
-      std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
+//       std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
       slices[i].setSliceStart ( onset_start * channels );
       slices[i].setSliceEnd ( onset_end * channels );
       if ( i == n_slices -1 )
         {
           slices[i].setSliceEnd ( end * channels );
-          std::cout << "last slice end = " << slices[i].getSliceEnd() << std::endl;
+//           std::cout << "last slice end = " << slices[i].getSliceEnd() << std::endl;
         }
 
     }

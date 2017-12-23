@@ -97,14 +97,14 @@ private:
     
     Rectangle<int> boxes[16];
     
-    const unsigned int lcd_left = 363;
-    const unsigned int lcd_right = 922;
-    const unsigned int lcd_top = 54;
-    const unsigned int lcd_bottom = 163;
-    const unsigned int lcd_center = lcd_bottom - lcd_top;
-    const unsigned int lcd_length = lcd_right - lcd_left;
-    const unsigned int lcd_height = (lcd_bottom - lcd_top)/2;
-    static constexpr unsigned int waveform_length = (922-363) * 2;
+    static constexpr unsigned int lcd_left = 363;
+    static constexpr unsigned int lcd_right = 922;
+    static constexpr unsigned int lcd_top = 54;
+    static constexpr unsigned int lcd_bottom = 163;
+    static constexpr unsigned int lcd_center = lcd_bottom - lcd_top;
+    static constexpr unsigned int lcd_length = lcd_right - lcd_left;
+    static constexpr unsigned int lcd_height = (lcd_bottom - lcd_top)/2;
+    static constexpr unsigned int waveform_length = lcd_length * 2;
     std::array<int, waveform_length> waveform;
     
     
