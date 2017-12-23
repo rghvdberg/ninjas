@@ -33,10 +33,7 @@ NinjasUI::NinjasUI()
     fImgFrame ( Art::frameData, Art::frameWidth, Art::frameHeight, GL_BGRA )
 {
   // init lcd
-//  waveform.fill ( lcd_center );
-//     for (int i = 0 ; i < lcd_length ; i++)
-//         std::cout << waveform[i];
-//     std::cout << std::endl;
+  waveform.fill ( lcd_center );
   // knobs
 
   fKnobSlices = new ImageKnob ( this,
@@ -562,19 +559,20 @@ void NinjasUI::onDisplay()
 
   for ( int i =0,j=0 ; i < lcd_length ; i++ )
     {
-
+      std::cout << waveform[j] << " ," ;
       glBegin ( GL_LINES );
       glVertex2i ( i+lcd_left,lcd_center );
       glVertex2i ( i+lcd_left,waveform[j] );
       j++;
+      std::cout << waveform[j] << " ," ;
+      
       glVertex2i ( i+lcd_left,lcd_center );
       glVertex2i ( i+lcd_left,waveform[j] );
       j++;
       glEnd();
 
     }
-
-  //TODO find nice colour
+    std::cout << std::endl;
   r = 0x8e/255.f;
   g = 0xe3/255.f;
   b = 0x71/255.f;

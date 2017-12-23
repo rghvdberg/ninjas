@@ -75,7 +75,6 @@ private:
     void createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* slices, int n_slices, int64_t size, int channels );
     int64_t find_nearest(std::vector<uint_t> & haystack, uint_t needle);
        
-    std::array<int,1112> waveform;
     float p_Attack[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
     float p_Decay[16] { 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05, 0.05,0.05,0.05,0.05 };
     float p_Sustain[16] { 1,1,1,1, 1,1,1,1, 1,1,1,1 ,1,1,1,1 };
@@ -105,6 +104,8 @@ private:
     const unsigned int lcd_center = lcd_bottom - lcd_top;
     const unsigned int lcd_length = lcd_right - lcd_left;
     const unsigned int lcd_height = (lcd_bottom - lcd_top)/2;
+    static constexpr unsigned int waveform_length = (922-363) * 2;
+    std::array<int, waveform_length> waveform;
     
     
 
