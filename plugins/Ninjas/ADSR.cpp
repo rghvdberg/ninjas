@@ -126,7 +126,7 @@ float ADSR::ADSRrun(bool * active) {
 void ADSR::setADSR(float a, float d, float s, float r, double sr)
 {
    adsr_samplerate = sr;
-   std::cout << "setADSR () adsr_samplerate = " << adsr_samplerate << std::endl ; 
+   //std::cout << "setADSR () adsr_samplerate = " << adsr_samplerate << std::endl ; 
    
     attack = a;
     decay = d;
