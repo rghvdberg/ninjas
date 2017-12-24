@@ -226,7 +226,14 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
 
       // floppy
     case paramFloppy:
-      fSwitchFloppy->setDown ( value > 0.5f );
+      if (sample_is_loaded)
+     {
+	fSwitchFloppy->setDown ( 1);
+      }
+      else
+      {
+	fSwitchFloppy->setDown(0);
+      }
       break;
     case paramSliceMode:
       fSliceModeSlider->setValue ( value );
@@ -261,6 +268,7 @@ void NinjasUI::uiFileBrowserSelected ( const char* filename )
   // if a file was selected, tell DSP
   if ( filename != nullptr )
     {
+      std::cout << "void NinjasUI::uiFileBrowserSelected ( const char* filename ) " << filename << std::endl;
       setState ( "filepath", filename );
       calcWaveform ( String ( filename ) , sampleVector );
     }
@@ -273,9 +281,19 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
   const uint buttonId ( imageSwitch->getId() );
   if ( buttonId ==  paramFloppy )
     {
+      std::cout << "floppy clicked" << std::endl;
       DGL::Window::FileBrowserOptions opts;
       opts.title = "Load audio file";
       getParentWindow().openFileBrowser ( opts );
+      if (sample_is_loaded)
+      {
+	fSwitchFloppy->setDown (true);
+      }
+      else
+      {
+	fSwitchFloppy->setDown(false);
+      }
+
     }
 
   switch ( buttonId )
@@ -434,25 +452,23 @@ void NinjasUI::imageKnobDragFinished ( ImageKnob* knob )
 void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 {
   int KnobID = knob->getId();
+  
   setParameterValue ( KnobID,value );
-  if ( KnobID == paramNumberOfSlices )
-    {
-      slices = value;
-      if (!slicemethod)
-  {
-   createSlicesRaw ( a_slices, slices, samplesize, channels );
-  }
-  else
-  {
-   createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
-  }
-      
-      
-     
-    }
 
   switch ( KnobID )
     {
+    case paramNumberOfSlices:
+       slices = value;
+       if ( !slicemethod )
+        {
+          createSlicesRaw ( a_slices, slices, samplesize, channels );
+        }
+      else
+        {
+          createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
+        }
+   break;
+      
     case paramAttack:
       p_Attack[currentSlice]=value;
       break;
@@ -465,6 +481,9 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
     case paramRelease:
       p_Release[currentSlice]=value;
       break;
+    default:
+      setParameterValue ( KnobID,value );
+      
     }
 }
 
@@ -484,14 +503,14 @@ void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 //   std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
   setParameterValue ( slider->getId(), value );
   slicemethod = value;
-  if (!slicemethod)
-  {
-   createSlicesRaw ( a_slices, slices, samplesize, channels );
-  }
+  if ( !slicemethod )
+    {
+      createSlicesRaw ( a_slices, slices, samplesize, channels );
+    }
   else
-  {
-   createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
-  }
+    {
+      createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
+    }
 
 }
 
@@ -563,7 +582,7 @@ void NinjasUI::onDisplay()
       glVertex2i ( i+lcd_left,waveform[j] );
       j++;
 //       std::cout << waveform[j] << " ," ;
-      
+
       glVertex2i ( i+lcd_left,lcd_center );
       glVertex2i ( i+lcd_left,waveform[j] );
       j++;
@@ -571,6 +590,10 @@ void NinjasUI::onDisplay()
 
     }
 //     std::cout << std::endl;
+
+// onsets
+if (slicemethod)
+{
   r = 0x8e/255.f;
   g = 0xe3/255.f;
   b = 0x71/255.f;
@@ -587,9 +610,10 @@ void NinjasUI::onDisplay()
       glVertex2i ( lcd_onset_x+lcd_left,lcd_bottom );
       glEnd();
     }
-
-  glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
   glDisable ( GL_LINE_STIPPLE );
+}
+  glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
+ 
   fImgFrame.drawAt ( 355,45 );
 
 }
@@ -610,8 +634,11 @@ void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
   channels   = fileHandle.channels();
   if ( samplesize == 0 )
     {
+      sample_is_loaded = false;
       return;
     }
+  sample_is_loaded =true;
+  fSwitchFloppy->setDown(true);
   float samples_per_pixel = ( float ) ( samplesize * channels ) / ( float ) lcd_length;
 
   sampleVector.resize ( samplesize * channels );
@@ -821,4 +848,5 @@ UI* createUI()
 // -----------------------------------------------------------------------------------------------------------
 
 END_NAMESPACE_DISTRHO
+
 

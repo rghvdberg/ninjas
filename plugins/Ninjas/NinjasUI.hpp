@@ -94,9 +94,11 @@ private:
     uint64_t samplesize {0};
     int channels {1};
     std::vector<float>sampleVector;
+    bool sample_is_loaded {false};
     
     Rectangle<int> boxes[16];
     
+    // need static constexpr apprently because of std::array ..
     static constexpr unsigned int lcd_left = 363;
     static constexpr unsigned int lcd_right = 922;
     static constexpr unsigned int lcd_top = 54;
