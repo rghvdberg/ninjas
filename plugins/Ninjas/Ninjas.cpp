@@ -64,6 +64,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 16.0f;
       parameter.name   = "Slices";
       parameter.symbol  = "number_of_slices";
+      parameter.midiCC = 102;
       break;
     }
     case paramAttack:
@@ -74,6 +75,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Attack";
       parameter.symbol = "attack";
+       parameter.midiCC = 103;
       break;
     }
     case paramDecay:
@@ -84,6 +86,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Decay";
       parameter.symbol =  "decay";
+       parameter.midiCC = 104;
       break;
     }
     case paramSustain:
@@ -94,6 +97,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name = "Sustain";
       parameter.symbol = "sustain";
+       parameter.midiCC = 105;
       break;
     }
     case paramRelease:
@@ -104,6 +108,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Release";
       parameter.symbol = "release";
+       parameter.midiCC = 106;
       break;
     }
     case paramOneShotFwd:
@@ -114,6 +119,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "One Shot Forward";
       parameter.symbol  = "one_shot_fwd";
+      parameter.midiCC = 107;
       break;
     }
     case paramOneShotRev:
@@ -124,6 +130,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "One Shot Reverse";
       parameter.symbol  = "one_shot_rev";
+      parameter.midiCC = 108;
       break;
     }
     case paramLoopFwd:
@@ -134,6 +141,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Looped Play Forward";
       parameter.symbol  = "loop_fwd";
+      parameter.midiCC = 109;
       break;
     }
     case paramLoopRev:
@@ -144,6 +152,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Looped Play Reverse";
       parameter.symbol  = "loop_rev";
+      parameter.midiCC = 110;
       break;
     }
     case paramFloppy:
@@ -165,23 +174,11 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Slice Mode";
       parameter.symbol  = "slicemode";
+      parameter.midiCC = 111;
       break;
     }
 
     }
-
-  /*
-  case paramSwitch01:
-      parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
-      parameter.ranges.def = 1.0f;
-      parameter.ranges.min = 0.0f;
-      parameter.ranges.max = 1.0f;
-      parameter.name   = "Switch "+String ( index - paramSwitch01 );
-      parameter.symbol  = "switch"+String ( index - paramSwitch01 );
-
-  }
-  */
-
   if ( index >= paramSwitch01 && index <= paramSwitch16 )
     {
       parameter.hints      = kParameterIsAutomable|kParameterIsBoolean ;
@@ -190,6 +187,8 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.ranges.max = 1.0f;
       parameter.name   = "Switch "+String ( index - paramSwitch01 );
       parameter.symbol  = "switch"+String ( index - paramSwitch01 );
+      //parameter.midiCC = index - paramSwitch01 + 33;
+      
     }
 
 }
@@ -371,7 +370,10 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
     {
       p_Grid[index - paramSwitch01]=value;
       if ( value == 1 )
+      {
         currentSlice = index - paramSwitch01;
+	std::cout << "currentSlice changed to " << currentSlice << std::endl;
+      }
     }
 } // setParameterValue
 
@@ -401,9 +403,29 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
               int message = status & 0xF0 ; // get midi message
               int data1 = midiEvents[curEventIndex].data[1];// note number
               int data2 = midiEvents[curEventIndex].data[2]; //
-
               // discard notes outside the 16 notes range
               // nn 60 - 74
+         //     std::cout << "midi " << message << ", " << data1 << ", " << data2 << std::endl; 
+              // get controller to select active slice
+              if ( message == 0xb0 )
+	      {
+		std::cout << "midi cc " << message << std::endl;
+		
+		switch (data1)
+		{
+		  case 20:
+		  std::cout << data1 << ", " << data2 << std::endl;
+		  std::cout << data2 % 16 << std::endl;
+		  setParameterValue(paramSwitch01 + (data2 %16), 1.0f);
+		  break;
+		  
+		  default:
+		  break;
+		    
+		}
+	      }
+		
+	      
 
               if ( ! ( ( message == 0x80 || message == 0x90 || message == 0xe0 ) && ( data1 >= 60 && data1 <= 74 ) ) )
                 {
@@ -459,11 +481,10 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 case 0xe0:   // pitchbend
                 {
                   pitchbend = ( data2 * 128 ) + data1;
+// 		  std::cout << "pitchbend ! = " << pitchbend << std::endl;
                   break;
 
                 }
-
-
 
                 } // switch
 

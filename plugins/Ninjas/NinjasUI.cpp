@@ -181,7 +181,7 @@ NinjasUI::NinjasUI()
  */
 void NinjasUI::parameterChanged ( uint32_t index, float value )
 {
-  //std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
+  std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
   switch ( index )
     {
     case paramNumberOfSlices:
