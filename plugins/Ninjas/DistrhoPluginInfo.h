@@ -42,14 +42,6 @@ enum Parameters
     paramLoopRev,
     paramFloppy,
     paramSliceMode,
-    paramSliceEditStart,
-    
-//     paramSliceEditFFWDBack, 
-//     paramSliceEditCoarseBack, 
-//     paramSliceEditFineBack, 
-//     paramSliceEditFine, 
-//     paramSliceEditCoarse, 
-//     paramSliceEditFFWD,
    
     paramSwitch01,
     paramSwitch02,
