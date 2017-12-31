@@ -662,7 +662,15 @@ void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
       j++;
     }
 //std::cout << std::endl;
-  NinjasUI::getOnsets ( samplesize ,channels, sampleVector, onsets );
+  getOnsets ( samplesize ,channels, sampleVector, onsets );
+  if ( !slicemethod )
+        {
+          createSlicesRaw ( a_slices, slices, samplesize, channels );
+        }
+      else
+        {
+          createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
+        }
   repaint();
   return;
 
