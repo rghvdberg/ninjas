@@ -2,7 +2,7 @@
 #define SAMPLE_H
 
 #include "sndfile.hh"
-#include "samplerate.h"
+#include <samplerate.h>
 #include <vector>
 #include <string>
 #include "Slice.h"

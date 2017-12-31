@@ -19,7 +19,7 @@
 #include <sndfile.hh>
 #include <vector>
 #include <iostream>
-#include <aubio/aubio.h>
+#include "aubio.h"
 #include <algorithm>
 #include "Sample.h"
 #include <string>

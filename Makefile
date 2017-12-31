@@ -11,6 +11,7 @@ all: libs plugins gen
 # --------------------------------------------------------------
 
 libs:
+	$(MAKE) -C aubio
 ifeq ($(HAVE_DGL),true)
 	$(MAKE) -C dpf/dgl
 endif
@@ -30,6 +31,7 @@ dpf/utils/lv2_ttl_generator:
 # --------------------------------------------------------------
 
 clean:
+	$(MAKE) clean -C aubio
 ifeq ($(HAVE_DGL),true)
 	$(MAKE) clean -C dpf/dgl
 endif

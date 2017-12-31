@@ -15,5 +15,4 @@
 bin/*-dssi/
 bin/*.lv2/
 bin/d_*
-bin/ducka
-bin/roomy
+bin/ninjas
