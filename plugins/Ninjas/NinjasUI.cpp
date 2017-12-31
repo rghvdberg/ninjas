@@ -18,7 +18,7 @@
 #include "DistrhoUI.hpp"
 #include "NinjasUI.hpp"
 #include "NinjasArtwork.hpp"
-#include "Ninjas.hpp"
+#include <iostream>
 #include <string>
 #include "DistrhoPluginInfo.h"
 
