@@ -32,6 +32,8 @@ ifeq ($(HAVE_LIBLO),true)
 BASE_FLAGS += -DHAVE_LIBLO
 endif
 
+AUBIO = -L../../deps/lib/ -l:libaubio.a
+
 # --------------------------------------------------------------
 # Set plugin binary file targets
 
@@ -89,8 +91,8 @@ jack: $(jack)
 
 $(jack): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(shell pkg-config --cflags --libs jack)  $(shell pkg-config --cflags --libs sndfile) $(shell pkg-config --cflags --libs samplerate) $(shell pkg-config --cflags --libs aubio) -DDISTRHO_PLUGIN_TARGET_JACK -o $@
-
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(DGL_LIBS) $(shell pkg-config --cflags --libs jack)  $(shell pkg-config --cflags --libs sndfile) $(shell pkg-config --cflags --libs samplerate) $(AUBIO)  -DDISTRHO_PLUGIN_TARGET_JACK -o $@
+# 
 # --------------------------------------------------------------
 # LADSPA
 
@@ -124,17 +126,16 @@ lv2_sep: $(lv2_dsp) $(lv2_ui)
 
 $(lv2): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --static --libs sndfile) $(shell pkg-config --cflags --static --libs samplerate)
-	$(shell PKG_CONFIG_PATH=/opt/kxstudio/lib/pkgconfig pkg-config --static --libs aubio)
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --cflags --static --libs sndfile) $(shell pkg-config --cflags --cflags --static --libs samplerate) $(AUBIO)
 	$(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
 
 $(lv2_dsp): $(OBJS_DSP) $(DISTRHO_PLUGIN_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --static --libs sndfile) $(shell pkg-config --cflags --static --libs samplerate) $(shell PKG_CONFIG_PATH=/opt/kxstudio/lib/pkgconfig pkg-config --static --libs aubio) $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --cflags --static --libs sndfile) $(shell pkg-config --cflags --cflags --static --libs samplerate) $(AUBIO)  $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
 
 $(lv2_ui): $(OBJS_UI) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --libs sndfile) $(shell PKG_CONFIG_PATH=/opt/kxstudio/lib/pkgconfig pkg-config --static --libs aubio) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS) $(shell pkg-config --cflags --libs sndfile) $(AUBIO) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_LV2 -o $@
 
 # --------------------------------------------------------------
 # VST
@@ -143,7 +144,7 @@ vst: $(vst)
 
 $(vst): $(OBJS_DSP) $(OBJS_UI) $(DISTRHO_PLUGIN_FILES) $(DISTRHO_UI_FILES)
 	mkdir -p $(shell dirname $@)
-	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS)  $(shell pkg-config --cflags --libs sndfile)  $(shell pkg-config --cflags --libs samplerate)  $(shell PKG_CONFIG_PATH=/opt/kxstudio/lib/pkgconfig pkg-config --static --libs aubio) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_VST -o $@
+	$(CXX) $^ $(BUILD_CXX_FLAGS) $(LINK_FLAGS)  $(shell pkg-config --cflags --libs sndfile)  $(shell pkg-config --cflags --libs samplerate) $(AUBIO) $(DGL_LIBS) $(SHARED) -DDISTRHO_PLUGIN_TARGET_VST -o $@
 
 # --------------------------------------------------------------
 

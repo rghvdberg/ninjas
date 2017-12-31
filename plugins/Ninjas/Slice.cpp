@@ -1,7 +1,7 @@
 #include "Slice.h"
 #include "Sample.h"
 #include <iostream>
-#include <aubio/aubio.h>
+//#include <aubio/aubio.h>
 
 Slice::Slice()
     :

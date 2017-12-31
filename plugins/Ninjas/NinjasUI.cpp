@@ -18,7 +18,7 @@
 #include "DistrhoUI.hpp"
 #include "NinjasUI.hpp"
 #include "NinjasArtwork.hpp"
-#include "Ninjas.hpp"
+#include "NinjasPlugin.hpp"
 #include <string>
 #include "DistrhoPluginInfo.h"
 
@@ -52,9 +52,9 @@ NinjasUI::NinjasUI()
                                 Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
   fKnobAttack->setId ( paramAttack );
   fKnobAttack->setAbsolutePos ( 560, 255 );
-  fKnobAttack->setRange ( 0.05f, 1.0f );
-  fKnobAttack->setDefault ( 0.05f );
-  fKnobAttack->setValue ( 0.05f );
+  fKnobAttack->setRange ( 0.01f, 1.0f );
+  fKnobAttack->setDefault ( 0.01f );
+  fKnobAttack->setValue ( 0.01f );
   fKnobAttack->setRotationAngle ( 300 );
   fKnobAttack->setCallback ( this );
 
@@ -62,9 +62,9 @@ NinjasUI::NinjasUI()
                                Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
   fKnobDecay->setId ( paramDecay );
   fKnobDecay->setAbsolutePos ( 637, 255 );
-  fKnobDecay->setRange ( 0.05f, 1.0f );
+  fKnobDecay->setRange ( 0.01f, 1.0f );
   fKnobDecay->setDefault ( 0.0f );
-  fKnobDecay->setValue ( 0.05f );
+  fKnobDecay->setValue ( 0.01f );
   fKnobDecay->setRotationAngle ( 300 );
   fKnobDecay->setCallback ( this );
 
@@ -82,13 +82,13 @@ NinjasUI::NinjasUI()
                                  Image ( Art::rotary_adsrData, Art::rotary_adsrWidth, Art::rotary_adsrHeight, GL_BGRA ) );
   fKnobRelease->setId ( paramRelease );
   fKnobRelease->setAbsolutePos ( 792, 255 );
-  fKnobRelease->setRange ( 0.05f, 1.0f );
-  fKnobRelease->setDefault ( 0.05f );
-  fKnobRelease->setValue ( 0.05f );
+  fKnobRelease->setRange ( 0.01f, 1.0f );
+  fKnobRelease->setDefault ( 0.01f );
+  fKnobRelease->setValue ( 0.01f );
   fKnobRelease->setRotationAngle ( 300 );
   fKnobRelease->setCallback ( this );
 
-  // slider
+  // sliders
   Image sliderImage ( Art::sliderData, Art::sliderWidth, Art:: sliderHeight );
   Point<int> sliderPosStart ( 295,150 );
   Point<int> sliderPosEnd ( 295,169 );
@@ -102,7 +102,8 @@ NinjasUI::NinjasUI()
   fSliceModeSlider->setStep ( 1.0f );
   fSliceModeSlider->setValue ( 0.0f );
   fSliceModeSlider->setCallback ( this );
-
+  
+  
   // switches
 
   // play modes
@@ -172,7 +173,6 @@ NinjasUI::NinjasUI()
         } // for x
     } // for y
 
-
 }
 
 /**
@@ -226,14 +226,14 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
 
       // floppy
     case paramFloppy:
-      if (sample_is_loaded)
-     {
-	fSwitchFloppy->setDown ( 1);
-      }
+      if ( sample_is_loaded )
+        {
+          fSwitchFloppy->setDown ( 1 );
+        }
       else
-      {
-	fSwitchFloppy->setDown(0);
-      }
+        {
+          fSwitchFloppy->setDown ( 0 );
+        }
       break;
     case paramSliceMode:
       fSliceModeSlider->setValue ( value );
@@ -243,6 +243,7 @@ void NinjasUI::parameterChanged ( uint32_t index, float value )
   // selector grid
   if ( index >= paramSwitch01 && index <= paramSwitch16 )
     {
+      std::cout << "parameterChanged index " << index << ", " << value << std::endl;
       int slice = index - paramSwitch01;
       fGrid[slice]->setDown ( value > 0.5f );
       if ( value == 1 )
@@ -285,14 +286,14 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
       DGL::Window::FileBrowserOptions opts;
       opts.title = "Load audio file";
       getParentWindow().openFileBrowser ( opts );
-      if (sample_is_loaded)
-      {
-	fSwitchFloppy->setDown (true);
-      }
+      if ( sample_is_loaded )
+        {
+          fSwitchFloppy->setDown ( true );
+        }
       else
-      {
-	fSwitchFloppy->setDown(false);
-      }
+        {
+          fSwitchFloppy->setDown ( false );
+        }
 
     }
 
@@ -452,14 +453,14 @@ void NinjasUI::imageKnobDragFinished ( ImageKnob* knob )
 void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 {
   int KnobID = knob->getId();
-  
+
   setParameterValue ( KnobID,value );
 
   switch ( KnobID )
     {
     case paramNumberOfSlices:
-       slices = value;
-       if ( !slicemethod )
+      slices = value;
+      if ( !slicemethod )
         {
           createSlicesRaw ( a_slices, slices, samplesize, channels );
         }
@@ -467,8 +468,8 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
         {
           createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
         }
-   break;
-      
+      break;
+
     case paramAttack:
       p_Attack[currentSlice]=value;
       break;
@@ -483,14 +484,14 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
       break;
     default:
       setParameterValue ( KnobID,value );
-      
+
     }
 }
 
 
 void  NinjasUI::imageSliderDragStarted ( ImageSlider* slider )
 {
-  // std::cout << "imageSliderDragStarted" << slider->getId() << std::endl;
+ //  std::cout << "imageSliderDragStarted" << slider->getId() << std::endl;
   editParameter ( slider->getId(), true );
 }
 void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
@@ -500,7 +501,7 @@ void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
 }
 void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 {
-//   std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
+  //std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
   setParameterValue ( slider->getId(), value );
   slicemethod = value;
   if ( !slicemethod )
@@ -511,7 +512,6 @@ void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
     {
       createSlicesOnsets ( onsets, a_slices, slices, samplesize, channels );
     }
-
 }
 
 
@@ -528,11 +528,13 @@ void NinjasUI::onDisplay()
   float r, g, b;
   bool colorflip {true};
   float samples_per_pixel = ( float ) ( samplesize * channels ) / ( float ) lcd_length;
+  if (sample_is_loaded)
+  {
   for ( int i = 0 ; i < slices ; i ++ )
     {
       int start = a_slices[i].getSliceStart() / samples_per_pixel;
       int end = a_slices[i].getSliceEnd() / samples_per_pixel;
-      // std::cout << " Slice " << i << " : " << start  << " - " << end << std::endl;
+      std::cout << " Slice " << i << " : " << start  << " - " << end << std::endl;
       if ( colorflip )
         {
           r = 0x3c/255.f;
@@ -553,14 +555,8 @@ void NinjasUI::onDisplay()
       boxes[i].setSize ( end - start, lcd_center );
       boxes[i].draw();
       colorflip = !colorflip;
-//
-//         glBegin ( GL_LINES );
-//         glVertex2i ( start+lcd_left,lcd_top );
-//         glVertex2i ( start+lcd_left,lcd_bottom);
-//         glVertex2i ( end+lcd_left,lcd_top );
-//         glVertex2i ( end+lcd_left,lcd_bottom);
-//     	glEnd();
     }
+  }
 
   // draw waveform
   glEnable ( GL_BLEND );
@@ -592,28 +588,28 @@ void NinjasUI::onDisplay()
 //     std::cout << std::endl;
 
 // onsets
-if (slicemethod)
-{
-  r = 0x8e/255.f;
-  g = 0xe3/255.f;
-  b = 0x71/255.f;
-  glColor4f ( r, g, b, 1.0f );
-  for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
+  if ( slicemethod )
     {
-      int lcd_onset_x = ( ( double ) *it / ( double ) samplesize ) * ( float ) lcd_length;
+      r = 0x8e/255.f;
+      g = 0xe3/255.f;
+      b = 0x71/255.f;
+      glColor4f ( r, g, b, 1.0f );
+      for ( std::vector<uint_t>::iterator it = onsets.begin() ; it != onsets.end(); ++it )
+        {
+          int lcd_onset_x = ( ( double ) *it / ( double ) samplesize ) * ( float ) lcd_length;
 
-      glLineWidth ( 0.5f );
-      glLineStipple ( 1,0xAAAA );
-      glEnable ( GL_LINE_STIPPLE );
-      glBegin ( GL_LINES );
-      glVertex2i ( lcd_onset_x+lcd_left,lcd_top );
-      glVertex2i ( lcd_onset_x+lcd_left,lcd_bottom );
-      glEnd();
+          glLineWidth ( 0.5f );
+          glLineStipple ( 1,0xAAAA );
+          glEnable ( GL_LINE_STIPPLE );
+          glBegin ( GL_LINES );
+          glVertex2i ( lcd_onset_x+lcd_left,lcd_top );
+          glVertex2i ( lcd_onset_x+lcd_left,lcd_bottom );
+          glEnd();
+        }
+      glDisable ( GL_LINE_STIPPLE );
     }
-  glDisable ( GL_LINE_STIPPLE );
-}
   glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
- 
+
   fImgFrame.drawAt ( 355,45 );
 
 }
@@ -638,7 +634,7 @@ void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
       return;
     }
   sample_is_loaded =true;
-  fSwitchFloppy->setDown(true);
+  fSwitchFloppy->setDown ( true );
   float samples_per_pixel = ( float ) ( samplesize * channels ) / ( float ) lcd_length;
 
   sampleVector.resize ( samplesize * channels );
@@ -712,33 +708,6 @@ int64_t NinjasUI::find_nearest ( std::vector<uint_t> & haystack, uint_t needle )
   //std::cout << *std::min_element(std::begin(haystack), std::end(haystack), distance_to_needle_comparator) << std::endl;
   return *std::min_element ( std::begin ( haystack ), std::end ( haystack ), distance_to_needle_comparator );
 }
-
-
-
-/*
-int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample_out, double host_samplerate )
-{
-    // copy samplevector in data_in
-    // data_out points to samplevector
-
-    SRC_DATA src_data;
-    src_data.data_in = & sample_in.at ( 0 );
-    src_data.src_ratio = host_samplerate / samplerate;
-    src_data.output_frames = size * src_data.src_ratio;
-
-    sample_out->resize ( src_data.output_frames * channels );
-
-    src_data.data_out = & sample_out->at ( 0 );
-    src_data.input_frames = size;
-
-    int err = src_simple ( & src_data, SRC_SINC_BEST_QUALITY,channels );
-    size = src_data.output_frames_gen;
-    std::cout <<  size << std::endl;
-    return err;
-}
-*/
-
-
 
 void NinjasUI::recallSliceSettings ( int slice )
 {

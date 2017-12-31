@@ -13,7 +13,7 @@ NAME = ninjas
 # Files to build
 
 OBJS_DSP = \
-	Ninjas.cpp.o \
+	NinjasPlugin.cpp.o \
 	ADSR.cpp.o \
 	Mixer.cpp.o \
 	Sample.cpp.o \
