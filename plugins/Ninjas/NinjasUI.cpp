@@ -264,7 +264,8 @@ void NinjasUI::stateChanged ( const char* key, const char* value )
 
 
 void NinjasUI::uiFileBrowserSelected ( const char* filename )
-{
+{ 
+  directory = dirnameOf(filename);
   // if a file was selected, tell DSP
   if ( filename != nullptr )
     {
@@ -281,13 +282,13 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
   const uint buttonId ( imageSwitch->getId() );
   if ( buttonId ==  paramFloppy )
     {
-      std::cout << "floppy clicked" << std::endl;
-      DGL::Window::FileBrowserOptions opts;
-      opts.title = "Load audio file";
-      getParentWindow().openFileBrowser ( opts );
+      filebrowseropts.title = "Load audio file";
+      filebrowseropts.startDir = directory.c_str();
+      getParentWindow().openFileBrowser ( filebrowseropts );
       if (sample_is_loaded)
       {
 	fSwitchFloppy->setDown (true);
+	
       }
       else
       {
@@ -721,30 +722,13 @@ int64_t NinjasUI::find_nearest ( std::vector<uint_t> & haystack, uint_t needle )
   return *std::min_element ( std::begin ( haystack ), std::end ( haystack ), distance_to_needle_comparator );
 }
 
-
-
-/*
-int Sample::resample ( std::vector<float> sample_in, std::vector<float> * sample_out, double host_samplerate )
+std::string NinjasUI::dirnameOf(const std::string& fname)
 {
-    // copy samplevector in data_in
-    // data_out points to samplevector
-
-    SRC_DATA src_data;
-    src_data.data_in = & sample_in.at ( 0 );
-    src_data.src_ratio = host_samplerate / samplerate;
-    src_data.output_frames = size * src_data.src_ratio;
-
-    sample_out->resize ( src_data.output_frames * channels );
-
-    src_data.data_out = & sample_out->at ( 0 );
-    src_data.input_frames = size;
-
-    int err = src_simple ( & src_data, SRC_SINC_BEST_QUALITY,channels );
-    size = src_data.output_frames_gen;
-    std::cout <<  size << std::endl;
-    return err;
+     size_t pos = fname.find_last_of("\\/");
+     return (std::string::npos == pos)
+         ? ""
+         : fname.substr(0, pos);
 }
-*/
 
 
 
