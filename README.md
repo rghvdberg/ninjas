@@ -35,7 +35,7 @@ There is no ~`make install`~, binaries will appear in `~ninjas/bin/`, just copy 
 - set number of slices using the Slices knob
 - set slicing method using the slider
  **Raw**: slices up the sample in equal parts
-**Onsets** snaps the slice start and end to the nearest detected onset
+ **Onsets**: snaps the slice start and end to the nearest detected onset
 - Sample slices will be mapped to C4 (midi note 60) and up
 - Change the pitch of a slice with pitchbend
 - Each slice has it's own **ADSR** and **playmode** settings. Use the righthand **Slice Selector** to select the slice you want to edit

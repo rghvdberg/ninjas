@@ -188,7 +188,7 @@ void NinjasPlugin::initParameter ( uint32_t index, Parameter& parameter )
       parameter.name   = "Switch "+String ( index - paramSwitch01 );
       parameter.symbol  = "switch"+String ( index - paramSwitch01 );
 //       parameter.midiCC = index - paramSwitch01 + 33;
-      
+
     }
 
 }
@@ -203,7 +203,7 @@ void NinjasPlugin::initState ( uint32_t index, String& stateKey, String& default
 
 }
 
-String NinjasPlugin::getState ( const char* key ) const
+String NinjasPlugin::getState ( const char* ) const
 {
   return String ( "filepath" );
 }
@@ -219,28 +219,22 @@ void NinjasPlugin::setState ( const char* key, const char* value )
           // sample loaded ok, slice it up and set bool
           int64_t size = SampleObject.getSampleSize();
           int channels = SampleObject.getSampleChannels();
-          getOnsets ( size,channels,sampleVector,onsets );
+          getOnsets ( size, channels, sampleVector, onsets );
 
           if ( slicemode == 0 )
-            createSlicesRaw ( a_slices,slices, size, channels );
+            createSlicesRaw ( a_slices, slices, size, channels );
           else
-            createSlicesOnsets ( onsets,a_slices,slices, size, channels );
+            createSlicesOnsets ( onsets, a_slices, slices, size, channels );
 
           bypass = false;
-          //setParameterValue(paramFloppy,1.0);
+          setParameterValue ( paramFloppy,1.0f );
         }
       else
         {
           bypass = true;
-          std::cout << "setState - sample not loaded" << std::endl;
-          // setState ( "filepath","empty" );
-          setParameterValue ( paramFloppy,0.0 );
+          setParameterValue ( paramFloppy,0.0f );
         }
-
     }
-
-
-
 }
 
 /* --------------------------------------------------------------------------------------------------------
@@ -370,17 +364,16 @@ void NinjasPlugin::setParameterValue ( uint32_t index, float value )
     {
       p_Grid[index - paramSwitch01]=value;
       if ( value == 1 )
-      {
-        currentSlice = index - paramSwitch01;
-	std::cout << "currentSlice changed to " << currentSlice << std::endl;
-      }
+        {
+          currentSlice = index - paramSwitch01;
+        }
     }
 } // setParameterValue
 
 /* --------------------------------------------------------------------------------------------------------
 * Audio/MIDI Processing */
 
-/*       inputs unused , outputs        , size of block we process, pointer to midi data       , number of midie events in current block */
+//------------------- inputs unused , outputs       , size of block we process, pointer to midi data       , number of midi events in current block 
 void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,          const MidiEvent* midiEvents, uint32_t midiEventCount )
 {
   float* const outL = outputs[0]; // output ports , stereo
@@ -405,28 +398,7 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
               int data2 = midiEvents[curEventIndex].data[2]; //
               // discard notes outside the 16 notes range
               // nn 60 - 74
-         //     std::cout << "midi " << message << ", " << data1 << ", " << data2 << std::endl; 
               // get controller to select active slice
-              if ( message == 0xb0 )
-	      {
-		std::cout << "midi cc " << message << std::endl;
-		
-		switch (data1)
-		{
-		  case 20:
-		  std::cout << data1 << ", " << data2 << std::endl;
-		  std::cout << data2 % 16 << std::endl;
-		  setParameterValue(paramSwitch01 + (data2 %16), 1.0f);
-		  break;
-		  
-		  default:
-		  break;
-		    
-		}
-	      }
-		
-	      
-
               if ( ! ( ( message == 0x80 || message == 0x90 || message == 0xe0 ) && ( data1 >= 60 && data1 <= 74 ) ) )
                 {
                   curEventIndex++;
@@ -481,13 +453,10 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                 case 0xe0:   // pitchbend
                 {
                   pitchbend = ( data2 * 128 ) + data1;
-// 		  std::cout << "pitchbend ! = " << pitchbend << std::endl;
                   break;
-
                 }
 
                 } // switch
-
 
               curEventIndex++; // we've processed a midi event,increase index so we know which midi event to process next
             }
@@ -507,8 +476,6 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                   int sliceEnd = a_slices[i].getSliceEnd();
                   int pos = voices[i].playbackIndex;
                   int channels = SampleObject.getSampleChannels();
-                  //  std::cout << "sliceStart" << sliceStart << "+ pos " << pos << " = " << sliceStart+pos <<std::endl;
-                  //  std::cout << "sliceEnd" << sliceEnd << std::endl;
                   float* sample = &sampleVector.at ( sliceStart+pos );
                   float sampleL { *sample };
                   float sampleR { * ( sample + ( channels -1 ) ) };
@@ -541,7 +508,6 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
                   voices[i].multiplierIndex += multiplier;
                   int tmp = ( int ) voices[i].multiplierIndex;
                   tmp=tmp * channels;
-                  // std::cout << "tmp = " << tmp << std::endl;
 
                   // check bounderies according to playmode: loop or oneshot.
 
@@ -601,7 +567,6 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
               mixR.add_Sample ( 0 );
             }
 
-
           float left = mixL.get_Mix();
           float right = mixR.get_Mix();
           outL[framesDone] = left;
@@ -623,22 +588,10 @@ void NinjasPlugin::run ( const float**, float** outputs, uint32_t frames,       
 void NinjasPlugin::createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int channels )
 {
   long double sliceSize = ( long double ) ( size*channels ) / ( long double ) n_slices;
-
-  /*   std::cout << "sliceSize :" << sliceSize
-               << " x " << n_slices << " n_slices = "
-               << n_slices * sliceSize << std::endl;
-        */
-
-
   for ( int i = 0 ; i < n_slices; i++ )
     {
       slices[i].setSliceStart ( ( int ) i * sliceSize );
       slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
-
-      /*    std::cout << "Slice :" << i << " : "
-                    << slices[i].getSliceStart() << "->"
-                    << slices[i].getSliceEnd() << std::endl;
-      	  */
     }
 }
 
@@ -678,24 +631,22 @@ void NinjasPlugin::getOnsets ( int64_t size, int channels, std::vector<float> & 
       aubio_onset_do ( onset , &ftable, out );
       if ( out->data[0] != 0 )
         {
-          // std::cout << "onset at " << aubio_onset_get_last ( onset ) << std::endl;
           onsets.push_back ( aubio_onset_get_last ( onset ) );
         }
       readptr += hop_size;
     }
-  //std::cout << std::endl;
   del_aubio_onset ( onset );
+  // TODO .. del_fvec stuff ?
   // del_fvec ( &ftable );
   // del_fvec ( out );
   aubio_cleanup();
 }
+
 void NinjasPlugin::createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* slices, int n_slices, int64_t size, int channels )
 {
-  // std::cout << "createSlicesOnsets" << std::endl;
-  // std::cout << size << std::endl;
   if ( size == 0 )
     {
-      std::cout << "no sample loaded" << std::endl;
+//       std::cout << "no sample loaded" << std::endl;
       return;
     }
   long double sliceSize = ( long double ) size / ( long double ) n_slices;
@@ -709,42 +660,34 @@ void NinjasPlugin::createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* sli
       int64_t onset_start = find_nearest ( onsets,start );
       int64_t onset_end = find_nearest ( onsets,end )-1;
 
-//       std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
-
-//       std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
       slices[i].setSliceStart ( onset_start * channels );
       slices[i].setSliceEnd ( onset_end * channels );
+      // set slice end of last slice to end of sample
       if ( i == n_slices -1 )
         {
           slices[i].setSliceEnd ( end * channels );
-//           std::cout << "last slice end = " << slices[i].getSliceEnd() << std::endl;
         }
-
     }
 }
 
-  int64_t NinjasPlugin::find_nearest ( std::vector<uint_t> & haystack, uint_t needle )
+int64_t NinjasPlugin::find_nearest ( std::vector<uint_t> & haystack, uint_t needle )
+{
+  auto distance_to_needle_comparator = [&] ( int64_t && a,  int64_t && b )
   {
-    auto distance_to_needle_comparator = [&] ( int64_t && a,  int64_t && b )
-    {
-      return abs ( a - needle ) < abs ( b - needle );
-    };
+    return abs ( a - needle ) < abs ( b - needle );
+  };
 
-    //std::cout << *std::min_element(std::begin(haystack), std::end(haystack), distance_to_needle_comparator) << std::endl;
-    return *std::min_element ( std::begin ( haystack ), std::end ( haystack ), distance_to_needle_comparator );
-  }
+  return *std::min_element ( std::begin ( haystack ), std::end ( haystack ), distance_to_needle_comparator );
+}
 
+/* ------------------------------------------------------------------------------------------------------------
+* Plugin entry point, called by DPF to create a new plugin instance. */
 
-
-
-  /* ------------------------------------------------------------------------------------------------------------
-  * Plugin entry point, called by DPF to create a new plugin instance. */
-
-  Plugin* createPlugin()
-  {
-    return new NinjasPlugin();
-  }
+Plugin* createPlugin()
+{
+  return new NinjasPlugin();
+}
 
 // -----------------------------------------------------------------------------------------------------------
 
-  END_NAMESPACE_DISTRHO
+END_NAMESPACE_DISTRHO

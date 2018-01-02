@@ -98,7 +98,7 @@ private:
     std::string directory;    
     Rectangle<int> boxes[16];
     
-    // need static constexpr apprently because of std::array ..
+    // need static constexpr apparently because of std::array ..
     static constexpr unsigned int lcd_left = 363;
     static constexpr unsigned int lcd_right = 922;
     static constexpr unsigned int lcd_top = 54;
@@ -108,8 +108,6 @@ private:
     static constexpr unsigned int lcd_height = (lcd_bottom - lcd_top)/2;
     static constexpr unsigned int waveform_length = lcd_length * 2;
     std::array<int, waveform_length> waveform;
-    
-    
 
     DISTRHO_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR ( NinjasUI )
 };

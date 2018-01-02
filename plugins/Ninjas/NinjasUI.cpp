@@ -181,8 +181,7 @@ NinjasUI::NinjasUI()
  */
 void NinjasUI::parameterChanged ( uint32_t index, float value )
 {
-    std::cout << "parameterChanged(index, value) " << index << " , " << value << std::endl;
-    switch ( index )
+     switch ( index )
     {
     case paramNumberOfSlices:
         fKnobSlices->setValue ( value );
@@ -266,18 +265,17 @@ void NinjasUI::stateChanged ( const char* key, const char* value )
 void NinjasUI::uiFileBrowserSelected ( const char* filename )
 {
     if ( filename != nullptr )
-    {
-        directory = dirnameOf ( filename );
-        // if a file was selected, tell DSP
-        std::cout << "void NinjasUI::uiFileBrowserSelected ( const char* filename ) " << filename << std::endl;
-        setState ( "filepath", filename );
+    {   
+      // if a file was selected, tell DSP
+           directory = dirnameOf ( filename );
+         setState ( "filepath", filename );
         calcWaveform ( String ( filename ) , sampleVector );
     }
 }
 /* ----------------------------------------------------------------------------------------------------------
  * Widget Callbacks
  *----------------------------------------------------------------------------------------------------------*/
-void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
+void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool )
 {
     const uint buttonId ( imageSwitch->getId() );
     if ( buttonId ==  paramFloppy )
@@ -421,9 +419,8 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
     if ( buttonId >= paramSwitch01 && buttonId <= paramSwitch16 )
     {
 
-        for ( int i = paramSwitch01, j=0; i <= paramSwitch16; ++i,++j )
+        for ( uint32_t i = paramSwitch01, j=0; i <= paramSwitch16; ++i,++j )
         {
-            // std::cout << ( i==buttonId ) << std::endl;
             editParameter ( i, true );
             setParameterValue ( i, i == buttonId ? 1.0f : 0.0f );
             fGrid[j]->setDown ( i == buttonId );
@@ -439,14 +436,11 @@ void NinjasUI::imageSwitchClicked ( ImageSwitch* imageSwitch, bool down )
 
 void NinjasUI::imageKnobDragStarted ( ImageKnob* knob )
 {
-    // std::cout << "knobID = " << knob->getId() << std::endl;
-    editParameter ( knob->getId(), true );
+     editParameter ( knob->getId(), true );
 }
 
 void NinjasUI::imageKnobDragFinished ( ImageKnob* knob )
 {
-    // std::cout << "knobID = " << knob->getId() << std::endl;
-
     editParameter ( knob->getId(), false );
 }
 
@@ -491,17 +485,14 @@ void NinjasUI::imageKnobValueChanged ( ImageKnob* knob, float value )
 
 void  NinjasUI::imageSliderDragStarted ( ImageSlider* slider )
 {
-    // std::cout << "imageSliderDragStarted" << slider->getId() << std::endl;
     editParameter ( slider->getId(), true );
 }
 void  NinjasUI::imageSliderDragFinished ( ImageSlider* slider )
 {
-    //  std::cout << "imageSliderDragFinished" << slider->getId() << std::endl;
     editParameter ( slider->getId(), false );
 }
 void  NinjasUI::imageSliderValueChanged ( ImageSlider* slider, float value )
 {
-//   std::cout << "imageSliderDragFinished" << slider->getId() << " ; " << value << std::endl;
     setParameterValue ( slider->getId(), value );
     slicemethod = value;
     if ( !slicemethod )
@@ -533,7 +524,6 @@ void NinjasUI::onDisplay()
     {
         int start = a_slices[i].getSliceStart() / samples_per_pixel;
         int end = a_slices[i].getSliceEnd() / samples_per_pixel;
-        // std::cout << " Slice " << i << " : " << start  << " - " << end << std::endl;
         if ( colorflip )
         {
             r = 0x3c/255.f;
@@ -575,14 +565,12 @@ void NinjasUI::onDisplay()
     b = 0x0d/255.f;
     glColor4f ( r, g, b, 1.0f );
 
-    for ( int i =0,j=0 ; i < lcd_length ; i++ )
+    for ( uint32_t i =0,j=0 ; i < lcd_length ; i++ )
     {
-//       std::cout << waveform[j] << " ," ;
         glBegin ( GL_LINES );
         glVertex2i ( i+lcd_left,lcd_center );
         glVertex2i ( i+lcd_left,waveform[j] );
         j++;
-//       std::cout << waveform[j] << " ," ;
 
         glVertex2i ( i+lcd_left,lcd_center );
         glVertex2i ( i+lcd_left,waveform[j] );
@@ -590,7 +578,6 @@ void NinjasUI::onDisplay()
         glEnd();
 
     }
-//     std::cout << std::endl;
 
 // onsets
     if ( slicemethod )
@@ -621,13 +608,8 @@ void NinjasUI::onDisplay()
 
 void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
 {
-    //const int LCD_HEIGHT = 107 / 2;
-    //const int LCD_LENGHT = 566;
-    //float sum {0};
-    //float average {0.5};
     int  iIndex {0};
     float fIndex {0};
-    //  int plotValue {53};
     double samplerate = getSampleRate();
 
     SndfileHandle fileHandle ( fp , SFM_READ,  SF_FORMAT_WAV | SF_FORMAT_FLOAT , 2 , samplerate );
@@ -646,23 +628,20 @@ void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
     fileHandle.read ( &sampleVector.at ( 0 ) , samplesize * channels );
 
 
-    for ( int i = 0, j =0 ; i < lcd_length ; i++ )
+    for ( uint32_t i = 0, j =0 ; i < lcd_length ; i++ )
     {
         fIndex = i * samples_per_pixel;
         iIndex = fIndex;
-        //std::cout << i << " , " << iIndex << " | ";
         auto minmax = std::minmax_element ( sampleVector.begin() + iIndex, sampleVector.begin() + iIndex+samples_per_pixel );
         float min = *minmax.first;
-        //std::cout << " value = " << *minmax.first << std::endl;
         float max = *minmax.second;
-        //std::cout << " value = " << *minmax.second << std::endl;
         // convert 0.0 - 1.0 to 0 - 107
         waveform[j] = min * ( float ) lcd_height  + lcd_center;
         j++;
         waveform[j] = max * ( float ) lcd_height + lcd_center;
         j++;
     }
-//std::cout << std::endl;
+
     getOnsets ( samplesize ,channels, sampleVector, onsets );
     if ( !slicemethod )
     {
@@ -679,11 +658,9 @@ void NinjasUI::calcWaveform ( String fp, std::vector<float> & sampleVector )
 
 void NinjasUI::createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* slices, int n_slices, int64_t size, int channels )
 {
-    // std::cout << "createSlicesOnsets" << std::endl;
-    // std::cout << size << std::endl;
-    if ( size == 0 )
+     if ( size == 0 )
     {
-        std::cout << "no sample loaded" << std::endl;
+//         std::cout << "no sample loaded" << std::endl;
         return;
     }
     long double sliceSize = ( long double ) size / ( long double ) n_slices;
@@ -697,15 +674,12 @@ void NinjasUI::createSlicesOnsets ( std::vector<uint_t> & onsets, Slice* slices,
         int64_t onset_start = find_nearest ( onsets,start );
         int64_t onset_end = find_nearest ( onsets,end )-1;
 
-//       std::cout << "raw start = " << start << " onset start = " << onset_start << std::endl;
-
-//       std::cout << "raw end = " << end << " onset end = " << onset_end << std::endl;
         slices[i].setSliceStart ( onset_start * channels );
         slices[i].setSliceEnd ( onset_end * channels );
+	// set end of last slice to end of sample
         if ( i == n_slices -1 )
         {
             slices[i].setSliceEnd ( end * channels );
-//           std::cout << "last slice end = " << slices[i].getSliceEnd() << std::endl;
         }
 
     }
@@ -718,7 +692,6 @@ int64_t NinjasUI::find_nearest ( std::vector<uint_t> & haystack, uint_t needle )
         return abs ( a - needle ) < abs ( b - needle );
     };
 
-    //std::cout << *std::min_element(std::begin(haystack), std::end(haystack), distance_to_needle_comparator) << std::endl;
     return *std::min_element ( std::begin ( haystack ), std::end ( haystack ), distance_to_needle_comparator );
 }
 
@@ -734,7 +707,6 @@ std::string NinjasUI::dirnameOf ( const std::string& fname )
 
 void NinjasUI::recallSliceSettings ( int slice )
 {
-    // std::cout << "recallSliceSettings ( " << slice << " )" << std::endl;
     setParameterValue ( paramAttack, p_Attack[slice] );
     fKnobAttack->setValue ( p_Attack[slice] );
     setParameterValue ( paramDecay,  p_Decay[slice] );
@@ -768,7 +740,6 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
     intptr_t readptr = 0;
     ftable.length = hop_size;    // 2. set ftable length
     fvec_t * out = new_fvec ( 2 ); // output position
-    //double samplerate = getSampleRate();
 
     if ( channels == 2 ) // create mono sample
     {
@@ -793,14 +764,10 @@ void NinjasUI::getOnsets ( int64_t size, int channels, std::vector<float> & samp
         aubio_onset_do ( onset , &ftable, out );
         if ( out->data[0] != 0 )
         {
-            //TODO cleanup
-            uint_t tmp_onset = aubio_onset_get_last ( onset );
-//	  std::cout << "onset at " << tmp_onset << std::endl;
             onsets.push_back ( aubio_onset_get_last ( onset ) );
         }
         readptr += hop_size;
     }
-//    std::cout << std::endl;
     del_aubio_onset ( onset );
     // del_fvec ( &ftable );
     // del_fvec ( out );
@@ -811,22 +778,12 @@ void NinjasUI::createSlicesRaw ( Slice* slices, int n_slices, int64_t size, int 
 {
     long double sliceSize = ( long double ) ( size*channels ) / ( long double ) n_slices;
 
-    /*   std::cout << "sliceSize :" << sliceSize
-                 << " x " << n_slices << " n_slices = "
-                 << n_slices * sliceSize << std::endl;
-          */
-
-
-    for ( int i = 0 ; i < n_slices; i++ )
+      for ( int i = 0 ; i < n_slices; i++ )
     {
         slices[i].setSliceStart ( ( int ) i * sliceSize );
         slices[i].setSliceEnd ( ( ( int ) ( i+1 ) * sliceSize ) - 1 );
 
-        /*    std::cout << "Slice :" << i << " : "
-                      << slices[i].getSliceStart() << "->"
-                      << slices[i].getSliceEnd() << std::endl;
-        	  */
-    }
+      }
 }
 
 /* ------------------------------------------------------------------------------------------------------------

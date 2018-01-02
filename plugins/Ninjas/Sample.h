@@ -23,7 +23,7 @@ private:
 public:
     Sample();
 
-    Sample(std::string filepath, std::vector <float> & samplevector);
+//    Sample(std::string filepath, std::vector <float> & samplevector);
     
     int64_t getSampleSize() const
     {
