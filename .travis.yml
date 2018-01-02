@@ -12,6 +12,3 @@ deploy:
   file_glob: true
   file: "bin/ninjas*"
   skip_cleanup: true
-  on:
-    tags: true
-    
