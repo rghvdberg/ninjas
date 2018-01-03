@@ -4,13 +4,16 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgl1-mesa-dev libx11-dev libsndfile1-dev libsamplerate0-dev libjack-jackd2-dev
 
-script: make
+script:
+- make
+- ./create_release_tarball.sh
 
 deploy:
   provider: releases
   api_key:
-    secure: jZPXGCgVYXJyyAAEKKDB/71ugw263J1g0i4z7FhZFGESXg8IhiH2sR6w7kzLnfQ0RFstIlCXb6LRu3T4tY1//11VI765l44Nz/jw5+z2DF5LNdgLlpa2HixF2OtU6preFzqFIv6gn7lYrgi5y8I+bBEt5WmsX8o85XVDfThrtt9qXALFMz/arSsIOQ8zrgcv6OHf8qbSAnaiuLhVRxy9sFiyxjL+bZ3rlXBixRX70+MztPl/97iXhRB+vRh6IaqPy/W/lxWsh3Gz/va7SR5y0l807OC4Lf7bxhIzMb/al1I6qVib06nMFFsnO+eKJCgMtJxV8QFhFDN45Ua5clBgZKjcdYpil2WAC2mp91Nx3r7/MtEPV4Y6Z8bRrHjnxEq2NkSK+DXbz9JzjXgPwO1mMRLQ7YqIskxT+ATh1aEJ0ULkNP3771g1LIAvO9Qd278H1X8KbrRDWubi/A/Wx/VjnXmrn1TnaKU/90ev4JYDEM65QlrpCMxDsiHymEPlHn6L0zdGgNGO5MsfCn275oJ2cPjzgTsG/sEQwALK4W3hYh/f46l0bPExm97FekD27LpK6VPMWa7bb3tnbyGdu7tRZqPDbRt+mYbavN/vPdX3qgIzbw0+ioWij8nC9fFzsTMRH1TWNGH84medzGRwmXmpSs+S6R+mZ2iwx6jJTadNHwU=
+    secure: lOw3uWTRDoULOl+z1hOgcfgxxM3yFL2Ee22KkwGs6tEtIHlrFa3lIxH2lqdhkV5g7ZmoUJlmIfmNG3nLWCvJ8ZKQWowGDq5lAL5GCow+933FoZYoLuvLNwacudM8fNM/pu97jBxIw5JBnox2ep7vp5f/O0tQopjqFWwA5nccGmq4VU6QSacPPA6K0LXBi1N45ta1Qm4o3IcS6l8rxZzJGIEmRX7ldpGqy0oVGde89P9k2Gxo6/GAO49XJMVkemdmuZvrkMhq8WLAfJb6kTCu2AtMvh57nW/+GCuCZ8PaVEG2SN9ocamVm9SfMAllWbpb4a8gG53fPPiMXgZWG0O9iynUYBEJf7VB2d4PnNd17TQatrBEplNlXRUgRAhSJ++Haf5knhxT0RWUXMJhCO5Qk97TrmrBDMQ0DtVl21ESsF9RKfRQfnQU1F8fxpTCWtAJtKfRaim/W3By7qHzWNg7n9HYOBq2+leQ5F9CXBDEmhw1huG0IDKW/CIQBQWXtWICrsv4L57yQ27NckzCc48HTe8p95xwSP/xZIQ9yx6ePAo4PCJMU+DF9v17+Mj+8SVcz3AYNav7AEnfCf0wAiJA4Lcpou9CVzaegaF806PxNzXzCCJ57LB1uAlhiyMQ5SnVhLDM1qlg9RVQy6xmr1flXX1tno/P956Rs12CcKYMzKM=
   file: bin/ninjas.tar.gz
   skip_cleanup: true
   on:
     repo: rghvdberg/ninjas
+    
