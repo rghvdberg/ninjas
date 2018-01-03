@@ -4,7 +4,9 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgl1-mesa-dev libx11-dev libsndfile1-dev libsamplerate0-dev libjack-jackd2-dev
 
-script: make
+script:
+- make
+- ./create_release_tarball
 
 deploy:
   provider: releases
