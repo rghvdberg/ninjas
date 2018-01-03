@@ -8,7 +8,10 @@ script: make
 
 deploy:
   provider: releases
-  api_key: "c17fceb442782073af17a8865e61a11ba10d1ea0"
+  api_key:
+    secure: jZPXGCgVYXJyyAAEKKDB/71ugw263J1g0i4z7FhZFGESXg8IhiH2sR6w7kzLnfQ0RFstIlCXb6LRu3T4tY1//11VI765l44Nz/jw5+z2DF5LNdgLlpa2HixF2OtU6preFzqFIv6gn7lYrgi5y8I+bBEt5WmsX8o85XVDfThrtt9qXALFMz/arSsIOQ8zrgcv6OHf8qbSAnaiuLhVRxy9sFiyxjL+bZ3rlXBixRX70+MztPl/97iXhRB+vRh6IaqPy/W/lxWsh3Gz/va7SR5y0l807OC4Lf7bxhIzMb/al1I6qVib06nMFFsnO+eKJCgMtJxV8QFhFDN45Ua5clBgZKjcdYpil2WAC2mp91Nx3r7/MtEPV4Y6Z8bRrHjnxEq2NkSK+DXbz9JzjXgPwO1mMRLQ7YqIskxT+ATh1aEJ0ULkNP3771g1LIAvO9Qd278H1X8KbrRDWubi/A/Wx/VjnXmrn1TnaKU/90ev4JYDEM65QlrpCMxDsiHymEPlHn6L0zdGgNGO5MsfCn275oJ2cPjzgTsG/sEQwALK4W3hYh/f46l0bPExm97FekD27LpK6VPMWa7bb3tnbyGdu7tRZqPDbRt+mYbavN/vPdX3qgIzbw0+ioWij8nC9fFzsTMRH1TWNGH84medzGRwmXmpSs+S6R+mZ2iwx6jJTadNHwU=
   file_glob: true
-  file: "bin/ninjas*"
+  file: bin/ninjas*
   skip_cleanup: true
+on:
+  repo: rghvdberg/ninjas
