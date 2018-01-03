@@ -6,7 +6,7 @@ before_install:
 
 script:
 - make
-- ./create_release_tarball
+- ./create_release_tarball.sh
 
 deploy:
   provider: releases
