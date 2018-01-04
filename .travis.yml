@@ -6,7 +6,7 @@ before_install:
 
 script:
 - make
-- ./create_release_tarball.sh
+- cd bin && tar -czvf ninjas.tar.gz ninjas ninjas.lv2 ninjas-vst.so
 
 deploy:
   provider: releases
